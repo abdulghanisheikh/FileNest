@@ -1,7 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
-@plugin "flowbite-react/plugin/tailwindcss";
-@source "../.flowbite-react/class-list.json";
 
 body{
   font-family: 'Poppins', sans-serif;

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import {Link,useNavigate} from "react-router-dom";
-import { Children } from "react";
+import {ToastContainer} from "react-toastify";
 
 const RegisterPage=()=>{
-  const [newUser,setNewUser]=useState({fullname:"",email:""});
+  const [newUser,setNewUser]=useState({fullname:"",email:"",password:""});
   const navigate=useNavigate();
   function handleInputChange(name,value){
     setNewUser((prev)=>({...prev,[name]:value}));
@@ -14,9 +14,10 @@ const RegisterPage=()=>{
     try{
       const res=await axios.post("http://localhost:3000/auth/create",newUser);
       if(res.data.success){
-        navigate("/");
+        alert("Account created successfully");
+        navigate("/login-page");
       }
-      setNewUser({fullname:"",email:""});
+      setNewUser({fullname:"",email:"",password:""});
     }
     catch(err){
       console.log(err.message);
@@ -36,8 +37,7 @@ const RegisterPage=()=>{
                 All your files, one secure home.
               </h1>
               <p className="text-sky-900">
-                Awesome, we've created the perfect place for you to store all
-                your documents.
+                Awesome, we've created the perfect place for you to store all your documents.
               </p>
             </div>
           </div>
@@ -51,15 +51,20 @@ const RegisterPage=()=>{
               <form onSubmit={handleSubmit} className="flex flex-col justify-center gap-5">
                 <div className="flex flex-col gap-1">
                   <label className="text-gray-800">Full Name</label>
-                  <input value={newUser.fullname} name="fullname" onChange={(e)=>handleInputChange("fullname",e.target.value)} type="text" placeholder="Enter your full name" className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
+                  <input value={newUser.fullname} name="fullname" onChange={(e)=>handleInputChange("fullname",e.target.value)} type="text" placeholder="Enter your full name" required className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-gray-800">Email Address</label>
-                  <input type="email" name="email" value={newUser.email} onChange={(e)=>handleInputChange("email",e.target.value)} placeholder="Enter your email address" className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
+                  <input type="email" name="email" value={newUser.email} onChange={(e)=>handleInputChange("email",e.target.value)} placeholder="Enter your email address" required className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-gray-800">Password</label>
+                  <input value={newUser.password} name="password" onChange={(e)=>handleInputChange("password",e.target.value)}type="password" placeholder="Enter your full name" required className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
                 </div>
                 <button type="submit" className="w-2/3 mt-5 px-5 py-2 rounded-full bg-blue-600 text-white cursor-pointer">Create Account</button>
                 <p className="text-sm">Already have an account? <span className="text-blue-600 cursor-pointer"><Link to="/">Log In</Link></span></p>
               </form>
+              <ToastContainer />
             </div>
         </div>
       </div>

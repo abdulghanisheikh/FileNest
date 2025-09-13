@@ -7,8 +7,9 @@ import RegisterPage from "./pages/RegisterPage";
 const App=()=>{
   return(
     <Routes>
-      <Route path="/" element={<LoginPage />}></Route>
-      <Route path="/register-page" element={<RegisterPage />}></Route>
+      <Route path="/login-page" element={<LoginPage />}></Route>
+      <Route path="/" element={<Navigate to="/login-page"/>}></Route>
+      <Route path="/signup-page" element={<RegisterPage />}></Route>
       <Route path="/dashboard" element={<Dashboard />}></Route>
     </Routes>
   )

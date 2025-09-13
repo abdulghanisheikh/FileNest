@@ -3,21 +3,31 @@ import axios from "axios";
 import {Link} from "react-router-dom";
 
 const LoginPage=()=>{
-  const [userEmail,setUserEmail]=useState("");
-  function handleInputChange(emailAddress){
-    setUserEmail(emailAddress);
+  const [loginData,setLoginData]=useState({
+    email:"",
+    password:""
+  });
+  function handleInputChange(name,value){
+    setLoginData((prev)=>{
+      return{...prev,[name]:value}
+    });
   }
   async function handleSubmit(e){
     e.preventDefault();
-    try{
-      const res=await axios.post("http://localhost:3000/auth/login",userEmail);
-      if(res.status===200){
-        console.log(res);
-      }
-      setUserEmail("");
+    const {fullname,email,password}=loginData;
+    if(!fullname||!email||!password){
+      console.log("all fields are required");
     }
-    catch(err){
-      console.log(err.message);
+    else{
+      try{
+        const {success,message}=await axios.post("http://localhost:3000/auth/login",loginData);
+        if(success){
+          console.log(message);
+        }
+      }
+      catch(err){
+        console.log(err.message);
+      }
     }
   }
   return(
@@ -48,10 +58,14 @@ const LoginPage=()=>{
               <form onSubmit={handleSubmit} className="flex flex-col justify-center gap-5">
                 <div className="flex flex-col gap-1">
                   <label className="text-gray-800">Email Address</label>
-                  <input type="email" name="email" value={userEmail} onChange={(e)=>handleInputChange(e.target.value)} placeholder="Enter your email address" className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
+                  <input type="email" name="email" value={loginData.email} onChange={(e)=>handleInputChange("email",e.target.value)} required placeholder="Enter your email address" className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-gray-800">Password</label>
+                  <input type="password" name="password" value={loginData.password} onChange={(e)=>handleInputChange("password",e.target.value)} required placeholder="Enter password" className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
                 </div>
                 <button type="submit" className="w-2/3 mt-5 px-5 py-2 rounded-full bg-blue-600 text-white cursor-pointer">Log In</button>
-                <p className="text-sm">Don't have an account? <span className="text-blue-600 cursor-pointer"><Link to="/register-page">Create Account</Link></span></p>
+                <p className="text-sm">Don't have an account? <span className="text-blue-600 cursor-pointer"><Link to="/signup-page">Create Account</Link></span></p>
               </form>
             </div>
         </div>
