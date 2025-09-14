@@ -19,7 +19,8 @@ const LoginPage=()=>{
   async function handleSubmit(e){
     e.preventDefault();
     try{
-        const {data}=await axios.post("http://localhost:3000/auth/login",loginData);
+        const loginAPI=import.meta.env.VITE_LOGIN_API
+        const {data}=await axios.post(loginAPI,loginData);
         const {success,message,jwtToken,user}=data;
         if(success){
             toast.success(message);

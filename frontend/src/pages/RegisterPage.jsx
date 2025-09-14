@@ -12,7 +12,8 @@ const RegisterPage=()=>{
   async function handleSubmit(e){
     e.preventDefault();
     try{
-      const {data}=await axios.post("http://localhost:3000/auth/create",newUser);
+      const signupAPI=import.meta.env.VITE_SIGNUP_API;
+      const {data}=await axios.post(signupAPI,newUser);
       const {success,message}=data;
       if(success){
         toast.success(message);
