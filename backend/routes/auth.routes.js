@@ -15,8 +15,10 @@ const signupValidation=[
     }),
     body("password").trim().isLength({min:5})
 ]
-
-const loginValidation=[body("email").trim().isEmail().normalizeEmail(),body("password").trim().isLength({min:5})]
+const loginValidation=[
+    body("email").trim().isEmail().normalizeEmail(),
+    body("password").trim().isLength({min:5})
+]
 
 router.post("/create",signupValidation,signup);
 router.post("/login",loginValidation,login);

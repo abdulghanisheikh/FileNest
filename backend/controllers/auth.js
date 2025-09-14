@@ -16,6 +16,7 @@ const signup=(req,res)=>{
                 });
                 return res.status(201).json({
                     message:"User created",
+                    success:true,
                     user:newUser
                 });
             });
@@ -23,6 +24,7 @@ const signup=(req,res)=>{
         else{
             return res.status(400).json({
                 message:"Validation failed",
+                success:false,
                 error:errors.array()
             });
         }
@@ -30,7 +32,8 @@ const signup=(req,res)=>{
     catch(err){
         res.status(500).json({
             message:"Server error",
-            error:err.message
+            error:err.message,
+            success:false
         });
     }
 }
@@ -38,43 +41,45 @@ const signup=(req,res)=>{
 const login=async(req,res)=>{
     try{
         const errors=validationResult(req);
-        if(errors.isEmpty()){
-            const {email,password}=req.body;
-            let user=await userModel.findOne({email});
-            if(!user){
-                return res.status(400).json({message:"password or email is incorrect",success:false});
-            }
-            else{
-                const result=await bcrypt.compare(password,user.password);
-                if(result){
-                    const token=jwt.sign(
-                        {email:user.email,id:user._id},
-                        process.env.JWT_SECRET,
-                        {expiresIn:"24h"}
-                    );
-                    res.cookie("token",token);
-                    return res.status(200).json({
-                        message:"Login successfull",
-                        success:true,
-                        jwtToken:token,
-                        email,
-                        name:user.fullname
-                    });
-                }
-                else{
-                    return res.status(400).json({message:"password or email is incorrect",success:false});
-                }
-            }
+        if(!errors.isEmpty()){
+            return res.status(400).json({
+                message:"Validation failed",
+                success:false
+            });
         }
-        return res.status(400).json({
-            message:"password or email is incorrect",
-            error:errors.array()
+        const {email,password}=req.body;
+        let user=await userModel.findOne({email});
+        if(!user){
+            return res.status(400).json({
+                message:"Email or password is incorrect",
+                success:false
+            });
+        }
+        const isMatch=await bcrypt.compare(password,user.password);
+        if(!isMatch){
+            return res.status(400).json({
+                message:"Email or password is incorrect",
+                success:false
+            });
+        }
+        const token=jwt.sign(
+            {email:user.email,id:user._id},
+            process.env.JWT_SECRET,
+            {expiresIn:"24h"}
+        );
+        res.cookie("token",token);
+        return res.status(200).json({
+            success:true,
+            message:"Login Successfull",
+            jwtToken:token,
+            user:user.fullname
         });
     }
     catch(err){
         res.status(500).json({
             message:"Server error",
-            error:err.message
+            error:err.message,
+            success:false
         });
     }
 }

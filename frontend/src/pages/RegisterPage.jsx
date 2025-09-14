@@ -1,21 +1,27 @@
 import React, { useState } from "react";
 import axios from "axios";
 import {Link,useNavigate} from "react-router-dom";
-import {ToastContainer} from "react-toastify";
+import {ToastContainer,toast} from "react-toastify";
 
 const RegisterPage=()=>{
   const [newUser,setNewUser]=useState({fullname:"",email:"",password:""});
   const navigate=useNavigate();
-  function handleInputChange(name,value){
+  function handleChange(name,value){
     setNewUser((prev)=>({...prev,[name]:value}));
   }
   async function handleSubmit(e){
     e.preventDefault();
     try{
-      const res=await axios.post("http://localhost:3000/auth/create",newUser);
-      if(res.data.success){
-        alert("Account created successfully");
-        navigate("/login-page");
+      const {data}=await axios.post("http://localhost:3000/auth/create",newUser);
+      const {success,message}=data;
+      if(success){
+        toast.success(message);
+        setTimeout(()=>{
+          navigate("/login-page");
+        },2000);
+      }
+      else{
+        toast.error(message);
       }
       setNewUser({fullname:"",email:"",password:""});
     }
@@ -51,20 +57,20 @@ const RegisterPage=()=>{
               <form onSubmit={handleSubmit} className="flex flex-col justify-center gap-5">
                 <div className="flex flex-col gap-1">
                   <label className="text-gray-800">Full Name</label>
-                  <input value={newUser.fullname} name="fullname" onChange={(e)=>handleInputChange("fullname",e.target.value)} type="text" placeholder="Enter your full name" required className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
+                  <input value={newUser.fullname} name="fullname" onChange={(e)=>handleChange("fullname",e.target.value)} type="text" placeholder="Enter your full name" required className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-gray-800">Email Address</label>
-                  <input type="email" name="email" value={newUser.email} onChange={(e)=>handleInputChange("email",e.target.value)} placeholder="Enter your email address" required className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
+                  <input type="email" name="email" value={newUser.email} onChange={(e)=>handleChange("email",e.target.value)} placeholder="Enter your email address" required className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-gray-800">Password</label>
-                  <input value={newUser.password} name="password" onChange={(e)=>handleInputChange("password",e.target.value)}type="password" placeholder="Enter your full name" required className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
+                  <input value={newUser.password} name="password" onChange={(e)=>handleChange("password",e.target.value)} type="password" placeholder="Enter your full name" required className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
                 </div>
                 <button type="submit" className="w-2/3 mt-5 px-5 py-2 rounded-full bg-blue-600 text-white cursor-pointer">Create Account</button>
                 <p className="text-sm">Already have an account? <span className="text-blue-600 cursor-pointer"><Link to="/">Log In</Link></span></p>
               </form>
-              <ToastContainer />
+              <ToastContainer position="top-right" />
             </div>
         </div>
       </div>
