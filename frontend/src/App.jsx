@@ -3,10 +3,12 @@ import {Routes,Route,Navigate} from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/Dashboard";
 import RegisterPage from "./pages/RegisterPage";
+import FileUpload from "./pages/FileUpload";
 
 const App=()=>{
   return(
     <Routes>
+      <Route path="/file-upload" element={<FileUpload />}></Route>
       <Route path="/login-page" element={<LoginPage />}></Route>
       <Route path="/" element={<Navigate to="/login-page"/>}></Route>
       <Route path="/signup-page" element={<RegisterPage />}></Route>
