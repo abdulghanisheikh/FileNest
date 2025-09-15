@@ -4,6 +4,9 @@ import { SlLogout } from "react-icons/sl";
 import {ToastContainer,toast} from "react-toastify";
 import {CircularProgressbar,buildStyles} from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { FcDocument } from "react-icons/fc";
+import { PiImagesDuotone } from "react-icons/pi";
+import { TiMediaPauseOutline } from "react-icons/ti";
 
 function Dashboard(){
   const navigate = useNavigate();
@@ -24,24 +27,33 @@ function Dashboard(){
   }
   return (
     <>
-      <div className='flex w-full min-h-screen gap-5 px-5'>
-        <div className='flex flex-col w-[20%] gap-10 px-5 h-full'>
+      <div className='flex w-full min-h-screen gap-5'>
+        <div className='flex flex-col w-[20%] gap-10 px-2 h-full'>
           <h1 className='text-4xl text-sky-950'>FileNest</h1>
           <div className='sidebar flex flex-col gap-5'>
             <Link to="/dashboard">
-              <div className='p-3 rounded-full bg-sky-700 text-center text-white'>Dashboard</div>
+              <div className='p-3 rounded-full bg-sky-600 text-center text-white'>Dashboard</div>
             </Link>
             <Link to="/dashboard">
-              <div className='p-3 rounded-full bg-sky-700 text-center text-white'>Document</div>
+              <div className='p-3 rounded-full flex items-center justify-center gap-1 bg-sky-600 text-center text-white'>
+                <FcDocument />
+                <p>Document</p>
+              </div>
             </Link>
             <Link to="/dashboard">
-              <div className='p-3 rounded-full bg-sky-700 text-center text-white'>Images</div>
+              <div className='p-3 rounded-full flex items-center justify-center gap-1 bg-sky-600 text-center text-white'>
+                <PiImagesDuotone />
+                <p>Images</p>
+              </div>
             </Link>
             <Link to="/dashboard">
-              <div className='p-3 rounded-full bg-sky-700 text-center text-white'>Media</div>
+              <div className='p-3 rounded-full flex items-center justify-center gap-1 bg-sky-600 text-center text-white'>
+                <TiMediaPauseOutline />
+                <p>Media</p>
+              </div>
             </Link>
             <Link to="/dashboard">
-              <div className='p-3 rounded-full bg-sky-700 text-center text-white'>Others</div>
+              <div className='p-3 rounded-full bg-sky-600 text-center text-white'>Others</div>
             </Link>
           </div>
           <div className="w-40 h-40 flex flex-col items-center self-center">
@@ -50,8 +62,8 @@ function Dashboard(){
             <a href="mailto:ghanisheikh26@gmail.com" className='text-sky-950 text-sm'>ghanisheikh26@gmail.com</a>
           </div>
         </div>
-        <div className='flex flex-col h-full w-[80%] bg-zinc-100 p-2 rounded-md'>
-          <div className='navbar flex w-full justify-between items-center px-5'>
+        <div className='flex flex-col h-full w-[80%] bg-zinc-100 py-1 rounded-md'>
+          <div className='navbar flex w-full justify-between items-center'>
             <input className='h-10 w-1/2 rounded-full outline-none bg-white px-5' type="text" placeholder='search' />
             <form action="" encType='multipart/form-data' className='flex w-1/2 gap-5 justify-end items-center'>
               <Link to="/upload-file">
