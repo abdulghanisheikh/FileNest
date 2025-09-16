@@ -12,6 +12,10 @@ const fileSchema=new mongoose.Schema({
         type:Number,
         max:10*1024*1024
     },
+    owner:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"user"
+    }]
 });
 const fileModel=mongoose.model("file",fileSchema);
 module.exports=fileModel;

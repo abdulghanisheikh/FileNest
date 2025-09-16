@@ -8,7 +8,7 @@ import FileUpload from "./pages/FileUpload";
 const App=()=>{
   return(
     <Routes>
-      <Route path="/file-upload" element={<FileUpload />}></Route>
+      <Route path="/upload-file" element={<FileUpload />}></Route>
       <Route path="/login-page" element={<LoginPage />}></Route>
       <Route path="/" element={<Navigate to="/login-page"/>}></Route>
       <Route path="/signup-page" element={<RegisterPage />}></Route>

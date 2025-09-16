@@ -177,14 +177,11 @@ Easy filtering & storage usage breakdown
 
 
 Structure:
-
-bucket-name/
-   user1/
-       file1.pdf
-       images/photo1.jpg
-   user2/
-       docs/resume.docx
-       images/photo2.jpg
-
-
-API will look something like this->/userId/filename
+user-files/ -> bucket
+ ├── user123/
+ │    ├── resume.pdf
+ │    ├── profile.png
+ │    └── project.zip
+ ├── user456/
+ │    ├── invoice.pdf
+ │    └── holiday-photo.jpg
