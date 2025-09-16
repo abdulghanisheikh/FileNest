@@ -28,6 +28,7 @@ const FileUpload=()=>{
                     hidden
                     type="file"
                     onChange={(e)=>setFile(e.target.files[0])}
+                    name="uploaded-file"
                     />
                     {file?`${file.name}`:"Drag & drop or choose a file"}
                 </label>
