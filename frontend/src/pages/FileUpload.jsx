@@ -1,17 +1,30 @@
 import React, { useState } from 'react'
 import {Link} from "react-router-dom";
 import axios from "axios";
+import {ToastContainer,toast} from "react-toastify";
 
 const FileUpload=()=>{
     const [file,setFile]=useState(null);
     async function handleUpload(e){
         e.preventDefault();
         try{
-            const res=await axios.post("http://localhost:3000/user/file-upload",file);
-            console.log(res);
+            let user=JSON.parse(localStorage.getItem("loggedInUser"));
+            console.log(user);
+            const formData=new FormData();
+            if(!file){
+                toast.error("Upload the file first");
+                return;
+            }
+            formData.append("uploaded-file",file);
+            formData.append("user",JSON.stringify(user));
+            const {data}=await axios.post("http://localhost:3000/user/upload",formData);
+            const {success,message}=data;
+            if(success){
+                toast.success(message);
+            }
         }
         catch(err){
-            console.log(err.message);
+            toast.error(`Upload Error: ${err.message}`);
         }
     }
     return(
@@ -34,6 +47,7 @@ const FileUpload=()=>{
                 </label>
                 <button type="submit" className="px-5 py-2 bg-blue-500 cursor-pointer text-white rounded-md">Upload</button>
             </form>
+            <ToastContainer position="top-right"/>
         </div>
   )
 }

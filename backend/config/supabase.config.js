@@ -1,5 +1,7 @@
-import {createClient} from "@supabase/supabase-js";
-const supabaseUrl=process.env.SUPABASE_URL;
-const supabaseServiceRoleKey=process.env.SUPABASE_SERVICE_ROLE_KEY
-const supabase=createClient(supabaseUrl,supabaseServiceRoleKey);
+const { createClient }=require("@supabase/supabase-js");
+const supabase=createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
 module.exports=supabase;

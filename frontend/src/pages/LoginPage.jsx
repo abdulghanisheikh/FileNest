@@ -25,7 +25,7 @@ const LoginPage=()=>{
         if(success){
             toast.success(message);
             localStorage.setItem("token",jwtToken);
-            localStorage.setItem("loggedInUser",user);
+            localStorage.setItem("loggedInUser",JSON.stringify(user));
             setTimeout(()=>{
                 navigate("/dashboard");
             },2000);

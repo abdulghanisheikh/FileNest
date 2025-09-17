@@ -1,6 +1,6 @@
 const mongoose=require("mongoose");
 const fileSchema=new mongoose.Schema({
-    originalName:String,
+    originalname:String,
     path:String,
     publicUrl:String,
     fileType:String,

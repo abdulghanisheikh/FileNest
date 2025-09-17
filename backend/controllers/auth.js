@@ -56,6 +56,8 @@ const login=async(req,res)=>{
             });
         }
         const isMatch=await bcrypt.compare(password,user.password);
+        const userData=user.toObject();
+        delete userData.password;
         if(!isMatch){
             return res.status(400).json({
                 message:"Email or password is incorrect",
@@ -65,14 +67,14 @@ const login=async(req,res)=>{
         const token=jwt.sign(
             {email:user.email,id:user._id},
             process.env.JWT_SECRET,
-            {expiresIn:"24h"}
+            {expiresIn:"1h"}
         );
         res.cookie("token",token);
         return res.status(200).json({
             success:true,
             message:"Login Successfull",
             jwtToken:token,
-            user:user.fullname
+            user:userData
         });
     }
     catch(err){
