@@ -1,17 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {Link,useNavigate} from "react-router-dom";
 import { SlLogout } from "react-icons/sl";
 import {ToastContainer,toast} from "react-toastify";
-import {CircularProgressbar,buildStyles} from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
+import ProgressBar from '../components/ProgressBar';
 import { FcDocument } from "react-icons/fc";
 import { PiImagesDuotone } from "react-icons/pi";
 import { TiMediaPauseOutline } from "react-icons/ti";
 import { LuLayoutDashboard } from "react-icons/lu";
+import { IoDocumentTextSharp } from "react-icons/io5";
 
 function Dashboard(){
   const navigate = useNavigate();
-  const memoryUsage=66;
+  useEffect(()=>{
+    const user=JSON.parse(localStorage.getItem("loggedInUser"));
+    console.log(user);
+  },[])
   function handleLogout(e){
     e.preventDefault();
     try{
@@ -78,24 +81,13 @@ function Dashboard(){
           </div>
           <div className='main flex p-5 rounded-xl justify-around'>
             <div className='flex flex-col w-1/2 px-15 gap-3 h-full'>
-              <div className='progressCard text-white bg-sky-500 w-full h-60 flex justify-around px-2 items-center border-gray-800 rounded-xl'>
-                <div style={{
-                  height:"10rem",
-                  width:"10rem",
-                }}>
-                  <CircularProgressbar value={memoryUsage} text={`${memoryUsage}%`} styles={buildStyles({
-                    textColor:"white",
-                    trailColor:"#7dd3fc",
-                    pathColor:"white"
-                  })}/>
-                </div>
-                <h1 className='text-2xl'>66% Space Used</h1>
-              </div>
+              <ProgressBar />
               <div className='flex gap-2 flex-wrap h-full w-full'>
-                <div className='w-55 h-35 border rounded-md'></div>
-                <div className='w-55 h-35 border rounded-md'></div>
-                <div className='w-55 h-35 border rounded-md'></div>
-                <div className='w-55 h-35 border rounded-md'></div>
+                <div className='contentBox w-55 h-40 border rounded-md flex flex-col p-2'>
+                  <div className='flex justify-between items-center w-full h-[10%]'>
+                    <IoDocumentTextSharp size={24} />
+                  </div>
+                </div>
               </div>
             </div>
             <div className='history bg-white rounded-xl p-2 flex flex-col h-full w-1/2 gap-2 py-5'>

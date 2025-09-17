@@ -3,13 +3,13 @@ const router=express.Router();
 const fileModel=require("../models/file.model.js");
 const upload=require("../config/multer.config.js");
 const supabase=require("../config/supabase.config.js");
-const userModel = require("../models/user.model.js");
+const userModel=require("../models/user.model.js");
 
 router.post("/upload",upload.single("uploaded-file"),async(req,res)=>{
     try{
-        let user;
+        let loggedInUser;
         try{
-            user=JSON.parse(req.body.user);
+            loggedInUser=JSON.parse(req.body.user);
         }
         catch{
             return res.status(400).json({
@@ -24,8 +24,9 @@ router.post("/upload",upload.single("uploaded-file"),async(req,res)=>{
                 message:"No file uploaded"
             });
         }
-        const path=`${user._id}/${Date.now()}-${file.originalname}`;
-        const {error:uploadError,data:uploadData}=await supabase.storage
+        const path=`${loggedInUser._id}/${Date.now()}-${file.originalname}`;
+        const {error:uploadError,data:uploadData}=await supabase
+        .storage
         .from("UserFiles")
         .upload(path,file.buffer,{
             contentType:file.mimetype
@@ -37,28 +38,34 @@ router.post("/upload",upload.single("uploaded-file"),async(req,res)=>{
                 error:uploadError.message
             });
         }
-        const {data:urlData,error:urlError}=supabase.storage
+        const {data}=supabase
+        .storage
         .from("UserFiles")
         .getPublicUrl(uploadData.path);
-        if(urlError){
-            return res.status(400).json({
-                success:false,
-                message:"Something went wrong",
-                error:urlError.message
-            });
-        }
+        const publicUrl=data.publicUrl;
         const newFile=await fileModel.create({
             originalname:file.originalname,
             path,
-            publicUrl:urlData,
+            publicUrl,
             fileType:file.mimetype,
             fileSize:file.size,
-            owner:user._id
+            owner:loggedInUser._id
         });
+        let user=await userModel.findById(loggedInUser._id);
+        if(!user){
+            return res.status(400).json({
+                success:false,
+                message:"User does not exist."
+            });
+        }
+        else{
+            user.files.push(newFile._id);
+            await user.save();
+        }
         return res.status(200).json({
             success:true,
-            message:"File uploaded successfully",
-            file:newFile
+            message:"File successfully uploaded",
+            newFile
         });
     }
     catch(err){

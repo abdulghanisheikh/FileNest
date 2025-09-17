@@ -9,7 +9,6 @@ const FileUpload=()=>{
         e.preventDefault();
         try{
             let user=JSON.parse(localStorage.getItem("loggedInUser"));
-            console.log(user);
             const formData=new FormData();
             if(!file){
                 toast.error("Upload the file first");
@@ -21,7 +20,9 @@ const FileUpload=()=>{
             const {success,message}=data;
             if(success){
                 toast.success(message);
+                setFile(null);
             }
+            else toast.error(message);
         }
         catch(err){
             toast.error(`Upload Error: ${err.message}`);
