@@ -1,5 +1,6 @@
-import React from 'react'
+import React,{useEffect,useState} from 'react'
 import {Link,useNavigate} from "react-router-dom";
+import axios from "axios";
 import { SlLogout } from "react-icons/sl";
 import {ToastContainer,toast} from "react-toastify";
 import ProgressBar from '../components/ProgressBar';
@@ -11,9 +12,31 @@ import { PiImages } from "react-icons/pi";
 import { FiVideo } from "react-icons/fi";
 import { FaChartPie } from "react-icons/fa";
 import { FiUploadCloud } from "react-icons/fi";
+import History from "../components/History";
 
 function Dashboard(){
   const navigate=useNavigate();
+  const [usedStorage,setUsedStorage]=useState(0);
+
+  async function fetchUsedStorage(){
+    try{
+      const {data}=await axios.get("http://localhost:3000/user/files-storage",{
+        withCredentials:true
+      });
+      const {success,totalSize}=data;
+      if(success){
+        setUsedStorage(((totalSize/1073741824)*100).toFixed(2));
+      }
+    }
+    catch(err){
+      console.log(err.message);
+    }
+  }
+  
+  useEffect(()=>{
+    fetchUsedStorage();
+  },[]);
+  
   function handleLogout(e){
     e.preventDefault();
     try{
@@ -86,7 +109,7 @@ function Dashboard(){
           </div>
           <div className='main flex p-5 rounded-xl justify-around'>
             <div className='flex flex-col w-1/2 px-15 gap-3 h-full'>
-              <ProgressBar />
+              <ProgressBar usedStorage={usedStorage} />
               <div className='flex gap-2 flex-wrap h-full w-full'>
                 <div className='contentBox bg-white w-55 h-45 border rounded-md flex flex-col py-3 px-5'>
                   <div className='flex flex-col justify-between h-1/2 w-full items-center'>
@@ -126,12 +149,7 @@ function Dashboard(){
                 </div>
               </div>
             </div>
-            <div className='history bg-white rounded-xl p-2 flex flex-col h-full w-1/2 gap-2 py-5'>
-              <h1 className='text-3xl'>Recent Files Uploaded</h1>
-              <div className='flex flex-col gap-1'>
-                <div className='w-full h-15 rounded-xl border border-gray-800'></div>
-              </div>
-            </div>
+            <History />
           </div>
         </div>
         <ToastContainer position="top-right" />

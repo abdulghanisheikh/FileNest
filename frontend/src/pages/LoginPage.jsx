@@ -20,7 +20,9 @@ const LoginPage=()=>{
     e.preventDefault();
     try{
         const loginAPI=import.meta.env.VITE_LOGIN_API
-        const {data}=await axios.post(loginAPI,loginData);
+        const {data}=await axios.post(loginAPI,loginData,{
+          withCredentials:true
+        });
         const {success,message,jwtToken,user}=data;
         if(success){
             toast.success(message);

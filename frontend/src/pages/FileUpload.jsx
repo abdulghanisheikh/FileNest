@@ -16,7 +16,9 @@ const FileUpload=()=>{
             }
             formData.append("uploaded-file",file);
             formData.append("user",JSON.stringify(user));
-            const {data}=await axios.post("http://localhost:3000/user/upload",formData);
+            const {data}=await axios.post("http://localhost:3000/user/upload",formData,{
+                withCredentials:true
+            });
             const {success,message}=data;
             if(success){
                 toast.success(message);
