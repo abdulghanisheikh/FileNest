@@ -9,7 +9,7 @@ const ProgressBar=({usedStorage})=>{
               height:"10rem",
               width:"10rem",
           }}>
-              <CircularProgressbar value={((usedStorage/1000000000)*100).toFixed(2)} text={`${((usedStorage/1073741824)*100).toFixed(2)}%`} styles={buildStyles({
+              <CircularProgressbar value={((usedStorage/1000000000)*100).toFixed(2)} text={`${((usedStorage/1000000000)*100).toFixed(2)}%`} styles={buildStyles({
               textColor:"white",
               trailColor:"#7dd3fc",
               pathColor:"white"
