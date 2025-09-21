@@ -81,10 +81,10 @@ function Dashboard(){
             <div className='flex flex-col w-1/2 px-15 gap-3 h-full'>
               <ProgressBar usedStorage={usedStorage} />
               <div className='flex gap-2 flex-wrap h-full w-full'>
-                <ContentBox title="Documents" storage={20} />
-                <ContentBox title="Images" storage={20} />
-                <ContentBox title="Media" storage={20} />
-                <ContentBox title="Others" storage={20} />
+                <ContentBox title="Documents" storage={20} to="/documents"/>
+                <ContentBox title="Images" storage={20} to="/images" />
+                <ContentBox title="Media" storage={20} to="/media" />
+                <ContentBox title="Others" storage={20} to="/others" />
               </div>
             </div>
             <History />
