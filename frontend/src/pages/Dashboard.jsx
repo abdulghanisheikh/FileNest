@@ -4,15 +4,10 @@ import axios from "axios";
 import { SlLogout } from "react-icons/sl";
 import {ToastContainer,toast} from "react-toastify";
 import ProgressBar from '../components/ProgressBar';
-import { PiImagesDuotone } from "react-icons/pi";
-import { TiMediaPauseOutline } from "react-icons/ti";
-import { LuLayoutDashboard } from "react-icons/lu";
-import { IoDocuments } from "react-icons/io5";
-import { PiImages } from "react-icons/pi";
-import { FiVideo } from "react-icons/fi";
-import { FaChartPie } from "react-icons/fa";
 import { FiUploadCloud } from "react-icons/fi";
 import History from "../components/History";
+import ContentBox from "../components/ContentBox";
+import NavButton from '../components/NavButton';
 
 function Dashboard(){
   const navigate=useNavigate();
@@ -25,7 +20,7 @@ function Dashboard(){
       });
       const {success,totalSize}=data;
       if(success){
-        setUsedStorage(((totalSize/1073741824)*100).toFixed(2));
+        setUsedStorage(totalSize);
       }
     }
     catch(err){
@@ -57,36 +52,11 @@ function Dashboard(){
         <div className='flex flex-col w-[20%] gap-10 px-2 h-full'>
           <h1 className='text-4xl text-sky-950'>FileNest</h1>
           <div className='sidebar flex flex-col gap-5'>
-            <Link to="/dashboard">
-              <div className='p-3 rounded-full flex items-center justify-center gap-1 bg-sky-600 text-center text-white shadow-md shadow-black/30'>
-                <LuLayoutDashboard />
-                <p>Dashboard</p>
-              </div>
-            </Link>
-            <Link to="/document">
-              <div className='p-3 rounded-full flex items-center justify-center gap-1 text-center bg-gray-100 shadow-md shadow-black/10'>
-                <IoDocuments />
-                <p>Document</p>
-              </div>
-            </Link>
-            <Link to="/image">
-              <div className='p-3 rounded-full flex items-center justify-center gap-1 text-center bg-gray-100 shadow-md shadow-black/10'>
-                <PiImagesDuotone />
-                <p>Images</p>
-              </div>
-            </Link>
-            <Link to="/media">
-              <div className='p-3 rounded-full flex items-center justify-center gap-1 text-center bg-gray-100 shadow-md shadow-black/10'>
-                <TiMediaPauseOutline />
-                <p>Media</p>
-              </div>
-            </Link>
-            <Link to="/others">
-              <div className='p-3 rounded-full bg-gray-100 shadow-md shadow-black/10 text-center flex items-center justify-center gap-1'>
-                <FaChartPie />
-                <p>Others</p>
-              </div>
-            </Link>
+            <NavButton name="Dashboard" to="/dashboard" bg="sky"/>
+            <NavButton name="Documents" to="/documents" bg="white" />
+            <NavButton name="Images" to="/documents" bg="white" />
+            <NavButton name="Media" to="/documents" bg="white" />
+            <NavButton name="Others" to="/documents" bg="white" />
           </div>
           <div className="w-40 h-40 flex flex-col items-center self-center">
             <img className="object-cover" src="/folder.png" alt="" />
@@ -111,42 +81,10 @@ function Dashboard(){
             <div className='flex flex-col w-1/2 px-15 gap-3 h-full'>
               <ProgressBar usedStorage={usedStorage} />
               <div className='flex gap-2 flex-wrap h-full w-full'>
-                <div className='contentBox bg-white w-55 h-45 border rounded-md flex flex-col py-3 px-5'>
-                  <div className='flex flex-col justify-between h-1/2 w-full items-center'>
-                    <div className='flex justify-between items-center w-full h-[10%]'>
-                        <IoDocuments size={22} />
-                        <p className='text-sm'>20GB</p>
-                    </div>
-                    <h1>Documents</h1>
-                  </div>
-                </div>
-                <div className='contentBox bg-white w-55 h-45 border rounded-md flex flex-col py-3 px-5'>
-                  <div className='flex flex-col justify-between h-1/2 w-full items-center'>
-                    <div className='flex justify-between items-center w-full h-[10%]'>
-                        <PiImages size={22} />
-                        <p className='text-sm'>20GB</p>
-                    </div>
-                    <h1>Images</h1>
-                  </div>
-                </div>
-                <div className='contentBox bg-white w-55 h-45 border rounded-md flex flex-col py-3 px-5'>
-                  <div className='flex flex-col justify-between h-1/2 w-full items-center'>
-                    <div className='flex justify-between items-center w-full h-[10%]'>
-                        <FiVideo size={22} />
-                        <p className='text-sm'>20GB</p>
-                    </div>
-                    <h1>Media</h1>
-                  </div>
-                </div>
-                <div className='contentBox bg-white w-55 h-45 border rounded-md flex flex-col py-3 px-5'>
-                  <div className='flex flex-col justify-between h-1/2 w-full items-center'>
-                    <div className='flex justify-between items-center w-full h-[10%]'>
-                        <FaChartPie size={22} />
-                        <p className='text-sm'>20GB</p>
-                    </div>
-                    <h1>Others</h1>
-                  </div>
-                </div>
+                <ContentBox title="Documents" storage={20} />
+                <ContentBox title="Images" storage={20} />
+                <ContentBox title="Media" storage={20} />
+                <ContentBox title="Others" storage={20} />
               </div>
             </div>
             <History />

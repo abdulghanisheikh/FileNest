@@ -13,10 +13,11 @@ async function isLoggedIn(req,res,next){
         req.user=decode;
         return next();
     }
-    catch{
+    catch(err){
         return res.status(401).json({
             success:false,
-            message:"Invalid or expired token"
+            message:"Invalid or expired token",
+            error:err.message
         });
     }
 }
