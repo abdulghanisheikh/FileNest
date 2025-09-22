@@ -17,7 +17,7 @@ const NavButton=({name,to,bg})=>{
         else if(name==="Images"){
             return <PiImages size={22} />
         }
-        else if(name==="Media"){
+        else if(name==="Video, Audio"){
             return <FiVideo size={22} />
         }
         else return <FaChartPie size={22} />
