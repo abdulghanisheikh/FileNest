@@ -21,7 +21,12 @@ const uploadFile=async(req,res)=>{
                 message:"No file uploaded"
             });
         }
-        const path=`${loggedInUser._id}/${Date.now()}-${file.originalname}`;
+        const now=new Date();
+        const day=String(now.getDate()).padStart(2,"0");
+        const month=String(now.getMonth()+1).padStart(2,"0");
+        const year=now.getFullYear();
+        const dateString=`${year}-${month}-${day}`
+        const path=`${loggedInUser._id}/${dateString}-${file.originalname}`;
         const {error:uploadError,data:uploadData}=await supabase
         .storage
         .from("UserFiles")
@@ -45,6 +50,7 @@ const uploadFile=async(req,res)=>{
             path,
             publicUrl,
             fileType:file.mimetype,
+            addedOn:now,
             fileSize:file.size,
             owner:loggedInUser._id
         });
