@@ -64,18 +64,19 @@ function Documents(){
 				<DropdownProfile />
 				</div>
 			</div>
-			<div className="main flex flex-col gap-3 justify-center bg-gray-100 px-10 py-5 rounded-xl h-screen/90">
+			<div className="main flex flex-col gap-3 justify-center bg-sky-100 px-10 py-5 rounded-xl h-screen/2">
 				<h1 className="text-4xl tracking-tighter font-semibold">Documents</h1>
 				<div className="flex h-full w-full flex-wrap gap-3">
-					{docs.map((item,id)=>(
-						<Doc 
+					{docs.length>0?docs.map((item,id)=>(
+						<Doc
 						key={id}
 						filename={item.originalname}
 						filesize={item.fileSize}
 						fileType={item.fileType}
 						addedOn={item.addedOn}
 						/>
-					))}
+					)):<h1 className="self-center">No Documents Yet.</h1>
+					}
 				</div>
 			</div>
 			</div>

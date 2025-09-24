@@ -30,7 +30,8 @@ function Dashboard(){
   useEffect(()=>{
     fetchUsedStorage();
   },[]);
-  return (
+
+  return(
     <>
       <div className='flex w-full min-h-screen'>
         <div className='flex flex-col w-[20%] gap-10 px-2 h-full'>
