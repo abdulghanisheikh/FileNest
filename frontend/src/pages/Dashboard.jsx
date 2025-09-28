@@ -17,7 +17,7 @@ function Dashboard(){
     const [imagesSize,setImagesSize]=useState(0);
     const [mediaSize,setMediaSize]=useState(0);
     const [otherSize,setOtherSize]=useState(0);
-    const MB=1000000
+    const MB=1000000;
     const {refresh,setRefresh}=useContext(UpdateContext);
 
     async function fetchUsedStorage(){
@@ -42,7 +42,6 @@ function Dashboard(){
         }
     }
 
-<<<<<<< HEAD
     async function fetchEachStorage(){
         try{
             const token=localStorage.getItem("token");
@@ -86,7 +85,6 @@ function Dashboard(){
     },[refresh,setRefresh]);
 
     return(
-        <>
         <div className='flex w-full min-h-screen'>
             <div className='flex flex-col w-[20%] gap-10 px-2 min-h-screen'>
             <h1 className='text-4xl text-sky-950'>FileNest</h1>
@@ -110,30 +108,6 @@ function Dashboard(){
                     </div>
                 </Link>
                 <DropdownProfile />
-=======
-  return(
-    <>
-      <div className='flex w-full min-h-screen'>
-        <div className='flex flex-col w-[20%] gap-10 px-2 min-h-screen'>
-          <h1 className='text-4xl text-sky-950'>FileNest</h1>
-          <div className='sidebar flex flex-col gap-5'>
-            <NavButton name="Dashboard" to="/dashboard" bg="sky"/>
-            <NavButton name="Documents" to="/documents" bg="white" />
-            <NavButton name="Images" to="/documents" bg="white" />
-            <NavButton name="Video, Audio" to="/documents" bg="white" />
-            <NavButton name="Others" to="/documents" bg="white" />
-          </div>
-          <Footer />
-        </div>
-        <div className='flex flex-col min-h-screen w-[80%] rounded-md'>
-          <div className='navbar flex w-full h-20 rounded-md px-5 justify-between items-center gap-2'>
-            <input className='h-10 w-1/2 shadow-sm shadow-black/10 rounded-full outline-none bg-white px-5' type="text" placeholder='search' />
-            <div className="flex gap-2 items-center">
-              <Link to="/upload-file">
-                <div className='flex self-end items-center gap-2 py-2 px-5 rounded-full bg-sky-800 text-white'>
-                  <FiUploadCloud size={20} />
-                  <h1>Upload</h1>
->>>>>>> bdb1a059dd893981245327d71b247b6d0688546b
                 </div>
             </div>
             <div className='main flex rounded-2xl justify-between bg-gray-100 px-10 py-5'>
@@ -151,7 +125,6 @@ function Dashboard(){
             </div>
             <ToastContainer position="top-right" />
         </div>
-        </>
-    );
+    )
 }
 export default Dashboard;

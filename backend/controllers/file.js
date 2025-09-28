@@ -1,9 +1,6 @@
 const userModel=require("../models/user.model.js");
 const fileModel=require("../models/file.model.js");
-<<<<<<< HEAD
 const supabase=require("../config/supabase.config.js");
-=======
->>>>>>> bdb1a059dd893981245327d71b247b6d0688546b
 
 const fileStorage=async(req,res)=>{
     try{
@@ -30,8 +27,9 @@ const fileStorage=async(req,res)=>{
     }
 }
 
-const fetchFiles=async(req,res)=>{
+const fetchDocs=async(req,res)=>{
     try{
+        let user=await userModel.findOne({id:req.user.id}).populate("files");
         const docs=await fileModel.find({
             fileType:{
                 $in:["application/pdf","text/plain","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
@@ -51,12 +49,12 @@ const fetchFiles=async(req,res)=>{
         });
     }
 }
-<<<<<<< HEAD
 
 const deleteFile=async(req,res)=>{
     try{
         const {filepath}=req.body;
-        if(!filepath){
+        console.log(filepath);
+        if(!filepath||typeof filepath!=="string"){
             return res.status(400).json({
                 success:false,
                 message:"file path is required"
@@ -69,10 +67,17 @@ const deleteFile=async(req,res)=>{
         if(error){
             return res.status(400).json({
                 success:false,
-                message:"Deletion failed"
+                message:"Deletion failed",
+                error:error.message
             });
         }
-        await fileModel.findOneAndDelete({path:filepath});
+        const deletedFile=await fileModel.findOneAndDelete({path:filepath});
+        if(!deletedFile){
+            return res.status(400).json({
+                success:false,
+                message:"File not found in DB"
+            });
+        }
         return res.status(200).json({
             success:true,
             message:"File deleted successfully",
@@ -131,9 +136,4 @@ const getEachStorage=async(req,res)=>{
     }
 }
 
-
-
-module.exports={fileStorage,fetchFiles,deleteFile,getEachStorage};
-=======
-module.exports={fileStorage,fetchFiles};
->>>>>>> bdb1a059dd893981245327d71b247b6d0688546b
+module.exports={fileStorage,fetchDocs,deleteFile,getEachStorage};

@@ -6,11 +6,7 @@ const ProgressBar=({usedStorage})=>{
     const MB=1000000;
     const totalStorage=1000000000;
     return(
-<<<<<<< HEAD
       <div className='progressCard text-white bg-sky-500 w-full h-50 flex justify-around px-2 py-3 items-center border-gray-800 rounded-xl'>
-=======
-      <div className='progressCard text-white bg-sky-500 w-full h-50 flex justify-around p-2 items-center border-gray-800 rounded-xl'>
->>>>>>> bdb1a059dd893981245327d71b247b6d0688546b
           <div style={{
               height:"10rem",
               width:"10rem",

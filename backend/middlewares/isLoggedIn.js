@@ -3,7 +3,7 @@ const jwt=require("jsonwebtoken");
 async function isLoggedIn(req,res,next){
     try{
         const header=req.headers.authorization;
-        if(!authHeader){
+        if(!header){
             return res.status(401).json({
                 success:false,
                 message:"No token, auth denied"

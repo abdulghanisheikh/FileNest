@@ -11,7 +11,7 @@ const Doc=({filename,filesize,filetype,addedOn,publicUrl,deleteFile})=>{
             return <GrDocumentPdf size={26} />
         }
         else if(filetype==="text/plain"){
-            return <GrDocumentTxt size={26} /> 
+            return <GrDocumentTxt size={26} />
         }
         else return <BsFiletypeDocx size={22} />
     }
@@ -26,7 +26,7 @@ const Doc=({filename,filesize,filetype,addedOn,publicUrl,deleteFile})=>{
     if(hours===0){
         hours=12;
     }
-    const formattedDate=`${year}/${month}/${day}`; 
+    const formattedDate=`${year}/${month}/${day}`;
     const time=`${hours}:${minutes} ${ampm}`;
     const MB=1000000;
     return(
@@ -44,7 +44,7 @@ const Doc=({filename,filesize,filetype,addedOn,publicUrl,deleteFile})=>{
                         <button onClick={deleteFile} className='cursor-pointer w-full text-xs hover:bg-sky-500 active:scale-95 duration-300 ease-in-out px-1 rounded-md'>Delete</button>
                     </div>}
                 </div>
-                <p>{(filesize/MB).toFixed(3)} MB</p>
+                <p>{(filesize/MB).toFixed(2)} MB</p>
               </div>
           </div>
           <div className="flex flex-col">

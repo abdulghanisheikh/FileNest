@@ -16,7 +16,7 @@ const FileUpload=()=>{
                 return;
             }
             let user=JSON.parse(localStorage.getItem("loggedInUser"));
-            const formData=new formData();
+            const formData=new FormData();
             if(!file){
                 toast.error("Upload the file first");
                 return;
