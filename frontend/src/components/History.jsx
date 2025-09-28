@@ -7,17 +7,6 @@ import { LuLayoutDashboard } from 'react-icons/lu';
 import axios from "axios";
 
 const History=()=>{
-    async function fetchRecentUploads(){
-      const res=await axios.get("http://localhost:3000/files/recent-uploads",{
-        withCredentials:true
-      });
-      console.log(res);
-    }
-
-    useEffect(()=>{
-      fetchRecentUploads();
-    },[])
-    
     return (
       <div className='history bg-white rounded-xl px-5 flex flex-col h-screen/90 w-1/2 gap-10 py-5'>
           <h1 className='text-3xl font-semibold'>Recent Uploads.</h1>

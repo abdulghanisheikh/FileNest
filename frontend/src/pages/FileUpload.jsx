@@ -1,15 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState,useContext } from 'react'
 import {Link} from "react-router-dom";
 import axios from "axios";
 import {ToastContainer,toast} from "react-toastify";
+import {UpdateContext} from "../context/Update";
 
 const FileUpload=()=>{
     const [file,setFile]=useState(null);
+    const {setRefresh}=useContext(UpdateContext);
     async function handleUpload(e){
         e.preventDefault();
         try{
+            const token=localStorage.getItem("token");
+            if(!token){
+                toast.error("No token, auth denied");
+                return;
+            }
             let user=JSON.parse(localStorage.getItem("loggedInUser"));
-            const formData=new FormData();
+            const formData=new formData();
             if(!file){
                 toast.error("Upload the file first");
                 return;
@@ -17,11 +24,14 @@ const FileUpload=()=>{
             formData.append("uploaded-file",file);
             formData.append("user",JSON.stringify(user));
             const {data}=await axios.post("http://localhost:3000/user/upload",formData,{
-                withCredentials:true
+                headers:{
+                    Authorization:`Bearer ${token}`
+                }
             });
             const {success,message}=data;
             if(success){
                 toast.success(message);
+                setRefresh(true);
                 setFile(null);
             }
             else toast.error(message);
@@ -46,9 +56,9 @@ const FileUpload=()=>{
                     onChange={(e)=>setFile(e.target.files[0])}
                     name="uploaded-file"
                     />
-                    {file?`${file.name}`:"Drag & drop or choose a file"}
+                    {file?`${file.name}`:"Drag & drop or Choose a file"}
                 </label>
-                <button type="submit" className="px-5 py-2 bg-blue-500 cursor-pointer text-white rounded-md">Upload</button>
+                <button type="submit" className="w-2/3 py-3 hover:bg-blue-500 shadow-md shadow-black/20 duration-300 ease-in-out bg-blue-600 cursor-pointer text-white rounded-xl">Upload</button>
             </form>
             <ToastContainer position="top-right"/>
         </div>

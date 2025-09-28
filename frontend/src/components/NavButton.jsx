@@ -24,7 +24,7 @@ const NavButton=({name,to,bg})=>{
     }
     return(
         <Link to={to}>
-            <div className={`p-3 rounded-full flex items-center justify-center gap-1 ${bg==="sky"?"bg-sky-600 text-white shadow-md shadow-black/30":"bg-white text-black"} text-center`}>
+            <div className={`p-3 rounded-full flex items-center justify-center gap-1 ${bg==="sky"?"bg-sky-600 text-white shadow-md shadow-black/20":"bg-white text-black"} text-center`}>
             {renderIcon()}
             <p>{name}</p>
             </div>

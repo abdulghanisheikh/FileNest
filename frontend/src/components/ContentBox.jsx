@@ -3,7 +3,7 @@ import { IoDocuments } from "react-icons/io5";
 import { PiImages } from "react-icons/pi";
 import { FiVideo } from "react-icons/fi";
 import { FaChartPie } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 //Images,Media,Others
 const ContentBox=({title,storage,to})=>{
@@ -25,7 +25,7 @@ const ContentBox=({title,storage,to})=>{
                 <div className='flex flex-col justify-between h-1/2 w-full items-center'>
                 <div className='flex justify-between items-center w-full h-[10%]'>
                     {renderIcon()}
-                    <p className='text-sm'>{storage}GB</p>
+                    <p className='text-sm'>{storage} MB</p>
                 </div>
                 <h1 className='font-semibold'>{title}</h1>
                 </div>
