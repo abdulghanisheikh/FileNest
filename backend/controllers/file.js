@@ -28,13 +28,27 @@ const fileStorage=async(req,res)=>{
 }
 
 const fetchDocs=async(req,res)=>{
+    const allowedTypes = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "text/plain",
+        "application/json"
+    ];
     try{
-        let user=await userModel.findOne({id:req.user.id}).populate("files");
-        const docs=await fileModel.find({
-            fileType:{
-                $in:["application/pdf","text/plain","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
+        let user=await userModel.findById(req.user.id).populate({
+            path:"files",
+            match:{
+                fileType:{$in:allowedTypes}
             }
         });
+        if(!user){
+            return res.status(400).json({
+                success:false,
+                message:"User invalid"
+            });
+        }
+        const docs=user.files;
         return res.status(200).json({
             success:true,
             message:"Docs fetched successfully",
@@ -53,7 +67,6 @@ const fetchDocs=async(req,res)=>{
 const deleteFile=async(req,res)=>{
     try{
         const {filepath}=req.body;
-        console.log(filepath);
         if(!filepath||typeof filepath!=="string"){
             return res.status(400).json({
                 success:false,
@@ -78,6 +91,17 @@ const deleteFile=async(req,res)=>{
                 message:"File not found in DB"
             });
         }
+        const user=await userModel.findById(req.user.id).populate("files");
+        if(!user){
+            return res.status(400).json({
+                success:false,
+                message:"User not exists"
+            });
+        }
+        user.files=user.files.filter((file)=>{
+            return file._id.toString()!==deletedFile._id.toString();
+        });
+        await user.save();
         return res.status(200).json({
             success:true,
             message:"File deleted successfully",
@@ -95,18 +119,20 @@ const deleteFile=async(req,res)=>{
 
 const getEachStorage=async(req,res)=>{
     try{
-        let files=await fileModel.find();
-        if(!files) return res.status(400).json({
-            success:false,
-            message:"No file found"
-        });
+        let user=await userModel.findById(req.user.id).populate("files");
+        if(!user){
+            return res.status(400).json({
+                success:false,
+                message:"User not found"
+            });
+        }
         let docStorage=0;
         let imageStorage=0;
         let mediaStorage=0;
         let otherStorage=0;
-        files.forEach((file)=>{
+        user.files.forEach((file)=>{
             if(file.fileType==="application/msword"||file.fileType==="application/pdf"||file.fileType==="application/vnd.openxmlformats-officedocument.wordprocessingml.document"||file.fileType==="text/plain"){
-                    docStorage+=file.fileSize;
+                docStorage+=file.fileSize;
             }
             else if(file.fileType==="image/png"||file.fileType==="image/jpeg"||file.fileType==="image/gif"||file.fileType==="image/svg+xml"||fileType==="image/webp"){
                 imageStorage+=file.fileSize;

@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect,useState,useContext } from "react";
 import {Link} from "react-router-dom";
 import { FiUploadCloud } from "react-icons/fi";
 import NavButton from '../components/NavButton';
@@ -6,10 +6,11 @@ import axios from "axios";
 import DropdownProfile from '../components/DropdownProfile';
 import Doc from "../components/Doc";
 import { ToastContainer,toast } from "react-toastify";
+import {UpdateContext} from "../context/Update";
 
 function Documents(){ 
 	const [docs,setDocs]=useState([]);
-
+	const {setRefresh}=useContext(UpdateContext);
 	async function fetchFiles(){
 		try{
 			const token=localStorage.getItem("token");
@@ -46,6 +47,7 @@ function Documents(){
 			});
 			const {success,message}=data;
 			if(success){
+				setRefresh(true);
 				fetchFiles();
 			}
 			else{
@@ -79,19 +81,22 @@ function Documents(){
 				<a href="mailto:ghanisheikh26@gmail.com" className='text-sky-950 text-sm'>ghanisheikh26@gmail.com</a>
 			</div>
 			</div>
-			<div className='flex flex-col min-h-screen w-[80%] bg-sky-100 rounded-md'>
-				<div className='navbar flex w-full bg-white py-3 px-2 gap-5 justify-end items-center'>
-					<Link to="/upload-file">
-						<div className='flex  self-end items-center gap-2 py-2 px-5 rounded-full bg-sky-800 text-white'>
-						<FiUploadCloud size={20} />
-						<h1>Upload</h1>
-						</div>
-					</Link>
-					<DropdownProfile />
-				</div>
-				<div className='main flex flex-col p-5 gap-2 rounded-xl justify-around'>
+			<div className='flex flex-col min-h-screen w-[80%] rounded-md gap-2'>
+				<div className='navbar flex w-full h-20 rounded-md px-5 justify-between items-center gap-2'>
+					<input className='h-10 w-1/2 shadow-sm shadow-black/10 rounded-full outline-none bg-white px-5' type="text" placeholder='search' />
+					<div className="flex gap-2 items-center">
+						<Link to="/upload-file">
+							<div className='flex self-end items-center gap-2 py-2 px-5 rounded-full bg-sky-800 text-white'>
+							<FiUploadCloud size={20} />
+							<h1>Upload</h1>
+							</div>
+						</Link>
+						<DropdownProfile />
+					</div>
+            	</div>
+				<div className='main flex flex-col px-3 py-2 gap-5 bg-sky-100 rounded-md min-h-screen justify-around'>
 					<h1 className="text-4xl">Documents.</h1>
-					<div className='flex gap-2 flex-wrap h-full w-full'>
+					<div className='flex gap-2 flex-wrap justify-start h-full w-full'>
 						{docs.length===0?<h1 className="text-sm">No documents uploaded yet.</h1>:
 						docs.map((item,id)=>{
 							return <Doc

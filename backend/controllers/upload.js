@@ -25,8 +25,14 @@ const uploadFile=async(req,res)=>{
         const day=String(now.getDate()).padStart(2,"0");
         const month=String(now.getMonth()+1).padStart(2,"0");
         const year=now.getFullYear();
-        const dateString=`${year}-${month}-${day}`
-        const path=`${loggedInUser._id}/${dateString}-${file.originalname}`;
+        const dateString=`${year}.${month}.${day}`
+        let hours=now.getHours();
+        const minutes=now.getMinutes();
+        const seconds=now.getSeconds();
+        hours=hours%12; //24hr -> 12hr format
+        if(hours===0) hours=12;
+        const timeStamp=`${hours}.${minutes}.${seconds}`;
+        const path=`${loggedInUser._id}/${dateString}-${timeStamp}-${file.originalname}`;
         const {error:uploadError,data:uploadData}=await supabase
         .storage
         .from("UserFiles")
@@ -61,10 +67,8 @@ const uploadFile=async(req,res)=>{
                 message:"User does not exist."
             });
         }
-        else{
-            user.files.push(newFile._id);
-            await user.save();
-        }
+        user.files.push(newFile._id);
+        await user.save();
         return res.status(200).json({
             success:true,
             message:"File successfully uploaded",
