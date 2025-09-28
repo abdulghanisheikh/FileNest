@@ -91,14 +91,14 @@ const deleteFile=async(req,res)=>{
                 message:"File not found in DB"
             });
         }
-        const user=await userModel.findById(req.user.id).populate("files");
+        let user=await userModel.findById(req.user.id); //it expects user files array of ObjectIds
         if(!user){
             return res.status(400).json({
                 success:false,
                 message:"User not exists"
             });
         }
-        user.files=user.files.filter((file)=>{
+        user.files=user.files.filter((file)=>{ //user.files -> array of objectIds
             return file._id.toString()!==deletedFile._id.toString();
         });
         await user.save();
