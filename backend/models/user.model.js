@@ -16,6 +16,22 @@ const userSchema=new mongoose.Schema({
         required:true,
         minLength:[5,"password must be atleast 5 characters long"]
     },
+    docUpdate:{
+        type:Date,
+        default:Date.now()
+    },
+    imageUpdate:{
+        type:Date,
+        default:Date.now()
+    },
+    mediaUpdate:{
+        type:Date,
+        default:Date.now()
+    },
+    otherUpdate:{
+        type:Date,
+        default:Date.now()
+    },
     files:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"file"

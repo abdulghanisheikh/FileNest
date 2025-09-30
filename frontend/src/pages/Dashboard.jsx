@@ -19,6 +19,10 @@ function Dashboard(){
     const [otherSize,setOtherSize]=useState(0);
     const MB=1000000;
     const {refresh,setRefresh}=useContext(UpdateContext);
+    const [docTime,setDocTime]=useState(null);
+    const [imageTime,setImageTime]=useState(null);
+    const [mediaTime,setMediaTime]=useState(null);
+    const [otherTime,setOtherTime]=useState(null);
 
     async function fetchUsedStorage(){
         try{
@@ -27,9 +31,9 @@ function Dashboard(){
                 toast.error("User not logged in");
                 return;
             }
-            const {data}=await axios.get("http://localhost:3000/user/files-storage",{
+            const {data}=await axios.get("http://localhost:3000/user/usedStorage",{
                 headers:{
-                Authorization:`Bearer ${token}`
+                    Authorization:`Bearer ${token}`
                 }
             });
             const {success,totalSize}=data;
@@ -42,6 +46,24 @@ function Dashboard(){
         }
     }
 
+    function getDateString(now){
+        const shortMonths=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        const day=String(now.getDate()).padStart(2,"0");
+        const month=shortMonths[now.getMonth()];
+        return `${day} ${month}`;
+    }
+
+    function getTimeStamp(now){
+        let hours=now.getHours();
+        const minutes=String(now.getMinutes()).padStart(2,"0");
+        hours=hours%12;
+        if(hours===0){
+            hours=12;
+        }
+        const ampm=hours>=12?"pm":"am";
+        return `${hours}:${minutes} ${ampm}`;
+    } 
+
     async function fetchEachStorage(){
         try{
             const token=localStorage.getItem("token");
@@ -51,15 +73,30 @@ function Dashboard(){
             }
             const {data}=await axios.get("http://localhost:3000/file/eachStorage",{
                 headers:{
-                Authorization:`Bearer ${token}`
+                    Authorization:`Bearer ${token}`
                 }
             });
-            const {success,message,docStorage,imageStorage,mediaStorage,otherStorage}=data;
+            const {
+                success,
+                message,
+                docStorage,
+                imageStorage,
+                mediaStorage,
+                otherStorage,
+                docUpdate,
+                imageUpdate,
+                mediaUpdate,
+                otherUpdate
+            }=data;
             if(success){
                 setDocsSize(docStorage);
                 setImagesSize(imageStorage);
                 setMediaSize(mediaStorage);
                 setOtherSize(otherStorage);
+                setDocTime(new Date(docUpdate));
+                setImageTime(new Date(imageUpdate));
+                setMediaTime(new Date(mediaUpdate));
+                setOtherTime(new Date(otherUpdate));
             }
             else{
                 toast.error(message);
@@ -80,7 +117,7 @@ function Dashboard(){
     useEffect(()=>{
         if(refresh){
             fetchEachStorage();
-            setRefresh(false);
+            fetchUsedStorage();
         }
     },[refresh,setRefresh]);
 
@@ -114,10 +151,10 @@ function Dashboard(){
                 <div className='flex flex-col items-center justify-center w-1/2 px-15 gap-3 h-full'>
                 <ProgressBar usedStorage={usedStorage} />
                 <div className='flex gap-2 flex-wrap h-full w-full'>
-                    <ContentBox title="Documents" storage={(docsSize/MB).toFixed(2)} to="/documents"/>
-                    <ContentBox title="Images" storage={(imagesSize/MB).toFixed(2)} to="/images" />
-                    <ContentBox title="Media" storage={(mediaSize/MB).toFixed(2)} to="/media" />
-                    <ContentBox title="Others" storage={(otherSize/MB).toFixed(2)} to="/others" />
+                    <ContentBox title="Documents" storage={(docsSize/MB).toFixed(2)} to="/documents" time={docTime?getTimeStamp(docTime):""} date={docTime?getDateString(docTime):""} />
+                    <ContentBox title="Images" storage={(imagesSize/MB).toFixed(2)} to="/images" time={imageTime?getTimeStamp(imageTime):""} date={imageTime?getDateString(imageTime):""} />
+                    <ContentBox title="Media" storage={(mediaSize/MB).toFixed(2)} to="/media" time={mediaTime?getTimeStamp(mediaTime):""} date={mediaTime?getDateString(mediaTime):""} />
+                    <ContentBox title="Others" storage={(otherSize/MB).toFixed(2)} to="/others" time={otherTime?getTimeStamp(otherTime):""} date={otherTime?getDateString(otherTime):""} />
                 </div>
                 </div>
                 <History />

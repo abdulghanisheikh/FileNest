@@ -19,10 +19,11 @@ const fileStorage=async(req,res)=>{
             totalSize
         });
     }
-    catch{
+    catch(err){
         return res.status(500).json({
             success:false,
-            message:"Server error"
+            message:"Server error",
+            error:err.message
         });
     }
 }
@@ -33,7 +34,10 @@ const fetchDocs=async(req,res)=>{
         "application/msword",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "text/plain",
-        "application/json"
+        "application/json",
+        "application/xml",
+        "text/csv",
+        "text/markdown"
     ];
     try{
         let user=await userModel.findById(req.user.id).populate({
@@ -66,6 +70,9 @@ const fetchDocs=async(req,res)=>{
 
 const deleteFile=async(req,res)=>{
     try{
+        const docType=["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document","text/plain","application/json","text/csv","text/markdown"];
+        const imageType=["image/png","image/gif","image/jpeg","image/svg+xml","image/x-icon","image/webp"];
+        const mediaType=["video/mp4","audio/mpeg"];
         const {filepath}=req.body;
         if(!filepath||typeof filepath!=="string"){
             return res.status(400).json({
@@ -101,6 +108,18 @@ const deleteFile=async(req,res)=>{
         user.files=user.files.filter((file)=>{ //user.files -> array of objectIds
             return file._id.toString()!==deletedFile._id.toString();
         });
+        if(docType.includes(deletedFile.fileType)){
+            user.docUpdate=new Date();
+        }
+        else if(imageType.includes(deletedFile.fileType)){
+            user.imageUpdate=new Date();
+        }
+        else if(mediaType.includes(deletedFile.fileType)){
+            user.mediaUpdate=new Date();
+        }
+        else{
+            user.otherUpdate=new Date();
+        }
         await user.save();
         return res.status(200).json({
             success:true,
@@ -119,6 +138,9 @@ const deleteFile=async(req,res)=>{
 
 const getEachStorage=async(req,res)=>{
     try{
+        const docType=["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document","text/plain","application/json","text/csv","text/markdown"];
+        const imageType=["image/png","image/gif","image/jpeg","image/svg+xml","image/x-icon","image/webp"];
+        const mediaType=["video/mp4","audio/mpeg"];
         let user=await userModel.findById(req.user.id).populate("files");
         if(!user){
             return res.status(400).json({
@@ -131,13 +153,13 @@ const getEachStorage=async(req,res)=>{
         let mediaStorage=0;
         let otherStorage=0;
         user.files.forEach((file)=>{
-            if(file.fileType==="application/msword"||file.fileType==="application/pdf"||file.fileType==="application/vnd.openxmlformats-officedocument.wordprocessingml.document"||file.fileType==="text/plain"){
+            if(docType.includes(file.fileType)){
                 docStorage+=file.fileSize;
             }
-            else if(file.fileType==="image/png"||file.fileType==="image/jpeg"||file.fileType==="image/gif"||file.fileType==="image/svg+xml"||fileType==="image/webp"){
+            else if(imageType.includes(file.fileType)){
                 imageStorage+=file.fileSize;
             }
-            else if(file.fileType==="audio/mpeg"||file.fileType==="video/mp4"){
+            else if(mediaType.includes(file.fileType)){
                 mediaStorage+=file.fileSize;
             }
             else{
@@ -150,12 +172,16 @@ const getEachStorage=async(req,res)=>{
             docStorage,
             imageStorage,
             mediaStorage,
-            otherStorage
+            otherStorage,
+            docUpdate:user.docUpdate,
+            imageUpdate:user.imageUpdate,
+            mediaUpdate:user.mediaUpdate,
+            otherUpdate:user.otherUpdate
         });
     }
     catch(err){
         return res.status(500).json({
-            success:true,
+            success:false,
             message:"Server error",
             error:err.message
         });

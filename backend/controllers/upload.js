@@ -2,13 +2,46 @@ const supabase=require("../config/supabase.config.js");
 const userModel=require("../models/user.model.js");
 const fileModel=require("../models/file.model.js");
 
+const getDateString=(now)=>{
+    const day=String(now.getDate()).padStart(2,"0");
+    const month=String(now.getMonth()+1).padStart(2,"0");
+    const year=now.getFullYear();
+    return `${year}.${month}.${day}`;
+};
+
+const getTimeString=(now)=>{
+    let hours=now.getHours();
+    const minutes=String(now.getMinutes()).padStart(2,"0");
+    const seconds=String(now.getSeconds()).padStart(2,"0");
+    hours=hours%12; //24hr -> 12hr format
+    if(hours===0) hours=12;
+    return `${hours}.${minutes}.${seconds}`;
+}
+
 const uploadFile=async(req,res)=>{
     try{
-        let loggedInUser;
-        try{
-            loggedInUser=JSON.parse(req.body.user);
-        }
-        catch{
+        const docType=[
+            "application/pdf","application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "text/plain",
+            "application/json",
+            "text/csv",
+            "text/markdown"
+        ];
+        const imageType=[
+            "image/png",
+            "image/gif",
+            "image/jpeg",
+            "image/svg+xml",
+            "image/x-icon",
+            "image/webp"
+        ];
+        const mediaType=[
+            "video/mp4",
+            "audio/mpeg"
+        ];
+        const loggedInUser=await userModel.findById(req.user.id);
+        if(!loggedInUser){
             return res.status(400).json({
                 success:false,
                 message:"Invalid user data"
@@ -22,17 +55,9 @@ const uploadFile=async(req,res)=>{
             });
         }
         const now=new Date();
-        const day=String(now.getDate()).padStart(2,"0");
-        const month=String(now.getMonth()+1).padStart(2,"0");
-        const year=now.getFullYear();
-        const dateString=`${year}.${month}.${day}`
-        let hours=now.getHours();
-        const minutes=now.getMinutes();
-        const seconds=now.getSeconds();
-        hours=hours%12; //24hr -> 12hr format
-        if(hours===0) hours=12;
-        const timeStamp=`${hours}.${minutes}.${seconds}`;
-        const path=`${loggedInUser._id}/${dateString}-${timeStamp}-${file.originalname}`;
+        const date=getDateString(now);
+        const time=getTimeString(now);
+        const path=`${loggedInUser._id}/${date}-${time}-${file.originalname}`;
         const {error:uploadError,data:uploadData}=await supabase
         .storage
         .from("UserFiles")
@@ -60,15 +85,20 @@ const uploadFile=async(req,res)=>{
             fileSize:file.size,
             owner:loggedInUser._id
         });
-        let user=await userModel.findById(loggedInUser._id);
-        if(!user){
-            return res.status(400).json({
-                success:false,
-                message:"User does not exist."
-            });
+        loggedInUser.files.push(newFile._id);
+        if(docType.includes(newFile.fileType)){
+            loggedInUser.docUpdate=now;
         }
-        user.files.push(newFile._id);
-        await user.save();
+        else if(imageType.includes(newFile.fileType)){
+            loggedInUser.imageUpdate=now;
+        }
+        else if(mediaType.includes(newFile.fileType)){
+            loggedInUser.mediaUpdate=now;
+        }
+        else{
+            loggedInUser.otherUpdate=now;
+        }
+        await loggedInUser.save();
         return res.status(200).json({
             success:true,
             message:"File successfully uploaded",
@@ -83,5 +113,4 @@ const uploadFile=async(req,res)=>{
         });
     }
 };
-
 module.exports=uploadFile;

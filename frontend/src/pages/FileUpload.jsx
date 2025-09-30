@@ -16,6 +16,10 @@ const FileUpload=()=>{
                 return;
             }
             let user=JSON.parse(localStorage.getItem("loggedInUser"));
+            if(!user){
+                toast.error("No User");
+                return;
+            }
             const formData=new FormData();
             if(!file){
                 toast.error("Upload the file first");

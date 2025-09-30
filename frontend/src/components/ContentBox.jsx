@@ -6,7 +6,7 @@ import { FaChartPie } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 //Images,Media,Others
-const ContentBox=({title,storage,to})=>{
+const ContentBox=({title,storage,to,time,date})=>{
     function renderIcon(){
         if(title==="Documents"){
             return <IoDocuments size={22} />
@@ -30,9 +30,9 @@ const ContentBox=({title,storage,to})=>{
                 <h1 className='font-semibold'>{title}</h1>
                 </div>
                 <hr className='border-t text-black/50'/>
-                <div className='flex flex-col items-center mt-2'>
+                <div className='flex flex-col items-center mt-2 gap-1'>
                     <p className='text-xs text-gray-500'>Last Update on</p>
-                    <p className='text-sm'>Date and time</p>
+                    <p className='text-sm'>{!time?"Time":time}, {!date?"Date":date}</p>
                 </div>
             </div>
         </Link>

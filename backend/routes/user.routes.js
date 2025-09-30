@@ -6,6 +6,6 @@ const isLoggedIn=require("../middlewares/isLoggedIn.js");
 const {fileStorage}=require("../controllers/file.js");
 
 router.post("/upload",isLoggedIn,upload.single("uploaded-file"),uploadFile);
-router.get("/files-storage",isLoggedIn,fileStorage);
+router.get("/usedStorage",isLoggedIn,fileStorage);
 
 module.exports=router;
