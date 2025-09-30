@@ -4,7 +4,7 @@ import NavButton from "../components/NavButton";
 import Navbar from "../components/Navbar";
 import Doc from "../components/Doc";
 import axios from "axios";
-import {UpdateContext} from "../Context/Update";
+import {UpdateContext} from "../context/Update";
 
 const Images=()=>{
     const [imageFiles,setImageFiles]=useState([]);
@@ -81,7 +81,7 @@ const Images=()=>{
                 </div>
                 <div className='flex flex-col min-h-screen w-[80%] rounded-md gap-2'>
                     <Navbar />
-                    <div className='main flex flex-col px-3 py-2 gap-5 bg-sky-100 rounded-md min-h-screen justify-around'>
+                    <div className='main flex flex-col px-3 py-2 gap-5 bg-zinc-100 rounded-md min-h-screen justify-around'>
                         <h1 className="text-4xl">Images.</h1>
                         <div className='flex gap-2 flex-wrap justify-start h-full w-full'>
                             {imageFiles.length===0?<p className='text-sm'>No image uploaded yet.</p>:

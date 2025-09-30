@@ -41,11 +41,11 @@ const FileUpload=()=>{
             else toast.error(message);
         }
         catch(err){
-            toast.error(`Upload Error: ${err.message}`);
+            toast.error(err.message);
         }
     }
     return(
-        <div className='flex flex-col gap-5 relative justify-center items-center main h-screen w-full bg-zinc-300 p-10'>
+        <div className='flex flex-col gap-5 relative justify-center items-center main h-screen w-full bg-zinc-100 p-10'>
             <div className='px-5 py-1 rounded-md bg-blue-500 text-white absolute top-5 right-5 cursor-pointer'>
                 <Link to="/dashboard">Back to dashboard</Link>
             </div>

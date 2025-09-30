@@ -132,7 +132,7 @@ function Dashboard(){
             </div>
             <div className='flex flex-col min-h-screen w-[80%] rounded-md'>
             <Navbar />
-            <div className='main flex rounded-2xl justify-between bg-gray-100 px-10 py-5'>
+            <div className='main flex rounded-2xl justify-between bg-zinc-100 px-10 py-5'>
                 <div className='flex flex-col items-center justify-center w-1/2 px-15 gap-3 h-full'>
                 <ProgressBar usedStorage={usedStorage} />
                 <div className='flex gap-2 flex-wrap h-full w-full'>

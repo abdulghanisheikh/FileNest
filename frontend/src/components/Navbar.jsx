@@ -9,9 +9,9 @@ const Navbar=()=>{
         <input className='h-10 w-1/2 shadow-sm shadow-black/10 rounded-full outline-none bg-white px-5' type="text" placeholder='search' />
         <div className="flex gap-2 items-center">
             <Link to="/upload-file">
-                <div className='flex self-end items-center gap-2 py-2 px-5 rounded-full bg-sky-800 text-white'>
+                <div className='flex self-end items-center gap-2 py-2 px-6 rounded-full hover:bg-sky-600 hover:scale-103 duration-300 ease-in-out bg-sky-700 shadow-md shadow-black/10 text-white'>
                 <FiUploadCloud size={20} />
-                <h1>Upload</h1>
+                <h1>Add File</h1>
                 </div>
             </Link>
             <DropdownProfile />
