@@ -1,14 +1,12 @@
 import React,{useEffect,useState,useContext} from 'react';
 import {UpdateContext} from "../context/Update";
 import axios from "axios";
-import {Link} from "react-router-dom";
 import {ToastContainer,toast} from "react-toastify";
 import ProgressBar from '../components/ProgressBar';
-import { FiUploadCloud } from "react-icons/fi";
 import History from "../components/History";
 import ContentBox from "../components/ContentBox";
 import NavButton from '../components/NavButton';
-import DropdownProfile from '../components/DropdownProfile';
+import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 function Dashboard(){
@@ -55,12 +53,10 @@ function Dashboard(){
 
     function getTimeStamp(now){
         let hours=now.getHours();
-        const minutes=String(now.getMinutes()).padStart(2,"0");
-        hours=hours%12;
-        if(hours===0){
-            hours=12;
-        }
+        const minutes=now.getMinutes().toString().padStart(2,"0");
         const ampm=hours>=12?"pm":"am";
+        hours=hours%12;
+        if(hours===0) hours=12;
         return `${hours}:${minutes} ${ampm}`;
     } 
 
@@ -128,25 +124,14 @@ function Dashboard(){
             <div className='sidebar flex flex-col gap-5'>
                 <NavButton name="Dashboard" to="/dashboard" bg="sky"/>
                 <NavButton name="Documents" to="/documents" bg="white" />
-                <NavButton name="Images" to="/documents" bg="white" />
-                <NavButton name="Video, Audio" to="/documents" bg="white" />
-                <NavButton name="Others" to="/documents" bg="white" />
+                <NavButton name="Images" to="/images" bg="white" />
+                <NavButton name="Video, Audio" to="/media" bg="white" />
+                <NavButton name="Others" to="/others" bg="white" />
             </div>
             <Footer />
             </div>
             <div className='flex flex-col min-h-screen w-[80%] rounded-md'>
-            <div className='navbar flex w-full h-20 rounded-md px-5 justify-between items-center gap-2'>
-                <input className='h-10 w-1/2 shadow-sm shadow-black/10 rounded-full outline-none bg-white px-5' type="text" placeholder='search' />
-                <div className="flex gap-2 items-center">
-                <Link to="/upload-file">
-                    <div className='flex self-end items-center gap-2 py-2 px-5 rounded-full bg-sky-800 text-white'>
-                    <FiUploadCloud size={20} />
-                    <h1>Upload</h1>
-                    </div>
-                </Link>
-                <DropdownProfile />
-                </div>
-            </div>
+            <Navbar />
             <div className='main flex rounded-2xl justify-between bg-gray-100 px-10 py-5'>
                 <div className='flex flex-col items-center justify-center w-1/2 px-15 gap-3 h-full'>
                 <ProgressBar usedStorage={usedStorage} />

@@ -1,26 +1,26 @@
 import React from 'react'
-import { IoDocuments } from 'react-icons/io5';
-import { PiImages } from 'react-icons/pi';
-import { FiVideo } from 'react-icons/fi';
-import { FaChartPie } from 'react-icons/fa';
-import { LuLayoutDashboard } from 'react-icons/lu';
+import { FcDocument } from "react-icons/fc";
+import { FaImage } from "react-icons/fa";
+import { TiMediaFastForwardOutline } from "react-icons/ti";
+import { PiChartPie } from "react-icons/pi";
+import { MdOutlineDashboard } from "react-icons/md";
 import { Link } from 'react-router-dom';
 
 const NavButton=({name,to,bg})=>{
     function renderIcon(){
         if(name==="Documents"){
-            return <IoDocuments size={22} />
+            return <FcDocument size={22} />
         }
         else if(name==="Dashboard"){
-            return <LuLayoutDashboard size={22} />
+            return <MdOutlineDashboard size={22} />
         }
         else if(name==="Images"){
-            return <PiImages size={22} />
+            return <FaImage size={22} />
         }
         else if(name==="Video, Audio"){
-            return <FiVideo size={22} />
+            return <TiMediaFastForwardOutline size={22} />
         }
-        else return <FaChartPie size={22} />
+        else return <PiChartPie size={22} />
     }
     return(
         <Link to={to}>
