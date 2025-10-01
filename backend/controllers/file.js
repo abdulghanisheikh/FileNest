@@ -218,4 +218,34 @@ const getImages=async(req,res)=>{
     }
 }
 
-module.exports={fileStorage,fetchDocs,deleteFile,getEachStorage,getImages};
+const getMedia=async(req,res)=>{
+    const allowedTypes=["video/mp4","audio/mpeg"];
+    try{
+        let user=await userModel.findById(req.user.id).populate({
+            path:"files",
+            match:{
+                fileType:{$in:allowedTypes}
+            }
+        });
+        if(!user){
+            return res.status(400).json({
+                success:false,
+                message:"User not exists"
+            });
+        }
+        return res.status(200).json({
+            success:true,
+            message:"Files fetched successfully",
+            media:user.files
+        });
+    }
+    catch(err){
+        return res.status(500).json({
+            success:false,
+            message:"Server error",
+            error:err.message
+        });
+    }
+}
+
+module.exports={fileStorage,fetchDocs,deleteFile,getEachStorage,getImages,getMedia};

@@ -6,6 +6,7 @@ import RegisterPage from "./pages/RegisterPage";
 import FileUpload from "./pages/FileUpload";
 import Documents from "./pages/Documents";
 import Images from "./pages/Images";
+import Media from "./pages/Media";
 
 const App=()=>{
   return(
@@ -17,6 +18,7 @@ const App=()=>{
       <Route path="/signup-page" element={<RegisterPage />}></Route>
       <Route path="/dashboard" element={<Dashboard />}></Route>
       <Route path="/images" element={<Images />}></Route>
+      <Route path="/media" element={<Media/>}></Route>
     </Routes>
   )
 }

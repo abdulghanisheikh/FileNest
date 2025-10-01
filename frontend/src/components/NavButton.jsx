@@ -1,31 +1,29 @@
 import React from 'react'
-import { FcDocument } from "react-icons/fc";
-import { FaImage } from "react-icons/fa";
-import { TiMediaFastForwardOutline } from "react-icons/ti";
-import { PiChartPie } from "react-icons/pi";
-import { MdOutlineDashboard } from "react-icons/md";
 import { Link } from 'react-router-dom';
 
-const NavButton=({name,to,bg})=>{
+const NavButton=({name,to})=>{
     function renderIcon(){
         if(name==="Documents"){
-            return <FcDocument size={22} />
+            return <img src="/documentation.png" alt="" />
         }
         else if(name==="Dashboard"){
-            return <MdOutlineDashboard size={22} />
+            return <img src="/dashboard.png" alt="" />
         }
         else if(name==="Images"){
-            return <FaImage size={22} />
+            return <img src="/gallery.png" alt="" />
         }
         else if(name==="Video, Audio"){
-            return <TiMediaFastForwardOutline size={22} />
+            return <img src="/multimedia.png" alt="" />
         }
-        else return <PiChartPie size={22} />
+        else return <img src="/others.png" alt="" />
     }
     return(
         <Link to={to}>
-            <div className={`p-3 rounded-full flex items-center justify-center gap-1 ${bg==="sky"?"bg-sky-600 text-white shadow-md shadow-black/20":"bg-white text-black"} text-center`}>
-            {renderIcon()}
+            <div className={`p-3 rounded-full flex items-center hover:bg-sky-900 hover:text-white duration-500 ease-in-out justify-center gap-1 text-center`}
+            >
+            <div className='h-6 w-6 rounded-full'>
+                {renderIcon()}
+            </div>
             <p>{name}</p>
             </div>
         </Link>

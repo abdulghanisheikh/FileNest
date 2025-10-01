@@ -5,9 +5,8 @@ import {ToastContainer,toast} from "react-toastify";
 import ProgressBar from '../components/ProgressBar';
 import History from "../components/History";
 import ContentBox from "../components/ContentBox";
-import NavButton from '../components/NavButton';
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Sidepanel from "../components/Sidepanel";
 
 function Dashboard(){
     const [usedStorage,setUsedStorage]=useState(0);
@@ -119,17 +118,7 @@ function Dashboard(){
 
     return(
         <div className='flex w-full min-h-screen'>
-            <div className='flex flex-col w-[20%] gap-10 px-2 min-h-screen'>
-            <h1 className='text-4xl text-sky-950'>FileNest</h1>
-            <div className='sidebar flex flex-col gap-5'>
-                <NavButton name="Dashboard" to="/dashboard" bg="sky"/>
-                <NavButton name="Documents" to="/documents" bg="white" />
-                <NavButton name="Images" to="/images" bg="white" />
-                <NavButton name="Video, Audio" to="/media" bg="white" />
-                <NavButton name="Others" to="/others" bg="white" />
-            </div>
-            <Footer />
-            </div>
+            <Sidepanel/>
             <div className='flex flex-col min-h-screen w-[80%] rounded-md'>
             <Navbar />
             <div className='main flex rounded-2xl justify-between bg-zinc-100 px-10 py-5'>
@@ -139,7 +128,7 @@ function Dashboard(){
                     <ContentBox title="Documents" storage={(docsSize/MB).toFixed(2)} to="/documents" time={docTime?getTimeStamp(docTime):""} date={docTime?getDateString(docTime):""} />
                     <ContentBox title="Images" storage={(imagesSize/MB).toFixed(2)} to="/images" time={imageTime?getTimeStamp(imageTime):""} date={imageTime?getDateString(imageTime):""} />
                     <ContentBox title="Media" storage={(mediaSize/MB).toFixed(2)} to="/media" time={mediaTime?getTimeStamp(mediaTime):""} date={mediaTime?getDateString(mediaTime):""} />
-                    <ContentBox title="Others" storage={(otherSize/MB).toFixed(2)} to="/others" time={otherTime?getTimeStamp(otherTime):""} date={otherTime?getDateString(otherTime):""} />
+                    <ContentBox title="Others" storage={(otherSize/MB).toFixed(2)} to="/others" time={otherTime?getTimeStamp(otherTime):""} date={otherTime?getDateString(otherTime):""}/>
                 </div>
                 </div>
                 <History />
