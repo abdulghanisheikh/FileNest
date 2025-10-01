@@ -11,15 +11,8 @@ function Documents(){
 	const {setRefresh}=useContext(UpdateContext);
 	async function fetchFiles(){
 		try{
-			const token=localStorage.getItem("token");
-			if(!token){
-				toast.error("No token");
-				return;
-			}
 			const {data}=await axios.get("http://localhost:3000/file/get-docs",{
-				headers:{
-					Authorization:`Bearer ${token}`
-				}
+				withCredentials:true
 			});
 			const {success,message,files}=data;
 			if(success){
@@ -36,12 +29,9 @@ function Documents(){
 
 	async function deleteFile(filepath){
 		try{
-			const token=localStorage.getItem("token");
 			const {data}=await axios.delete("http://localhost:3000/file/delete",{
 				data:{filepath},
-				headers:{
-					Authorization:`Bearer ${token}`
-				}
+				withCredentials:true
 			});
 			const {success,message}=data;
 			if(success){

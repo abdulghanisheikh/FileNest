@@ -10,11 +10,6 @@ const FileUpload=()=>{
     async function handleUpload(e){
         e.preventDefault();
         try{
-            const token=localStorage.getItem("token");
-            if(!token){
-                toast.error("No token, auth denied");
-                return;
-            }
             let user=JSON.parse(localStorage.getItem("loggedInUser"));
             if(!user){
                 toast.error("No User");
@@ -28,9 +23,7 @@ const FileUpload=()=>{
             formData.append("uploaded-file",file);
             formData.append("user",JSON.stringify(user));
             const {data}=await axios.post("http://localhost:3000/user/upload",formData,{
-                headers:{
-                    Authorization:`Bearer ${token}`
-                }
+                withCredentials:true
             });
             const {success,message}=data;
             if(success){

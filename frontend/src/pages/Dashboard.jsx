@@ -23,20 +23,11 @@ function Dashboard(){
 
     async function fetchUsedStorage(){
         try{
-            const token=localStorage.getItem("token");
-            if(!token){
-                toast.error("User not logged in");
-                return;
-            }
             const {data}=await axios.get("http://localhost:3000/user/usedStorage",{
-                headers:{
-                    Authorization:`Bearer ${token}`
-                }
+                withCredentials:true
             });
             const {success,totalSize}=data;
-            if(success){
-                setUsedStorage(totalSize);
-            }
+            if(success) setUsedStorage(totalSize);
         }
         catch(err){
             toast.error(err.message);
@@ -61,15 +52,8 @@ function Dashboard(){
 
     async function fetchEachStorage(){
         try{
-            const token=localStorage.getItem("token");
-            if(!token){
-                toast.error("No token, auth denied");
-                return;
-            }
             const {data}=await axios.get("http://localhost:3000/file/eachStorage",{
-                headers:{
-                    Authorization:`Bearer ${token}`
-                }
+                withCredentials:true
             });
             const {
                 success,

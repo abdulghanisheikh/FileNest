@@ -5,6 +5,10 @@ const userSchema=new mongoose.Schema({
         required:true,
         minLength:[3,"full name must be atleast 3 characters long"]
     },
+    profilePicture:{
+        type:String,
+        default:""
+    },
     email:{
         type:String,
         unique:true,

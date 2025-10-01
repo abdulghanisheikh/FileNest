@@ -19,7 +19,7 @@ const NavButton=({name,to})=>{
     }
     return(
         <Link to={to}>
-            <div className={`p-3 rounded-full flex items-center hover:bg-sky-900 hover:text-white duration-500 ease-in-out justify-center gap-1 text-center`}
+            <div className={`p-3 rounded-full flex items-center hover:bg-pink-900 hover:text-white duration-500 ease-in-out justify-center gap-1 text-center`}
             >
             <div className='h-6 w-6 rounded-full'>
                 {renderIcon()}

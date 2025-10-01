@@ -1,15 +1,14 @@
 const jwt=require("jsonwebtoken");
 
-async function isLoggedIn(req,res,next){
+function isLoggedIn(req,res,next){
     try{
-        const header=req.headers.authorization;
-        if(!header){
+        const token=req.cookies.token;
+        if(!token){
             return res.status(401).json({
                 success:false,
                 message:"No token, auth denied"
             });
         }
-        const token=header.split(" ")[1];
         const decoded=jwt.verify(token,process.env.JWT_SECRET);
         req.user=decoded;
         return next();

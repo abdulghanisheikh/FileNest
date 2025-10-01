@@ -69,11 +69,14 @@ const login=async(req,res)=>{
             process.env.JWT_SECRET,
             {expiresIn:"24h"}
         );
-        res.cookie("token",token);
+        res.cookie("token",token,{
+            httpOnly:true, //JS can't access token in frontend
+            secure:false,
+            sameSite:"lax" //allowed cross-origin domain
+        });
         return res.status(200).json({
             success:true,
             message:"Login Successfull",
-            jwtToken:token,
             user:userData
         });
     }
@@ -85,4 +88,27 @@ const login=async(req,res)=>{
         });
     }
 }
-module.exports={signup,login};
+
+const logout=async(req,res)=>{
+    try{
+        req.cookie(token,"",{
+            httpOnly:true,
+            secure:false,
+            sameSite:"lax",
+            expires:new Date(0)
+        });
+        return res.status(200).json({
+            success:true,
+            message:"Logout successfull."
+        });
+    }
+    catch(err){
+        return res.status(500).json({
+            success:false,
+            message:"Server error",
+            error:err.message
+        });
+    }
+}
+
+module.exports={signup,login,logout};

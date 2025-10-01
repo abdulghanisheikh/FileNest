@@ -11,11 +11,8 @@ const Media=()=>{
 	const {setRefresh}=useContext(UpdateContext);
 	const fetchMediaFiles=async()=>{
 		try{
-			const token=localStorage.getItem("token");
 			const res=await axios.get("http://localhost:3000/file/get-media",{
-				headers:{
-					Authorization:`Bearer ${token}`
-				}
+				withCredentials:true
 			});
 			const {success,message,media}=res.data;
 			if(success){
@@ -32,16 +29,9 @@ const Media=()=>{
 
 	const deleteFile=async(filepath)=>{
 		try{
-			const token=localStorage.getItem("token");
-			if(!token){
-				toast.error("No token, auth denied");
-				return;
-			}
 			const res=await axios.delete("http://localhost:3000/file/delete",{
 				data:{filepath},
-				headers:{
-					Authorization:`Bearer ${token}`
-				}
+				withCredentials:true
 			});
 			const {success,message}=res.data;
 			if(success){

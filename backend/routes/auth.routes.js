@@ -1,7 +1,7 @@
 const express=require("express");
 const router=express.Router();
-const {body,validationResult}=require("express-validator");
-const {signup,login}=require("../controllers/auth.js");
+const {body}=require("express-validator");
+const {signup,login,logout}=require("../controllers/auth.js");
 const userModel=require("../models/user.model.js");
 
 const signupValidation=[
@@ -9,7 +9,7 @@ const signupValidation=[
     body("email").trim().isEmail().normalizeEmail().custom(async(value)=>{
         let existingUser=await userModel.findOne({email:value});
         if(existingUser){
-            throw new Error("User already exists.");
+            console.log("User already exists.");
         }
         return true;
     }),
@@ -22,5 +22,6 @@ const loginValidation=[
 
 router.post("/create",signupValidation,signup);
 router.post("/login",loginValidation,login);
+router.post("/logout",logout);
 
 module.exports=router;

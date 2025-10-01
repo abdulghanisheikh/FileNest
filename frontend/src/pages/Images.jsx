@@ -11,14 +11,8 @@ const Images=()=>{
     const {setRefresh}=useContext(UpdateContext);
     const fetchImages=async()=>{
         try{
-            const token=localStorage.getItem("token");
-            if(!token){
-                toast.error("No token, auth denied");
-            }
             const {data}=await axios.get("http://localhost:3000/file/get-images",{
-                headers:{
-                    Authorization:`Bearer ${token}`
-                }
+                withCredentials:true
             });
             const {success,message,images}=data;
             if(success){
@@ -34,15 +28,9 @@ const Images=()=>{
     }
     const deleteFile=async(filepath)=>{
         try{
-            const token=localStorage.getItem("token");
-            if(!token){
-                toast.error("No token, auth denied");
-            }
             const res=await axios.delete("http://localhost:3000/file/delete",{
                 data:{filepath},
-                headers:{
-                    Authorization:`Bearer ${token}`
-                }
+                withCredentials:true
             });
             const {success,message}=res.data;
             if(success){

@@ -23,10 +23,9 @@ const LoginPage=()=>{
         const {data}=await axios.post(loginAPI,loginData,{
           withCredentials:true
         });
-        const {success,message,jwtToken,user}=data;
+        const {success,message,user}=data;
         if(success){
             toast.success(message);
-            localStorage.setItem("token",jwtToken);
             localStorage.setItem("loggedInUser",JSON.stringify(user));
             setTimeout(()=>{
                 navigate("/dashboard");
@@ -37,8 +36,8 @@ const LoginPage=()=>{
         }
     }
     catch(err){
-        const message=err.response.data.message;
-        toast.error(message);   
+      const message=err?.response?.data?.message||err.message||"Something went wrong.";
+      toast.error(message);
     }
   }
 

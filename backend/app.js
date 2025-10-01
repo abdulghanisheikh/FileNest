@@ -8,8 +8,7 @@ const cors=require("cors");
 const authRouter=require("./routes/auth.routes.js");
 const userRouter=require("./routes/user.routes.js");
 const fileRouter=require("./routes/file.routes.js");
-
-app.use(cookieParser());
+//Middlewares
 app.use(cors({
     origin:process.env.FRONTEND,
     credentials:true
@@ -17,6 +16,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
+//Routes
 app.use("/auth",authRouter);
 app.use("/user",userRouter);
 app.use("/file",fileRouter);
