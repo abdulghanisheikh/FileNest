@@ -116,26 +116,23 @@ const uploadFile=async(req,res)=>{
 
 const uploadProfile=async(req,res)=>{
     try{
-        const {profile}=req.body;
-        const token=req.cookies.token;
-        if(!token){
+        const loggedInUser=req.user;
+        if(!loggedInUser){
             return res.status(401).json({
                 success:false,
-                message:"No token, auth denied"
+                message:"Invalid user, auth denied."
             });
         }  
-        let user=await userModel.findOne({_id:token.id});
+        let user=await userModel.findOne({_id:loggedInUser.id});
         if(!user){
             return res.status(400).json({
                 success:false,
                 message:"User not exists."
             });
         }
+        const profile=req.file; //this is how you get file when you send file using multer in formData.
         const path=`/profile-pictures/${user._id}/${profile.path}`;
-        const {data:uploadData,error:uploadError}=await supabase
-        .storage
-        .from("UserFiles")
-        .upload(path,profile.buffer,{
+        const {data:uploadData,error:uploadError}=await supabase.storage.from("UserFiles").upload(path,profile.buffer,{
             contentType:profile.mimetype
         });
         if(uploadError){
@@ -144,12 +141,8 @@ const uploadProfile=async(req,res)=>{
                 message:"Upload failed."
             });
         }
-        const {data}=await supabase
-        .storage
-        .from("UserFiles")
-        .getPublicUrl(uploadData.path);
-        const publicUrl=data.publicUrl;
-        user.profilePicture=publicUrl;
+        const {data:publicData}=supabase.storage.from("UserFiles").getPublicUrl(uploadData.path);
+        user.profilePicture=publicData.publicUrl;
         await user.save();
         return res.status(200).json({
             success:true,

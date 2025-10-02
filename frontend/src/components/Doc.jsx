@@ -3,6 +3,7 @@ import { GrDocumentPdf } from "react-icons/gr";
 import { GrDocumentTxt } from "react-icons/gr";
 import { BsFiletypeDocx } from "react-icons/bs";
 import { LuImage } from "react-icons/lu";
+import { MdOutlineRemove } from "react-icons/md";
 import { FaFileWord } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { RiFileExcel2Line } from "react-icons/ri";
@@ -67,11 +68,11 @@ const Doc=({filename,filesize,filetype,addedOn,publicUrl,deleteFile})=>{
               </div>
               <div className='flex flex-col justify-between h-15 items-end gap-1'>
                 <div onClick={()=>setOpen(!open)} className='relative cursor-pointer p-1 rounded-full bg-sky-700 text-white'>
-                    <BsThreeDotsVertical size={18} />
-                    {open&&<div className='absolute top-0 right-7 p-1 flex flex-col justify-center items-start rounded-md bg-sky-800 opacity-90 text-white'>
-                        <a href={publicUrl} target="_blank" className='w-full cursor-pointer text-xs hover:bg-sky-500 active:scale-95 duration-300 ease-in-out px-1 rounded-md'>View</a>
-                        <button className='cursor-pointer w-full text-xs hover:bg-sky-500 active:scale-95 duration-300 ease-in-out px-1 rounded-md'>Download</button>
-                        <button onClick={deleteFile} className='cursor-pointer w-full text-xs hover:bg-sky-500 active:scale-95 duration-300 ease-in-out px-1 rounded-md'>Delete</button>
+                    {!open?<BsThreeDotsVertical size={18} />:<MdOutlineRemove size={18}/>}
+                    {open&&<div className='absolute top-0 right-7 h-20 w-20 flex flex-col justify-between rounded-md bg-sky-800 opacity-95 text-white text-xs'>
+                        <a href={publicUrl} target="_blank" className='cursor-pointer text-center w-full hover:bg-sky-500 active:scale-95 duration-300 ease-in-out p-1 rounded-t-md'>View</a>
+                        <button className='cursor-pointer w-full p-1 hover:bg-sky-500 active:scale-95 duration-300 ease-in-out ounded-md'>Download</button>
+                        <button onClick={deleteFile} className='w-full p-1 cursor-pointer hover:bg-sky-500 active:scale-95 duration-300 ease-in-out rounded-b-md'>Delete</button>
                     </div>}
                 </div>
                 <p>{(filesize/MB).toFixed(2)} MB</p>

@@ -36,7 +36,7 @@ const DropdownProfile=()=>{
         }
     }
 
-    async function profileHandler(e){
+    async function handleProfile(e){
         e.preventDefault();
         try{
             const formData=new FormData();
@@ -63,7 +63,7 @@ const DropdownProfile=()=>{
                 <div onClick={()=>setOpen(!open)} className='absolute top-5 right-5 cursor-pointer text-red-500'>
                     <IoMdCloseCircleOutline size={22} />
                 </div>
-                <form onSubmit={profileHandler} encType="multipart/form-data" className='flex flex-col gap-2 items-center justify-around'>
+                <form onSubmit={handleProfile} encType="multipart/form-data" className='flex flex-col gap-2 items-center justify-around'>
                     <h1 className='text-sm'>{email}</h1>
                     <div className='profilePicture h-25 w-25 rounded-full border flex justify-center items-center border-gray-700'>
                         <img src={profileUrl} className="text-xs" alt="profile" />
