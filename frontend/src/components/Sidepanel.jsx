@@ -5,7 +5,7 @@ import Footer from "./Footer";
 const Sidepanel=()=>{
     const links=[{
         name:"Dashboard",
-        to:"/dashboard",
+        to:"/dashboard"
     },{
         name:"Documents",
         to:"/documents"
@@ -19,6 +19,7 @@ const Sidepanel=()=>{
         name:"Other",
         to:"/other"
     }];
+
     return(
     <div className='sidepanel flex flex-col w-[20%] gap-10 p-5 min-h-screen'>
         <h1 className='text-4xl text-sky-950'>FileNest</h1>
@@ -27,7 +28,8 @@ const Sidepanel=()=>{
                 return <NavButton
                 key={id}
                 name={item.name} 
-                to={item.to} />
+                to={item.to} 
+                />
             })}
         </div>
         <Footer />

@@ -20,7 +20,7 @@ const getTimeString=(now)=>{
 
 const uploadFile=async(req,res)=>{
     try{
-        const docType=[
+        const docType=[  
             "application/pdf","application/msword",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "text/plain",
@@ -113,4 +113,58 @@ const uploadFile=async(req,res)=>{
         });
     }
 };
-module.exports=uploadFile;
+
+const uploadProfile=async(req,res)=>{
+    try{
+        const {profile}=req.body;
+        const token=req.cookies.token;
+        if(!token){
+            return res.status(401).json({
+                success:false,
+                message:"No token, auth denied"
+            });
+        }  
+        let user=await userModel.findOne({_id:token.id});
+        if(!user){
+            return res.status(400).json({
+                success:false,
+                message:"User not exists."
+            });
+        }
+        const path=`/profile-pictures/${user._id}/${profile.path}`;
+        const {data:uploadData,error:uploadError}=await supabase
+        .storage
+        .from("UserFiles")
+        .upload(path,profile.buffer,{
+            contentType:profile.mimetype
+        });
+        if(uploadError){
+            return res.status(400).json({
+                success:false,
+                message:"Upload failed."
+            });
+        }
+        const {data}=await supabase
+        .storage
+        .from("UserFiles")
+        .getPublicUrl(uploadData.path);
+        const publicUrl=data.publicUrl;
+        user.profilePicture=publicUrl;
+        await user.save();
+        return res.status(200).json({
+            success:true,
+            message:"Profile set successfully.",
+            data:uploadData,
+            publicUrl
+        });
+    }
+    catch(err){
+        return res.status(500).json({
+            success:false,
+            message:"Server error",
+            error:err.message
+        });
+    }
+};
+
+module.exports={uploadFile,uploadProfile};

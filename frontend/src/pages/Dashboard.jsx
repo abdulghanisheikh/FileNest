@@ -102,7 +102,7 @@ function Dashboard(){
 
     return(
         <div className='flex w-full min-h-screen'>
-            <Sidepanel/>
+            <Sidepanel />
             <div className='flex flex-col min-h-screen w-[80%] rounded-md'>
             <Navbar />
             <div className='main flex rounded-2xl justify-between bg-zinc-100 px-10 py-5'>

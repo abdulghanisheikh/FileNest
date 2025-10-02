@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 
-const NavButton=({name,to})=>{
+const NavButton=({name,to,at})=>{
     function renderIcon(){
         if(name==="Documents"){
             return <img src="/documentation.png" alt="" />
@@ -19,8 +19,7 @@ const NavButton=({name,to})=>{
     }
     return(
         <Link to={to}>
-            <div className={`p-3 rounded-full flex items-center hover:bg-pink-900 hover:text-white duration-500 ease-in-out justify-center gap-1 text-center`}
-            >
+            <div className="p-3 rounded-full flex items-center hover:bg-sky-700 hover:text-white duration-500 hover:scale-102 ease-in-out shadow-sm shadow-black/10 justify-center gap-1 text-center">
             <div className='h-6 w-6 rounded-full'>
                 {renderIcon()}
             </div>
