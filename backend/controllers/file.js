@@ -248,4 +248,23 @@ const getMedia=async(req,res)=>{
     }
 }
 
-module.exports={fileStorage,fetchDocs,deleteFile,getEachStorage,getImages,getMedia};
+const getUserProfile=async(req,res)=>{
+    try{
+        const loggedInUser=req.user;
+        if(!loggedInUser) return res.status(400).json({success:false,message:"No user, auth denied"});
+        let user=await userModel.findById(loggedInUser.id);
+        if(!user) return res.status(400).json({success:false,message:"User Invalid"});
+        let profileUrl=user.profilePicture;
+        if(!profileUrl) return res.status(400).json({success:false,message:"No profile uploaded."});
+        return res.status(200).json({success:true,message:"Profile fetched successfully.",profileUrl});
+    }
+    catch(err){
+        return res.status(500).json({
+            success:false,
+            message:"Server error",
+            error:err.message
+        });
+    }
+}
+
+module.exports={fileStorage,fetchDocs,deleteFile,getEachStorage,getImages,getMedia,getUserProfile};
