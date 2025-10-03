@@ -18,28 +18,12 @@ const getTimeString=(now)=>{
     return `${hours}.${minutes}.${seconds}`;
 }
 
+const docType=["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document","text/plain","application/json","text/csv","text/markdown"];
+const imageType=["image/png","image/gif","image/jpeg","image/svg+xml","image/x-icon","image/webp"];
+const mediaType=["video/mp4","audio/mpeg"];
+
 const uploadFile=async(req,res)=>{
     try{
-        const docType=[  
-            "application/pdf","application/msword",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "text/plain",
-            "application/json",
-            "text/csv",
-            "text/markdown"
-        ];
-        const imageType=[
-            "image/png",
-            "image/gif",
-            "image/jpeg",
-            "image/svg+xml",
-            "image/x-icon",
-            "image/webp"
-        ];
-        const mediaType=[
-            "video/mp4",
-            "audio/mpeg"
-        ];
         const loggedInUser=await userModel.findById(req.user.id);
         if(!loggedInUser){
             return res.status(400).json({
@@ -160,4 +144,4 @@ const uploadProfile=async(req,res)=>{
     }
 };
 
-module.exports={uploadFile,uploadProfile};
+module.exports={uploadFile,uploadProfile,docType,imageType,mediaType};

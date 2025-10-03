@@ -112,7 +112,7 @@ function Dashboard(){
                     <ContentBox title="Documents" storage={(docsSize/MB).toFixed(2)} to="/documents" time={docTime?getTimeStamp(docTime):""} date={docTime?getDateString(docTime):""} />
                     <ContentBox title="Images" storage={(imagesSize/MB).toFixed(2)} to="/images" time={imageTime?getTimeStamp(imageTime):""} date={imageTime?getDateString(imageTime):""} />
                     <ContentBox title="Media" storage={(mediaSize/MB).toFixed(2)} to="/media" time={mediaTime?getTimeStamp(mediaTime):""} date={mediaTime?getDateString(mediaTime):""} />
-                    <ContentBox title="Others" storage={(otherSize/MB).toFixed(2)} to="/others" time={otherTime?getTimeStamp(otherTime):""} date={otherTime?getDateString(otherTime):""}/>
+                    <ContentBox title="Others" storage={(otherSize/MB).toFixed(2)} to="/other" time={otherTime?getTimeStamp(otherTime):""} date={otherTime?getDateString(otherTime):""}/>
                 </div>
                 </div>
                 <History />

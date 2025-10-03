@@ -1,6 +1,7 @@
 const userModel=require("../models/user.model.js");
 const fileModel=require("../models/file.model.js");
 const supabase=require("../config/supabase.config.js");
+const {docType,imageType,mediaType}=require("./upload.js");
 
 const fileStorage=async(req,res)=>{
     try{
@@ -267,4 +268,33 @@ const getUserProfile=async(req,res)=>{
     }
 }
 
-module.exports={fileStorage,fetchDocs,deleteFile,getEachStorage,getImages,getMedia,getUserProfile};
+const getOthers=async(req,res)=>{
+    try{
+        let user=await userModel.findById(req.user.id).populate({
+            path:"files",
+            match:{
+                fileType:{$nin:[...docType,...imageType,...mediaType]} //merge all these array in one
+            }                                                          //nin=not in
+        });
+        if(!user){
+            return res.status(400).json({
+                success:false,
+                message:"User invalid"
+            });
+        }
+        return res.status(200).json({
+            success:true,
+            message:"Files fetched successfully",
+            others:user.files
+        });
+    }
+    catch(err){
+        return res.status(500).json({
+            success:false,
+            message:"Server error",
+            error:err.message
+        });
+    }
+}
+
+module.exports={fileStorage,fetchDocs,deleteFile,getEachStorage,getImages,getMedia,getUserProfile,getOthers};

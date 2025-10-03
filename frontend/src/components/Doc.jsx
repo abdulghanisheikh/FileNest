@@ -14,7 +14,7 @@ function getDateString(addedOn){
     const date=new Date(addedOn);
     const year=date.getFullYear();
     const month=String(date.getMonth()+1).padStart(2,"0");
-    const day=String(date.getDay()+1).padStart(2,"0");
+    const day=String(date.getDate()).padStart(2,"0");
     return `${year}/${month}/${day}`;
 }
 
@@ -69,9 +69,8 @@ const Doc=({filename,filesize,filetype,addedOn,publicUrl,deleteFile})=>{
               <div className='flex flex-col justify-between h-15 items-end gap-1'>
                 <div onClick={()=>setOpen(!open)} className='relative cursor-pointer p-1 rounded-full bg-sky-700 text-white'>
                     {!open?<BsThreeDotsVertical size={18} />:<MdOutlineRemove size={18}/>}
-                    {open&&<div className='absolute top-0 right-7 h-20 w-20 flex flex-col justify-between rounded-md bg-sky-800 opacity-95 text-white text-xs'>
+                    {open&&<div className='absolute top-0 right-7 h-fit w-20 flex flex-col rounded-md bg-sky-800 opacity-95 text-white text-xs'>
                         <a href={publicUrl} target="_blank" className='cursor-pointer text-center w-full hover:bg-sky-500 active:scale-95 duration-300 ease-in-out p-1 rounded-t-md'>View</a>
-                        <button className='cursor-pointer w-full p-1 hover:bg-sky-500 active:scale-95 duration-300 ease-in-out ounded-md'>Download</button>
                         <button onClick={deleteFile} className='w-full p-1 cursor-pointer hover:bg-sky-500 active:scale-95 duration-300 ease-in-out rounded-b-md'>Delete</button>
                     </div>}
                 </div>
