@@ -7,16 +7,16 @@ import Doc from "../components/Doc";
 import {UpdateContext} from "../context/Update";
 
 const Other=()=>{
-    const [mediaFiles,setMediaFiles]=useState([]);
+    const [otherFiles,setOtherFiles]=useState([]);
     const {setRefresh}=useContext(UpdateContext);
-    const fetchMediaFiles=async()=>{
+    const fetchOtherFiles=async()=>{
         try{
-            const res=await axios.get("http://localhost:3000/file/get-media",{
+            const res=await axios.get("http://localhost:3000/file/get-others",{
                 withCredentials:true
             });
-            const {success,message,media}=res.data;
+            const {success,message,others}=res.data;
             if(success){
-                setMediaFiles(media);
+                setOtherFiles(others);
             }
             else{
                 toast.error(message);
@@ -36,7 +36,7 @@ const Other=()=>{
             const {success,message}=res.data;
             if(success){
                 setRefresh(true);
-                fetchMediaFiles();
+                fetchOtherFiles();
             }
             else toast.error(message);
         }
@@ -46,7 +46,7 @@ const Other=()=>{
     }
 
     useEffect(()=>{
-        fetchMediaFiles();
+        fetchOtherFiles();
     },[]);
     
     return(
@@ -57,7 +57,7 @@ const Other=()=>{
                     <div className='main flex flex-col px-3 py-2 gap-5 bg-zinc-100 rounded-md min-h-screen justify-around'>
                         <h1 className="text-4xl">Others.</h1>
                         <div className='flex gap-2 flex-wrap justify-start h-full w-full'>
-                            {mediaFiles.length===0?<p className='text-sm'>No file uploaded yet.</p>:mediaFiles.map((item,id)=>{
+                            {otherFiles.length===0?<p className='text-sm'>No file uploaded yet.</p>:otherFiles.map((item,id)=>{
                                 return <Doc 
                                 key={id}
                                 filename={item.originalname}
