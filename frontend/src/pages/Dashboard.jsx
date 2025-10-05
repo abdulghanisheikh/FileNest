@@ -10,16 +10,20 @@ import Sidepanel from "../components/Sidepanel";
 
 function Dashboard(){
     const [usedStorage,setUsedStorage]=useState(0);
-    const [docsSize,setDocsSize]=useState(0);
-    const [imagesSize,setImagesSize]=useState(0);
-    const [mediaSize,setMediaSize]=useState(0);
-    const [otherSize,setOtherSize]=useState(0);
+    const [eachSizes,setEachSizes]=useState({
+        docSize:0,
+        imageSize:0,
+        mediaSize:0,
+        otherSize:0  
+    });
     const MB=1000000;
     const {refresh,setRefresh}=useContext(UpdateContext);
-    const [docTime,setDocTime]=useState(null);
-    const [imageTime,setImageTime]=useState(null);
-    const [mediaTime,setMediaTime]=useState(null);
-    const [otherTime,setOtherTime]=useState(null);
+    const [eachTimes,setEachTimes]=useState({
+        docTime:null,
+        imageTime:null,
+        mediaTime:null,
+        otherTime:null
+    });
 
     async function fetchUsedStorage(){
         try{
@@ -68,14 +72,18 @@ function Dashboard(){
                 otherUpdate
             }=data;
             if(success){
-                setDocsSize(docStorage);
-                setImagesSize(imageStorage);
-                setMediaSize(mediaStorage);
-                setOtherSize(otherStorage);
-                setDocTime(new Date(docUpdate));
-                setImageTime(new Date(imageUpdate));
-                setMediaTime(new Date(mediaUpdate));
-                setOtherTime(new Date(otherUpdate));
+                setEachSizes({
+                    docSize:docStorage,
+                    imageSize:imageStorage,
+                    mediaSize:mediaStorage,
+                    otherSize:otherStorage 
+                });
+                setEachTimes({
+                    docTime:new Date(docUpdate),
+                    imageTime:new Date(imageUpdate),
+                    mediaTime:new Date(mediaUpdate),
+                    otherTime:new Date(otherUpdate)
+                });
             }
             else{
                 toast.error(message);
@@ -109,16 +117,16 @@ function Dashboard(){
                 <div className='flex flex-col items-center justify-center w-1/2 px-15 gap-3 h-full'>
                 <ProgressBar usedStorage={usedStorage} />
                 <div className='flex gap-2 flex-wrap h-full w-full'>
-                    <ContentBox title="Documents" storage={(docsSize/MB).toFixed(2)} to="/documents" time={docTime?getTimeStamp(docTime):""} date={docTime?getDateString(docTime):""} />
-                    <ContentBox title="Images" storage={(imagesSize/MB).toFixed(2)} to="/images" time={imageTime?getTimeStamp(imageTime):""} date={imageTime?getDateString(imageTime):""} />
-                    <ContentBox title="Media" storage={(mediaSize/MB).toFixed(2)} to="/media" time={mediaTime?getTimeStamp(mediaTime):""} date={mediaTime?getDateString(mediaTime):""} />
-                    <ContentBox title="Others" storage={(otherSize/MB).toFixed(2)} to="/other" time={otherTime?getTimeStamp(otherTime):""} date={otherTime?getDateString(otherTime):""}/>
+                    <ContentBox title="Documents" storage={(eachSizes.docSize/MB).toFixed(2)} to="/documents" time={eachTimes.docTime?getTimeStamp(eachTimes.docTime):""} date={eachTimes.docTime?getDateString(eachTimes.docTime):""} />
+                    <ContentBox title="Images" storage={(eachSizes.imageSize/MB).toFixed(2)} to="/images" time={eachTimes.imageTime?getTimeStamp(eachTimes.imageTime):""} date={eachTimes.imageTime?getDateString(eachTimes.imageTime):""} />
+                    <ContentBox title="Media" storage={(eachSizes.mediaSize/MB).toFixed(2)} to="/media" time={eachTimes.mediaTime?getTimeStamp(eachTimes.mediaTime):""} date={eachTimes.mediaTime?getDateString(eachTimes.mediaTime):""} />
+                    <ContentBox title="Others" storage={(eachSizes.otherSize/MB).toFixed(2)} to="/other" time={eachTimes.otherTime?getTimeStamp(eachTimes.otherTime):""} date={eachTimes.otherTime?getDateString(eachTimes.otherTime):""}/>
                 </div>
                 </div>
                 <History />
             </div>
             </div>
-            <ToastContainer position="top-right" />
+            <ToastContainer position="top-left" />
         </div>
     )
 }
