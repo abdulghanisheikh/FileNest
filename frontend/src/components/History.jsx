@@ -1,5 +1,4 @@
 import React from 'react';
-import {LuLayoutDashboard} from 'react-icons/lu';
 
 const History=({uploadHistory})=>{
     const docType=["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.  document","text/plain","application/json","text/csv","text/markdown"];
@@ -33,7 +32,7 @@ const History=({uploadHistory})=>{
     }
 
     return(
-      <div className='history bg-white rounded-xl px-5 flex flex-col h-screen/90 w-1/2 gap-10 py-5'>
+      <div className='history bg-white rounded-xl px-5 flex flex-col h-screen/90 w-1/2 gap-5 py-5'>
           <h1 className='text-3xl font-semibold'>Recent Uploads.</h1>
           {uploadHistory.length>0?
           <ul className='space-y-2'>

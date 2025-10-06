@@ -16,15 +16,15 @@ function Dashboard(){
         mediaSize:0,
         otherSize:0  
     });
-    const MB=1000000;
-    const {refresh,setRefresh}=useContext(UpdateContext);
-    const [uploadHistory,setUploadHistory]=useState([]);
     const [eachTimes,setEachTimes]=useState({
         docTime:null,
         imageTime:null,
         mediaTime:null,
         otherTime:null
     });
+    const MB=1000000;
+    const {refresh,setRefresh}=useContext(UpdateContext);
+    const [uploadHistory,setUploadHistory]=useState([]);
 
     async function fetchUsedStorage(){
         try{

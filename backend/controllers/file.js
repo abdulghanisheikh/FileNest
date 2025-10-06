@@ -53,11 +53,10 @@ const fetchDocs=async(req,res)=>{
                 message:"User invalid"
             });
         }
-        const docs=user.files;
         return res.status(200).json({
             success:true,
             message:"Docs fetched successfully",
-            files:docs
+            files:user.files.reverse()
         });
     }
     catch(err){
@@ -207,7 +206,7 @@ const getImages=async(req,res)=>{
         return res.status(200).json({
             success:true,
             message:"Images fetched successfully",
-            images:user.files
+            images:user.files.reverse()
         });
     }
     catch(err){
@@ -237,7 +236,7 @@ const getMedia=async(req,res)=>{
         return res.status(200).json({
             success:true,
             message:"Files fetched successfully",
-            media:user.files
+            media:user.files.reverse()
         });
     }
     catch(err){
@@ -285,7 +284,7 @@ const getOthers=async(req,res)=>{
         return res.status(200).json({
             success:true,
             message:"Files fetched successfully",
-            others:user.files
+            others:user.files.reverse()
         });
     }
     catch(err){
@@ -308,7 +307,10 @@ const getAllFiles=async(req,res)=>{
         let user=await userModel.findById(req.user.id).populate({
             path:"files",
             match:{
-                addedOn:{$gte:startOfDay,$lte:endOfDay} //gte=greater than equals to, lte=lower than equals to
+                addedOn:{
+                    $gte:startOfDay, //$gte=greater than and equal to
+                    $lte:endOfDay //$lte=lower than and equal to
+                }
             }
         });
         if(!user){

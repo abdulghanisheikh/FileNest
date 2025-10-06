@@ -105,7 +105,7 @@ const DropdownProfile=()=>{
                         <p>Delete Account</p>
                     </div>
                 </div>
-                <ToastContainer position="top-right" />
+                <ToastContainer position="top-left" />
             </div>
             }
         </div>
