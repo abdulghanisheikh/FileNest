@@ -85,8 +85,7 @@ const uploadFile=async(req,res)=>{
         await loggedInUser.save();
         return res.status(200).json({
             success:true,
-            message:"File successfully uploaded",
-            newFile
+            message:"File successfully uploaded"
         });
     }
     catch(err){

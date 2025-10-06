@@ -71,7 +71,7 @@ const Images=()=>{
                         </div>
                     </div>
                 </div>
-            <ToastContainer position="top-right"/>
+            <ToastContainer position="top-left"/>
         </div>
     )
 }

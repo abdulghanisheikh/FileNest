@@ -18,6 +18,7 @@ function Dashboard(){
     });
     const MB=1000000;
     const {refresh,setRefresh}=useContext(UpdateContext);
+    const [uploadHistory,setUploadHistory]=useState([]);
     const [eachTimes,setEachTimes]=useState({
         docTime:null,
         imageTime:null,
@@ -93,11 +94,26 @@ function Dashboard(){
             toast.error(err.message);
         }
     }
+
+    async function fetchUploadHistory(){
+        try{
+            const res=await axios.get("http://localhost:3000/user/getUploadHistory",{
+                withCredentials:true
+            });
+            const {success,message,files}=res.data;
+            if(success) setUploadHistory(files);
+            else toast.error(message);
+        }
+        catch(err){
+            toast.error(err.message);
+        }
+    }
     
     //Run once, when component mounts
     useEffect(()=>{
         fetchUsedStorage();
         fetchEachStorage();
+        fetchUploadHistory();
     },[]);
 
     //Run whenever refresh becomes true
@@ -105,6 +121,7 @@ function Dashboard(){
         if(refresh){
             fetchEachStorage();
             fetchUsedStorage();
+            fetchUploadHistory();
         }
     },[refresh,setRefresh]);
 
@@ -123,7 +140,7 @@ function Dashboard(){
                     <ContentBox title="Others" storage={(eachSizes.otherSize/MB).toFixed(2)} to="/other" time={eachTimes.otherTime?getTimeStamp(eachTimes.otherTime):""} date={eachTimes.otherTime?getDateString(eachTimes.otherTime):""}/>
                 </div>
                 </div>
-                <History />
+                <History uploadHistory={uploadHistory} />
             </div>
             </div>
             <ToastContainer position="top-left" />

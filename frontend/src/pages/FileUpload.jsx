@@ -57,7 +57,7 @@ const FileUpload=()=>{
                 </label>
                 <button type="submit" className="w-2/3 py-3 hover:bg-blue-500 shadow-md shadow-black/20 duration-300 ease-in-out bg-blue-600 cursor-pointer text-white rounded-xl">Upload</button>
             </form>
-            <ToastContainer position="top-right"/>
+            <ToastContainer position="top-left"/>
         </div>
   )
 }

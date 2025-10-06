@@ -78,7 +78,7 @@ const LoginPage=()=>{
                 <button type="submit" className="w-2/3 mt-5 px-5 py-2 rounded-full bg-blue-600 text-white cursor-pointer">Log In</button>
                 <p className="text-sm">Don't have an account? <span className="text-blue-600 cursor-pointer"><Link to="/signup-page">Create Account</Link></span></p>
               </form>
-              <ToastContainer position="top-right" />
+              <ToastContainer position="top-left" />
             </div>
         </div>
       </div>

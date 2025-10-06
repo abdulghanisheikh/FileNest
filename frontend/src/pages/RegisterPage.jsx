@@ -71,7 +71,7 @@ const RegisterPage=()=>{
                 <button type="submit" className="w-2/3 mt-5 px-5 py-2 rounded-full bg-blue-600 text-white cursor-pointer">Create Account</button>
                 <p className="text-sm">Already have an account? <span className="text-blue-600 cursor-pointer"><Link to="/">Log In</Link></span></p>
               </form>
-              <ToastContainer position="top-right" />
+              <ToastContainer position="top-left" />
             </div>
         </div>
       </div>
