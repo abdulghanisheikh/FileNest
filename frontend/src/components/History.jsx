@@ -5,12 +5,12 @@ const History=({uploadHistory})=>{
     const docType=["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.  document","text/plain","application/json","text/csv","text/markdown"];
     const imageType=["image/png","image/gif","image/jpeg","image/svg+xml","image/x-icon","image/webp"];
 
-    function getTimeString(dateObj){
+    const getMinutesAgo=(dateObj)=>{
         const date=new Date(dateObj);
-        const day=date.getDate();
-        const month=String(date.getMonth()+1).padStart(2,"0");
-        const year=date.getFullYear();
-        return `${day}/${month}/${year}`;
+        const diff=(Date.now()-date)/1000/60;
+        if(diff<1) return "now";
+        if(diff<60) return `${Math.floor(diff)} mins ago`;
+        if(diff<1440) return `${Math.floow(diff/60)} hrs ago`;
     }
 
     const renderIcon=(type)=>{
@@ -40,10 +40,10 @@ const History=({uploadHistory})=>{
             {uploadHistory.map((item,idx)=>{
                 return <li
                 key={idx}
-                className='flex w-full h-12 rounded-full px-5 items-center justify-between shadow-sm shadow-black/20 bg-sky-800 text-white text-xs'>
+                className='flex w-full h-12 rounded-full px-5 items-center justify-between shadow-sm shadow-black/20 bg-sky-800 text-white text-xs hover:bg-sky-700 duration-300 ease-in-out'>
                     <div className='flex justify-center items-center text-sm p-1 rounded-full bg-sky-500'>{renderIcon(item.fileType)}</div>
                     <p>You added <span className='font-semibold'>{item.originalname}</span></p>
-                    <p>{getTimeString(item.addedOn)}</p>
+                    <p>{getMinutesAgo(item.addedOn)}</p>
                 </li>
             })}
           </ul>:<p className='text-center text-sm'>You have'nt uploaded any file yet.</p>}
