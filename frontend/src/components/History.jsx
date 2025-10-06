@@ -1,14 +1,9 @@
 import React from 'react';
-import {IoDocuments} from 'react-icons/io5';
-import {PiImages} from 'react-icons/pi';
-import {FiVideo} from 'react-icons/fi';
-import {FaChartPie} from 'react-icons/fa';
 import {LuLayoutDashboard} from 'react-icons/lu';
 
 const History=({uploadHistory})=>{
     const docType=["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.  document","text/plain","application/json","text/csv","text/markdown"];
     const imageType=["image/png","image/gif","image/jpeg","image/svg+xml","image/x-icon","image/webp"];
-    const mediaType=["video/mp4","audio/mpeg"];
 
     function getTimeString(dateObj){
         const date=new Date(dateObj);
@@ -18,17 +13,23 @@ const History=({uploadHistory})=>{
         return `${day}/${month}/${year}`;
     }
 
-    const renderIcon=(filetype)=>{
-        if(docType.includes(filetype)){
-            return <IoDocuments size={16}></IoDocuments>
+    const renderIcon=(type)=>{
+        if(docType.includes(type)){
+            return "📕";
         }
-        else if(imageType.includes(filetype)){
-            return <PiImages size={16}></PiImages>
+        else if(imageType.includes(type)){
+            return "🖼️";
         }
-        else if(mediaType.includes(filetype)){
-            return <FiVideo size={16}></FiVideo>;
+        else if(type.startsWith("video")){
+            return "🎥";
         }
-        else return <FaChartPie size={16}></FaChartPie>;
+        else if(type.startsWith("audio")){
+            return "🎵";
+        }
+        else if(type.includes("zip")){
+            return "📦";
+        }
+        else return "📄";
     }
 
     return(
@@ -36,11 +37,11 @@ const History=({uploadHistory})=>{
           <h1 className='text-3xl font-semibold'>Recent Uploads.</h1>
           {uploadHistory.length>0?
           <ul className='space-y-2'>
-            {uploadHistory.reverse().map((item,idx)=>{
+            {uploadHistory.map((item,idx)=>{
                 return <li
                 key={idx}
-                className='flex w-full h-12 rounded-full px-5 items-center justify-between shadow-sm shadow-black/20 bg-gray-100 text-black text-xs'>
-                    <p className='text-gray-800'>{renderIcon(item.fileType)}</p>
+                className='flex w-full h-12 rounded-full px-5 items-center justify-between shadow-sm shadow-black/20 bg-sky-800 text-white text-xs'>
+                    <div className='flex justify-center items-center text-sm p-1 rounded-full bg-sky-500'>{renderIcon(item.fileType)}</div>
                     <p>You added <span className='font-semibold'>{item.originalname}</span></p>
                     <p>{getTimeString(item.addedOn)}</p>
                 </li>

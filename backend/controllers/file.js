@@ -299,7 +299,18 @@ const getOthers=async(req,res)=>{
 
 const getAllFiles=async(req,res)=>{
     try{
-        let user=await userModel.findById(req.user.id).populate("files");
+        //get the very starting moment of the day
+        const startOfDay=new Date();
+        startOfDay.setHours(0,0,0,0);
+        //get the very last moment of the day
+        const endOfDay=new Date();
+        endOfDay.setHours(23,59,59,999);
+        let user=await userModel.findById(req.user.id).populate({
+            path:"files",
+            match:{
+                addedOn:{$gte:startOfDay,$lte:endOfDay} //gte=greater than equals to, lte=lower than equals to
+            }
+        });
         if(!user){
             return res.status(400).json({
                 success:false,
@@ -309,7 +320,7 @@ const getAllFiles=async(req,res)=>{
         return res.status(200).json({
             success:true,
             message:"Files fetched successfully",
-            files:user.files
+            files:user.files.reverse()
         });
     }
     catch(err){
