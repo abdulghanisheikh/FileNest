@@ -40,12 +40,12 @@ const History=({uploadHistory})=>{
                 return <li
                 key={idx}
                 className='flex w-full h-12 rounded-full px-5 items-center justify-between shadow-sm shadow-black/20 bg-sky-800 text-white text-xs hover:bg-sky-700 duration-300 ease-in-out'>
-                    <div className='flex justify-center items-center text-sm p-1 rounded-full bg-sky-500'>{renderIcon(item.fileType)}</div>
+                    <div className='flex justify-center items-center p-1 text-lg rounded-full'>{renderIcon(item.fileType)}</div>
                     <p>You added <span className='font-semibold'>{item.originalname}</span></p>
                     <p>{getMinutesAgo(item.addedOn)}</p>
                 </li>
             })}
-          </ul>:<p className='text-center text-sm'>You have'nt uploaded any file yet.</p>}
+          </ul>:<p className='text-center text-sm'>No actions today.</p>}
       </div>
     )
 }

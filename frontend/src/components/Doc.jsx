@@ -70,7 +70,7 @@ const Doc=({filename,filesize,filetype,addedOn,publicUrl,deleteFile})=>{
                 <div onClick={()=>setOpen(!open)} className='relative cursor-pointer p-1 rounded-full bg-sky-700 text-white'>
                     {!open?<BsThreeDotsVertical size={18} />:<MdOutlineRemove size={18}/>}
                     {open&&<div className='absolute top-0 right-7 h-fit w-20 flex flex-col rounded-md bg-sky-800 opacity-95 text-white text-xs font-semibold'>
-                        <a href={publicUrl} target="_blank" className='cursor-pointer text-center w-full hover:bg-white active:scale-95 hover:text-black duration-300 ease-in-out p-1 rounded-t-md'>View</a>
+                        <a href={publicUrl} target="_blank" className='cursor-pointer text-center w-full hover:bg-white active:scale-95 hover:text-blue-500 duration-300 ease-in-out p-1 rounded-t-md'>View</a>
                         <button onClick={deleteFile} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-red-500 duration-300 ease-in-out rounded-b-md'>Delete</button>
                     </div>}
                 </div>
