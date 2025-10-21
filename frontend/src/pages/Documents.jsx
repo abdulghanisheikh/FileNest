@@ -54,9 +54,9 @@ function Documents(){
 	return(
 		<div className='flex w-full min-h-screen gap-5'>
 			<Sidepanel />
-			<div className='flex flex-col min-h-screen w-[80%] rounded-md gap-2'>
+			<div className='flex flex-col min-h-screen w-[80%] rounded-md gap-1'>
 				<Navbar />
-				<div className='main flex flex-col px-3 py-2 gap-5 bg-zinc-100 rounded-md min-h-screen justify-around'>
+				<div className='main flex flex-col px-4 py-2 gap-5 bg-zinc-100 rounded-md min-h-screen justify-around'>
 					<h1 className="text-4xl">Documents.</h1>
 					<div className='flex gap-2 flex-wrap justify-start h-full w-full'>
 						{docs.length===0?<p className="text-sm">No documents uploaded yet.</p>:
@@ -70,8 +70,7 @@ function Documents(){
 							publicUrl={item.publicUrl}
 							deleteFile={()=>deleteFile(item.path)}
 							/>
-						})
-						}
+						})}
 					</div>
 				</div>
 			</div>

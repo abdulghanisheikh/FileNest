@@ -9,7 +9,7 @@ const History=({uploadHistory})=>{
         const diff=(Date.now()-date)/1000/60;
         if(diff<1) return "now";
         if(diff<60) return `${Math.floor(diff)} mins ago`;
-        if(diff<1440) return `${Math.floow(diff/60)} hrs ago`;
+        if(diff<1440) return `${Math.floor(diff/60)} hrs ago`;
     }
 
     const renderIcon=(type)=>{

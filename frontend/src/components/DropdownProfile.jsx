@@ -74,6 +74,28 @@ const DropdownProfile=()=>{
         }
     }
 
+    async function handleAccountDelete(){
+        try{
+            const res=await axios.delete("http://localhost:3000/user/deleteAccount",{
+                withCredentials:true
+            });
+            const {success,message}=res.data;
+            if(success){
+                localStorage.clear();
+                toast.success(message);
+                setTimeout(()=>{
+                    navigate("/signup-page");
+                },2000);
+            }
+            else{
+                toast.error(message);
+            }
+        }
+        catch(err){
+            toast.error(err.message);
+        }
+    }
+
     useEffect(()=>{
         fetchProfile();
     },[])
@@ -101,7 +123,7 @@ const DropdownProfile=()=>{
                     <div className='text-red-500 px-5 py-1 border rounded-xl text-sm cursor-pointer hover:bg-red-500 border-red-500 hover:text-white duration-300 ease-in-out' onClick={handleLogout}>
                         <p>Log Out</p>
                     </div>
-                    <div className='text-red-500 border-red-500 px-5 py-1 border rounded-xl text-sm cursor-pointer hover:bg-red-500  hover:text-white duration-300 ease-in-out'>
+                    <div onClick={handleAccountDelete} className='text-red-500 border-red-500 px-5 py-1 border rounded-xl text-sm cursor-pointer hover:bg-red-500  hover:text-white duration-300 ease-in-out'>
                         <p>Delete Account</p>
                     </div>
                 </div>

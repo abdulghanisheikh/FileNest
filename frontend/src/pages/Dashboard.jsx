@@ -123,7 +123,7 @@ function Dashboard(){
             fetchUsedStorage();
             fetchUploadHistory();
         }
-    },[refresh,setRefresh]);
+    },[refresh]);
 
     return(
         <div className='flex w-full min-h-screen'>
@@ -131,7 +131,7 @@ function Dashboard(){
             <div className='flex flex-col min-h-screen w-[80%] rounded-md'>
             <Navbar />
             <div className='main flex rounded-2xl justify-between bg-zinc-100 px-10 py-5'>
-                <div className='flex flex-col items-center justify-center w-1/2 px-15 gap-3 h-full'>
+                <div className='flex flex-col items-center justify-center w-1/2 px-12 gap-3 h-full'>
                 <ProgressBar usedStorage={usedStorage} />
                 <div className='flex gap-2 flex-wrap h-full w-full'>
                     <ContentBox title="Documents" storage={(eachSizes.docSize/MB).toFixed(2)} to="/documents" time={eachTimes.docTime?getTimeStamp(eachTimes.docTime):""} date={eachTimes.docTime?getDateString(eachTimes.docTime):""} />
