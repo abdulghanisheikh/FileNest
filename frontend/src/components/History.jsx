@@ -1,6 +1,9 @@
-import React from 'react';
+import React,{useState} from 'react';
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { MdOutlineRemove } from "react-icons/md";
 
 const History=({uploadHistory})=>{
+    const [open,setOpen]=useState(false);
     const docType=["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.  document","text/plain","application/json","text/csv","text/markdown"];
     const imageType=["image/png","image/gif","image/jpeg","image/svg+xml","image/x-icon","image/webp"];
 
@@ -43,6 +46,13 @@ const History=({uploadHistory})=>{
                     <div className='flex justify-center items-center p-1 text-lg rounded-full'>{renderIcon(item.fileType)}</div>
                     <p>You added <span className='font-semibold'>{item.originalname}</span></p>
                     <p>{getMinutesAgo(item.addedOn)}</p>
+                    <div className='cursor-pointer relative rounded-full p-1 bg-white text-black' onClick={()=>setOpen(!open)}>
+                        {open?<MdOutlineRemove size={18}/>:<BsThreeDotsVertical size={18}/>}
+                        {open&&<div className='flex flex-col absolute -left-16 top-0 bg-sky-600 text-white rounded-md overflow-hidden'>
+                            <p className='hover:bg-white px-3 py-1 text-center hover:text-blue-500 duration-[300] ease-in-out font-semibold text-xs'>View</p>
+                            <p className='hover:bg-white px-3 py-1 text-center hover:text-red-500 duration-[300] ease-in-out font-semibold text-xs'>Delete</p>    
+                        </div>}
+                    </div>
                 </li>
             })}
           </ul>:<p className='text-center text-sm'>No actions today.</p>}

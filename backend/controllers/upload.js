@@ -125,13 +125,16 @@ const uploadProfile=async(req,res)=>{
                 error:uploadError.message
             });
         }
-        const {data:publicData}=supabase.storage.from("UserFiles").getPublicUrl(path);
+        const {data:publicData}=supabase
+        .storage
+        .from("UserFiles")
+        .getPublicUrl(path);
         user.profilePicture=publicData.publicUrl;
         await user.save();
         return res.status(200).json({
             success:true,
             message:"Profile set successfully.",
-            publicUrl:user.profilePicture
+            profileUrl:user.profilePicture
         });
     }
     catch(err){

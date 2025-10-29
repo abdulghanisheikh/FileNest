@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import {useState,useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import { IoMdCloseCircleOutline } from "react-icons/io";
@@ -45,10 +45,13 @@ const DropdownProfile=()=>{
                 withCredentials:true,
                 headers:{"Content-Type":"multipart/form-data"}
             });
-            const {success,message,publicUrl}=res.data;
+            const {success,message,profileUrl}=res.data;
             if(success){
                 toast.success(message);
-                setProfileUrl(publicUrl);
+                localStorage.setItem("profile",profileUrl);
+            }
+            else{
+                toast.error(message);
             }
         }
         catch(err){
@@ -96,12 +99,22 @@ const DropdownProfile=()=>{
         }
     }
 
+    async function handleProfileDelete(){
+    }
+
     useEffect(()=>{
-        fetchProfile();
+        const profilePicture=localStorage.getItem("profile");
+        if(profilePicture){
+            setProfileUrl(profilePicture);
+        }
+        else{
+            fetchProfile();
+            localStorage.setItem("profile",profilePicture);
+        }
     },[])
 
     return(
-        <div className='relative flex flex-col gap-1 rounded-md'>
+        <div className='relative flex flex-col gap-1 rounded-md z-[2]'>
             <button type="button" onClick={()=>setOpen(!open)} className='px-5 py-1 rounded-md shadow-sm hover:scale-103 duration-300 ease-in-out shadow-black/30 cursor-pointer bg-white active:scale-95'>👋 {username}</button>
             {
             open&&<div className='absolute top-10 right-10 h-90 w-90 flex flex-col gap-1 justify-between p-5 text-black bg-white rounded-md shadow-sm shadow-black/20 text-center font-semibold'>
@@ -111,13 +124,16 @@ const DropdownProfile=()=>{
                 <form onSubmit={handleProfile} encType="multipart/form-data" className='flex flex-col gap-2 items-center justify-around'>
                     <h1 className='text-sm'>{email}</h1>
                     <div className='profilePicture h-25 w-25 bg-cover border-none overflow-hidden rounded-full flex justify-center items-center'>
-                        <img src={profileUrl||"/default-profile.jpg"} className="text-xs" alt="profile" />
+                        <img src={profileUrl||"/default-profile.jpg"} alt="profile picture"/>
                     </div>
-                    <label className='flex flex-col justify-center items-center cursor-pointer'>
-                        <input type="file" name="profile" hidden onChange={(e)=>setProfile(e.target.files[0])} />
-                        {profile?<p className='text-sm'>{profile.originalname}</p>:<p className='text-sm px-5 hover:bg-blue-600 hover:scale-102 hover:text-white duration-300 ease-in-out rounded-full bg-white text-blue-600 border border-blue-600'>Select Profile</p>}
+                    {profileUrl?<p onClick={handleProfileDelete} className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-red-700 hover:text-white duration-300 ease-in-out rounded-full text-red-600 border border-red-600'>Remove profile</p>:
+                    <>
+                    <label>
+                        <input type="file" hidden onChange={(e)=>setProfile(e.target.files[0])}/>
+                        <p className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-blue-700 hover:text-white duration-300 ease-in-out rounded-full text-blue-600 border border-blue-600'>Select profile</p>
                     </label>
                     <button type='submit' className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-green-700 hover:text-white duration-300 ease-in-out rounded-full text-green-600 border border-green-600'>Click to Add</button>
+                    </>}
                 </form>
                 <div className='flex flex-col gap-1'>
                     <div className='text-red-500 px-5 py-1 border rounded-xl text-sm cursor-pointer hover:bg-red-500 border-red-500 hover:text-white duration-300 ease-in-out' onClick={handleLogout}>

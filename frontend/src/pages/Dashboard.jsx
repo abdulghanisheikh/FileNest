@@ -14,7 +14,7 @@ function Dashboard(){
         docSize:0,
         imageSize:0,
         mediaSize:0,
-        otherSize:0  
+        otherSize:0
     });
     const [eachTimes,setEachTimes]=useState({
         docTime:null,
@@ -53,7 +53,7 @@ function Dashboard(){
         hours=hours%12;
         if(hours===0) hours=12;
         return `${hours}:${minutes} ${ampm}`;
-    } 
+    }
 
     async function fetchEachStorage(){
         try{

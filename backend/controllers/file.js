@@ -254,7 +254,7 @@ const getUserProfile=async(req,res)=>{
         if(!loggedInUser) return res.status(400).json({success:false,message:"No user, auth denied"});
         let user=await userModel.findById(loggedInUser.id);
         if(!user) return res.status(400).json({success:false,message:"User Invalid"});
-        let profileUrl=user.profilePicture;
+        const profileUrl=user.profilePicture;
         if(!profileUrl) return res.status(400).json({success:false,message:"No profile uploaded."});
         return res.status(200).json({success:true,message:"Profile fetched successfully.",profileUrl});
     }

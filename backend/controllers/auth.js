@@ -51,7 +51,7 @@ const login=async(req,res)=>{
         let user=await userModel.findOne({email});
         if(!user){
             return res.status(400).json({
-                message:"Email or password is incorrect",
+                message:"User not exists",
                 success:false
             });
         }
