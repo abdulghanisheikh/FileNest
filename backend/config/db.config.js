@@ -1,5 +1,5 @@
 const mongoose=require("mongoose");
-const connection=()=>{
+function connection(){
     mongoose.connect(process.env.MONGO_URI)
     .then(()=>{
         console.log("database connected");

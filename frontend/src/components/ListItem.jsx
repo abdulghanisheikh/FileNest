@@ -6,7 +6,7 @@ const ListItem=({item,idx,renderIcon,getMinutesAgo,deleteFile})=>{
     const [open,setOpen]=useState(false);
     return <li
         key={idx}
-        className='flex w-full h-12 rounded-full px-5 items-center justify-between shadow-sm shadow-black/20 bg-sky-800 text-white text-xs hover:bg-sky-700 duration-300 ease-in-out'>
+        className='flex w-full h-12 rounded-full px-5 items-center justify-between shadow-sm shadow-black/20 bg-sky-500 text-white text-xs hover:bg-sky-700 duration-300 ease-in-out'>
             <div className='flex justify-center items-center p-1 text-lg rounded-full'>{renderIcon()}</div>
             <p>You added <span className='font-semibold'>{item.originalname}</span></p>
             <p>{getMinutesAgo()}</p>

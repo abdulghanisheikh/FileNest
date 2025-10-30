@@ -1,8 +1,7 @@
 import {useState,useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
-import {toast} from "react-toastify";
 import { IoMdCloseCircleOutline } from "react-icons/io";
-import {ToastContainer} from "react-toastify";
+import {ToastContainer,toast} from "react-toastify";
 import axios from "axios";
 
 const DropdownProfile=()=>{
@@ -45,10 +44,9 @@ const DropdownProfile=()=>{
                 withCredentials:true,
                 headers:{"Content-Type":"multipart/form-data"}
             });
-            const {success,message,profileUrl}=res.data;
+            const {success,message}=res.data;
             if(success){
                 toast.success(message);
-                localStorage.setItem("profile",profileUrl);
             }
             else{
                 toast.error(message);
@@ -67,6 +65,7 @@ const DropdownProfile=()=>{
             const {success,message,profileUrl}=res.data;
             if(success){
                 setProfileUrl(profileUrl);
+                localStorage.setItem("profile",profileUrl);
             }
             else{
                 toast.error(message);
@@ -99,19 +98,34 @@ const DropdownProfile=()=>{
         }
     }
 
-    async function handleProfileDelete(){
+    async function handleRemoveProfile(){
+        try{
+            const res=await axios.delete("http://localhost:3000/user/removeProfile",{
+                withCredentials:true
+            });
+            const {success,message}=res.data;
+            if(success){
+                localStorage.removeItem("profile");
+                toast.success(message);
+            }
+            else{
+                toast.error(message);
+            }
+        }
+        catch(err){
+            toast.error(err.message);
+        }
     }
 
     useEffect(()=>{
-        const profilePicture=localStorage.getItem("profile");
-        if(profilePicture){
+        let profilePicture=localStorage.getItem("profile");
+        if(profilePicture&&profilePicture!=="null"){
             setProfileUrl(profilePicture);
         }
         else{
             fetchProfile();
-            localStorage.setItem("profile",profilePicture);
         }
-    },[])
+    },[]);
 
     return(
         <div className='relative flex flex-col gap-1 rounded-md z-[2]'>
@@ -124,22 +138,22 @@ const DropdownProfile=()=>{
                 <form onSubmit={handleProfile} encType="multipart/form-data" className='flex flex-col gap-2 items-center justify-around'>
                     <h1 className='text-sm'>{email}</h1>
                     <div className='profilePicture h-25 w-25 bg-cover border-none overflow-hidden rounded-full flex justify-center items-center'>
-                        <img src={profileUrl||"/default-profile.jpg"} alt="profile picture"/>
+                        <img src={profileUrl||"/default-profile.jpg"} className='text-xs' alt="profile picture"/>
                     </div>
-                    {profileUrl?<p onClick={handleProfileDelete} className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-red-700 hover:text-white duration-300 ease-in-out rounded-full text-red-600 border border-red-600'>Remove profile</p>:
+                    {profileUrl?<p onClick={handleRemoveProfile} className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-red-500 hover:text-white duration-300 ease-in-out rounded-md text-red-500 shadow-md shadow-black/10'>Remove profile</p>:
                     <>
                     <label>
                         <input type="file" hidden onChange={(e)=>setProfile(e.target.files[0])}/>
-                        <p className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-blue-700 hover:text-white duration-300 ease-in-out rounded-full text-blue-600 border border-blue-600'>Select profile</p>
+                        {!profile&&<p className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-blue-700 hover:text-white duration-300 ease-in-out rounded-full text-blue-600 shadow-md shadow-black/10'>Select profile</p>}
                     </label>
-                    <button type='submit' className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-green-700 hover:text-white duration-300 ease-in-out rounded-full text-green-600 border border-green-600'>Click to Add</button>
+                    {profile&&<button type='submit' className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-green-700 hover:text-white duration-300 ease-in-out rounded-full text-green-600 shadow-md shadow-black/10'>Click to Add</button>}
                     </>}
                 </form>
-                <div className='flex flex-col gap-1'>
-                    <div className='text-red-500 px-5 py-1 border rounded-xl text-sm cursor-pointer hover:bg-red-500 border-red-500 hover:text-white duration-300 ease-in-out' onClick={handleLogout}>
+                <div className='flex flex-col gap-2'>
+                    <div className='text-red-500 px-5 py-1 rounded-md shadow-md shadow-black/10 text-sm cursor-pointer hover:bg-red-500 hover:text-white duration-300 ease-in-out' onClick={handleLogout}>
                         <p>Log Out</p>
                     </div>
-                    <div onClick={handleAccountDelete} className='text-red-500 border-red-500 px-5 py-1 border rounded-xl text-sm cursor-pointer hover:bg-red-500  hover:text-white duration-300 ease-in-out'>
+                    <div onClick={handleAccountDelete} className='text-red-500 shadow-md shadow-black/10 px-5 py-1 rounded-md text-sm cursor-pointer hover:bg-red-500 hover:text-white duration-300 ease-in-out'>
                         <p>Delete Account</p>
                     </div>
                 </div>

@@ -334,4 +334,86 @@ const getAllFiles=async(req,res)=>{
     }
 }
 
-module.exports={fileStorage,fetchDocs,deleteFile,getEachStorage,getImages,getMedia,getUserProfile,getOthers,getAllFiles};
+async function deleteFolder(foldername){
+    try{
+        const limit=1000;
+        const offset=0;
+        const {data:files,error}=await supabase
+        .storage
+        .from("UserFiles")
+        .list(foldername,{limit,offset});
+        if(error){
+            return{
+                success:false,
+                message:"Operation failed",
+                error:error.message
+            };
+        }
+        if(!files||files.length===0){
+            return{
+                success:false,
+                message:"No profile"
+            };
+        }
+        let filesPath=files.map((file)=>`${foldername}/${file.name}`);
+        const {error:deleteError}=await supabase
+        .storage
+        .from("UserFiles")
+        .remove([filesPath]);
+        if(deleteError){
+            return{
+                success:false,
+                message:"Operation failed",
+                error:deleteError.message
+            };
+        }
+        return{
+            success:true,
+            message:"Profile removed."
+        }
+    }
+    catch(err){
+        return{
+            success:false,
+            message:"Server error, try again",
+            error:err.message
+        }
+    }
+}
+
+async function removeProfile(req,res){
+    try{
+        const loggedInUser=req.user;
+        if(!loggedInUser){
+            return res.status(400).json({
+                success:false,
+                message:"Invalid user, auth denied"
+            });
+        }
+        let user=await userModel.findById(req.user.id);
+        if(!user){
+            return res.status(400).json({
+                success:false,
+                message:"User not exists."
+            });
+        }
+        user.profilePicture="";
+        await user.save();
+        const result=await deleteFolder(`profile-pictures/${user._id}`);
+        if(result.success){
+            return res.status(200).json(result);
+        }
+        else{
+            return res.status(400).json(result);
+        }
+    }
+    catch(err){
+        return res.status(500).json({
+            success:500,
+            message:"Server error, try again",
+            error:err.message
+        });
+    }
+}
+
+module.exports={fileStorage,fetchDocs,deleteFile,getEachStorage,getImages,getMedia,getUserProfile,getOthers,getAllFiles,removeProfile};
