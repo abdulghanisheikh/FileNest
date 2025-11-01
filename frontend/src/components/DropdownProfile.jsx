@@ -136,7 +136,7 @@ const DropdownProfile=()=>{
                     <IoMdCloseCircleOutline size={22} />
                 </div>
                 <form onSubmit={handleProfile} encType="multipart/form-data" className='flex flex-col gap-2 items-center justify-around'>
-                    <h1 className='text-sm'>{email}</h1>
+                    <h1 className='text-xs text-black/70'>{email}</h1>
                     <div className='profilePicture h-25 w-25 bg-cover border-none overflow-hidden rounded-full flex justify-center items-center'>
                         <img src={profileUrl||"/default-profile.jpg"} className='text-xs' alt="profile picture"/>
                     </div>

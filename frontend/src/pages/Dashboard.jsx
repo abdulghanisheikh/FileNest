@@ -126,7 +126,7 @@ function Dashboard(){
     },[refresh]);
 
     return(
-        <div className='flex w-full min-h-screen'>
+        <div className='flex w-full min-h-screen bg-zinc-100'>
             <Sidepanel />
             <div className='flex flex-col min-h-screen w-[80%] rounded-md'>
             <Navbar />

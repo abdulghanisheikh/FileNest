@@ -55,8 +55,8 @@ const History=({uploadHistory})=>{
     }
 
     return(
-      <div className='history bg-white rounded-xl px-5 flex flex-col h-screen/90 w-1/2 gap-5 py-5'>
-          <h1 className='text-3xl font-semibold'>Recent Uploads.</h1>
+      <div className='history bg-sky-200 rounded-xl px-5 flex flex-col h-screen/90 w-1/2 gap-5 py-5'>
+          <h1 className='text-3xl font-semibold'>Todays Uploads</h1>
           {uploadHistory.length>0?
           <ul className='space-y-2'>
             {uploadHistory.map((item,idx)=>{

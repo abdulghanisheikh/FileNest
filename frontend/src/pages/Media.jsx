@@ -9,6 +9,7 @@ import {UpdateContext} from "../context/Update";
 const Media=()=>{
 	const [mediaFiles,setMediaFiles]=useState([]);
 	const {setRefresh}=useContext(UpdateContext);
+	const [query,setQuery]=useState("");
 	const fetchMediaFiles=async()=>{
 		try{
 			const res=await axios.get("http://localhost:3000/file/get-media",{
@@ -48,16 +49,17 @@ const Media=()=>{
 	useEffect(()=>{
 		fetchMediaFiles();
 	},[]);
-	
+	const filteredMedia=mediaFiles.filter((media)=>media.originalname.toLowerCase().includes(query.toLowerCase()));
 	return(
-		<div className='flex w-full min-h-screen gap-5'>
+		<div className='flex w-full min-h-screen gap-5 bg-zinc-100'>
 				<Sidepanel />
 				<div className='flex flex-col min-h-screen w-[80%] rounded-md gap-1'>
-					<Navbar />
-					<div className='main flex flex-col px-4 py-2 gap-5 bg-zinc-100 rounded-md min-h-screen justify-around'>
+					<Navbar query={query} setQuery={setQuery}/>
+					<div className='main flex flex-col p-5 gap-5 bg-blue-100 rounded-md min-h-screen justify-around'>
 						<h1 className="text-4xl">Multimedia</h1>
 						<div className='flex gap-2 flex-wrap justify-start h-full w-full'>
-							{mediaFiles.length===0?<p className='text-sm'>No file uploaded yet.</p>:mediaFiles.map((item,id)=>{
+							{filteredMedia.length===0?<p className='text-sm'>No file uploaded yet.</p>:
+							filteredMedia.map((item,id)=>{
 								return <Doc 
 								key={id}
 								filename={item.originalname}
