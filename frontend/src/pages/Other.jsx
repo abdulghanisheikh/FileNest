@@ -50,7 +50,9 @@ const Other=()=>{
         fetchOtherFiles();
     },[]);
     
-    const filteredFiles=otherFiles.filter((file)=>file.originalname.toLowerCase().includes(query.toLowerCase()));
+    const filteredFiles=otherFiles.filter((file)=>{
+        return file.originalname.toLowerCase().includes(query.toLowerCase());
+    });
     return(
         <div className='flex w-full min-h-screen gap-5 bg-zinc-100'>
                 <Sidepanel/>

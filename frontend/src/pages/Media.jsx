@@ -49,7 +49,11 @@ const Media=()=>{
 	useEffect(()=>{
 		fetchMediaFiles();
 	},[]);
-	const filteredMedia=mediaFiles.filter((media)=>media.originalname.toLowerCase().includes(query.toLowerCase()));
+
+	//No need of state as it is derived from query and media files
+	const filteredMedia=mediaFiles.filter((media)=>{
+		return media.originalname.toLowerCase().includes(query.toLowerCase());
+	});
 	return(
 		<div className='flex w-full min-h-screen gap-5 bg-zinc-100'>
 				<Sidepanel />

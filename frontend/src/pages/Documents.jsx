@@ -51,7 +51,9 @@ function Documents(){
 		fetchFiles();
 	},[])
 	 
-	const filteredDocs=docs.filter((doc)=>doc.originalname.toLowerCase().includes(query.toLowerCase()));
+	const filteredDocs=docs.filter((doc)=>{
+		return doc.originalname.toLowerCase().includes(query.toLowerCase());
+	});
 	return(
 		<div className='flex w-full min-h-screen gap-5 bg-zinc-100'>
 			<Sidepanel />
