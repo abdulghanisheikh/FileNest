@@ -11,10 +11,11 @@ const DropdownProfile=()=>{
     const navigate=useNavigate();
     const username=JSON.parse(localStorage.getItem("loggedInUser")).fullname;
     const email=JSON.parse(localStorage.getItem("loggedInUser")).email;
+    const baseUrl=import.meta.env.VITE_BASE_URL;
 
     async function handleLogout(){
         try{
-            const res=await axios.post("http://localhost:3000/auth/logout",{},{
+            const res=await axios.post(`${baseUrl}/auth/logout`,{},{
                 withCredentials:true //to send httpOnly cookie to backend
             });
             const {success,message}=res.data;
@@ -39,7 +40,7 @@ const DropdownProfile=()=>{
         try{
             const formData=new FormData();
             formData.append("profile",profile);
-            const res=await axios.post("http://localhost:3000/user/uploadProfile",formData,
+            const res=await axios.post(`${baseUrl}/user/uploadProfile`,formData,
             {
                 withCredentials:true,
                 headers:{"Content-Type":"multipart/form-data"}
@@ -59,7 +60,7 @@ const DropdownProfile=()=>{
 
     async function fetchProfile(){
         try{
-            const res=await axios.get("http://localhost:3000/user/getProfile",{
+            const res=await axios.get(`${baseUrl}/user/getProfile`,{
                 withCredentials:true
             });
             const {success,message,profileUrl}=res.data;
@@ -78,7 +79,7 @@ const DropdownProfile=()=>{
 
     async function handleAccountDelete(){
         try{
-            const res=await axios.delete("http://localhost:3000/user/deleteAccount",{
+            const res=await axios.delete(`${baseUrl}/user/deleteAccount`,{
                 withCredentials:true
             });
             const {success,message}=res.data;
@@ -100,7 +101,7 @@ const DropdownProfile=()=>{
 
     async function handleRemoveProfile(){
         try{
-            const res=await axios.delete("http://localhost:3000/user/removeProfile",{
+            const res=await axios.delete(`${baseUrl}/user/removeProfile`,{
                 withCredentials:true
             });
             const {success,message}=res.data;

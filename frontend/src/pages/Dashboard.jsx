@@ -23,12 +23,13 @@ function Dashboard(){
         otherTime:null
     });
     const MB=1000000;
-    const {refresh,setRefresh}=useContext(UpdateContext);
+    const {refresh}=useContext(UpdateContext);
     const [uploadHistory,setUploadHistory]=useState([]);
+    const baseUrl=import.meta.env.VITE_BASE_URL;
 
     async function fetchUsedStorage(){
         try{
-            const {data}=await axios.get("http://localhost:3000/user/usedStorage",{
+            const {data}=await axios.get(`${baseUrl}/user/usedStorage`,{
                 withCredentials:true
             });
             const {success,totalSize}=data;
@@ -57,7 +58,7 @@ function Dashboard(){
 
     async function fetchEachStorage(){
         try{
-            const {data}=await axios.get("http://localhost:3000/file/eachStorage",{
+            const {data}=await axios.get(`${baseUrl}/file/eachStorage`,{
                 withCredentials:true
             });
             const {
@@ -97,7 +98,7 @@ function Dashboard(){
 
     async function fetchUploadHistory(){
         try{
-            const res=await axios.get("http://localhost:3000/user/getUploadHistory",{
+            const res=await axios.get(`${baseUrl}/user/getUploadHistory`,{
                 withCredentials:true
             });
             const {success,message,files}=res.data;

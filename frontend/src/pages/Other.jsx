@@ -10,9 +10,10 @@ const Other=()=>{
     const [otherFiles,setOtherFiles]=useState([]);
     const {setRefresh}=useContext(UpdateContext);
     const [query,setQuery]=useState("");
+    const baseUrl=import.meta.env.VITE_BASE_URL;
     const fetchOtherFiles=async()=>{
         try{
-            const res=await axios.get("http://localhost:3000/file/get-others",{
+            const res=await axios.get(`${baseUrl}/file/get-others`,{
                 withCredentials:true
             });
             const {success,message,others}=res.data;
@@ -30,7 +31,7 @@ const Other=()=>{
 
     const deleteFile=async(filepath)=>{
         try{
-            const res=await axios.delete("http://localhost:3000/file/delete",{
+            const res=await axios.delete(`${baseUrl}/file/delete`,{
                 data:{filepath},
                 withCredentials:true
             });

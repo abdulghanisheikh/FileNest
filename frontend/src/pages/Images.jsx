@@ -10,9 +10,10 @@ const Images=()=>{
     const [imageFiles,setImageFiles]=useState([]);
     const [query,setQuery]=useState("");
     const {setRefresh}=useContext(UpdateContext);
+    const baseUrl=import.meta.env.VITE_BASE_URL;
     const fetchImages=async()=>{
         try{
-            const {data}=await axios.get("http://localhost:3000/file/get-images",{
+            const {data}=await axios.get(`${baseUrl}/file/get-images`,{
                 withCredentials:true
             });
             const {success,message,images}=data;
@@ -29,7 +30,7 @@ const Images=()=>{
     }
     const deleteFile=async(filepath)=>{
         try{
-            const res=await axios.delete("http://localhost:3000/file/delete",{
+            const res=await axios.delete(`${baseUrl}/file/delete`,{
                 data:{filepath},
                 withCredentials:true
             });

@@ -7,6 +7,7 @@ const History=({uploadHistory})=>{
     const {setRefresh}=useContext(UpdateContext);
     const docType=["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.  document","text/plain","application/json","text/csv","text/markdown"];
     const imageType=["image/png","image/gif","image/jpeg","image/svg+xml","image/x-icon","image/webp"];
+    const baseUrl=import.meta.env.VITE_BASE_URL;
 
     function getMinutesAgo(dateObj){
         const date=new Date(dateObj);
@@ -37,7 +38,7 @@ const History=({uploadHistory})=>{
     
     async function deleteFile(filepath){
         try{
-			const {data}=await axios.delete("http://localhost:3000/file/delete",{
+			const {data}=await axios.delete(`${baseUrl}/file/delete`,{
 				data:{filepath},
 				withCredentials:true
 			});

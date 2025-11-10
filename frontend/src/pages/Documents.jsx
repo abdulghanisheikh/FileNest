@@ -10,10 +10,11 @@ function Documents(){
 	const [docs,setDocs]=useState([]);
 	const [query,setQuery]=useState("");
 	const {setRefresh}=useContext(UpdateContext);
+	const baseUrl=import.meta.env.VITE_BASE_URL;
 
 	async function fetchFiles(){
 		try{
-			const {data}=await axios.get("http://localhost:3000/file/get-docs",{
+			const {data}=await axios.get(`${baseUrl}/file/get-docs`,{
 				withCredentials:true
 			});
 			const {success,message,files}=data;
@@ -30,7 +31,7 @@ function Documents(){
 	}
 	async function deleteFile(filepath){
 		try{
-			const {data}=await axios.delete("http://localhost:3000/file/delete",{
+			const {data}=await axios.delete(`${baseUrl}/file/delete`,{
 				data:{filepath},
 				withCredentials:true
 			});

@@ -2,7 +2,7 @@ const userModel=require("../models/user.model.js");
 const fileModel=require("../models/file.model.js");
 const supabase=require("../config/supabase.config.js");
 
-const deleteFolder=async(folderName)=>{
+async function deleteFolder(folderName){
     try{
         const limit=1000;
         const offset=0;
@@ -49,7 +49,7 @@ const deleteFolder=async(folderName)=>{
     }
 }
 
-const deleteAccount=async(req,res)=>{
+async function deleteAccount(req,res){
     try{
         let userId=req.user.id;
         let deletedUser=await userModel.findByIdAndDelete(userId);

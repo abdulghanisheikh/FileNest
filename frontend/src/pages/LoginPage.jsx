@@ -19,8 +19,8 @@ const LoginPage=()=>{
   async function handleSubmit(e){
     e.preventDefault();
     try{
-        const loginAPI=import.meta.env.VITE_LOGIN_API
-        const {data}=await axios.post(loginAPI,loginData,{
+        const baseUrl=import.meta.env.VITE_BASE_URL;
+        const {data}=await axios.post(`${baseUrl}/auth/login`,loginData,{
           withCredentials:true
         });
         const {success,message,user}=data;

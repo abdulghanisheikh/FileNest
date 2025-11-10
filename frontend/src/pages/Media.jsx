@@ -10,9 +10,10 @@ const Media=()=>{
 	const [mediaFiles,setMediaFiles]=useState([]);
 	const {setRefresh}=useContext(UpdateContext);
 	const [query,setQuery]=useState("");
+	const baseUrl=import.meta.env.VITE_BASE_URL;
 	const fetchMediaFiles=async()=>{
 		try{
-			const res=await axios.get("http://localhost:3000/file/get-media",{
+			const res=await axios.get(`${baseUrl}/file/get-media`,{
 				withCredentials:true
 			});
 			const {success,message,media}=res.data;
@@ -30,7 +31,7 @@ const Media=()=>{
 
 	const deleteFile=async(filepath)=>{
 		try{
-			const res=await axios.delete("http://localhost:3000/file/delete",{
+			const res=await axios.delete(`${baseUrl}/file/delete`,{
 				data:{filepath},
 				withCredentials:true
 			});

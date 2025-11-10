@@ -7,6 +7,8 @@ import {UpdateContext} from "../context/Update";
 const FileUpload=()=>{
     const [file,setFile]=useState(null);
     const {setRefresh}=useContext(UpdateContext);
+    const baseUrl=import.meta.env.VITE_BASE_URL;
+
     async function handleUpload(e){
         e.preventDefault();
         try{
@@ -22,7 +24,7 @@ const FileUpload=()=>{
             }
             formData.append("uploaded-file",file);
             formData.append("user",JSON.stringify(user));
-            const {data}=await axios.post("http://localhost:3000/user/upload",formData,{
+            const {data}=await axios.post(`${baseUrl}/user/upload`,formData,{
                 withCredentials:true
             });
             const {success,message}=data;
