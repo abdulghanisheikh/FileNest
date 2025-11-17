@@ -10,7 +10,8 @@ const userRouter=require("./routes/user.routes.js");
 const fileRouter=require("./routes/file.routes.js");
 //Middlewares
 app.use(cors({
-    origin:process.env.FRONTEND,
+    origin:["http://localhost:5173",process.env.FRONTEND],
+    methods:["GET","POST","PUT","DELETE","PATCH","OPTIONS"],
     credentials:true
 }));
 app.use(express.json());
