@@ -70,9 +70,9 @@ const login=async(req,res)=>{
             {expiresIn:"24h"}
         );
         res.cookie("token",token,{
-            httpOnly:true, //JS can't access token in frontend
-            secure:false,
-            sameSite:"lax" //allowed cross-origin domain
+            httpOnly:true, //JS can't access cookies in frontend
+            secure:true,
+            sameSite:"none" //Allow cross-origin domain
         });
         return res.status(200).json({
             success:true,
@@ -93,8 +93,8 @@ const logout=async(req,res)=>{
     try{
         res.cookie("token","",{
             httpOnly:true,
-            secure:false,
-            sameSite:"lax",
+            secure:true,
+            sameSite:"none",
             expiresIn:new Date(0)
         });
         return res.status(200).json({
