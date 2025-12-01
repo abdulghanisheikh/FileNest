@@ -69,7 +69,6 @@ const DropdownProfile=()=>{
                 setProfileUrl(profileUrl);
             }
             else{
-                localStorage.setItem("profile",profileUrl);
                 toast.error(message);
             }
         }
