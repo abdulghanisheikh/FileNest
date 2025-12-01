@@ -250,8 +250,6 @@ const getMedia=async(req,res)=>{
 
 const getUserProfile=async(req,res)=>{
     try{
-        const loggedInUser=req.user;
-        if(!loggedInUser) return res.status(400).json({success:false,message:"No user, auth denied"});
         let user=await userModel.findById(loggedInUser.id);
         if(!user) return res.status(400).json({success:false,message:"User Invalid"});
         const profileUrl=user.profilePicture;
@@ -352,14 +350,14 @@ async function deleteFolder(foldername){
         if(!files||files.length===0){
             return{
                 success:false,
-                message:"No profile"
+                message:"No files found in profile folder"
             };
         }
-        let filesPath=files.map((file)=>`${foldername}/${file.name}`);
+        let filesPath=files.map(file=>`${foldername}/${file.name}`);
         const {error:deleteError}=await supabase
         .storage
         .from("UserFiles")
-        .remove([filesPath]);
+        .remove(filesPath);
         if(deleteError){
             return{
                 success:false,
@@ -383,13 +381,6 @@ async function deleteFolder(foldername){
 
 async function removeProfile(req,res){
     try{
-        const loggedInUser=req.user;
-        if(!loggedInUser){
-            return res.status(400).json({
-                success:false,
-                message:"Invalid user, auth denied"
-            });
-        }
         let user=await userModel.findById(req.user.id);
         if(!user){
             return res.status(400).json({
@@ -409,7 +400,7 @@ async function removeProfile(req,res){
     }
     catch(err){
         return res.status(500).json({
-            success:500,
+            success:false,
             message:"Server error, try again",
             error:err.message
         });

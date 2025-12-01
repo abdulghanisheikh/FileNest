@@ -114,7 +114,7 @@ const DropdownProfile=()=>{
             }
         }
         catch(err){
-            toast.error(err.message);
+            toast.error(err.response?.data?.message);
         }
     }
 

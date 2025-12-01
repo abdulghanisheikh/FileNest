@@ -115,8 +115,12 @@ const uploadProfile=async(req,res)=>{
             });
         }
         const profile=req.file; //this is how you get file when you send file using multer in formData.
-        const path=`profile-pictures/${user._id}/${Date.now()}-${profile.originalname}`;
-        const {data:uploadData,error:uploadError}=await supabase.storage.from("UserFiles").upload(path,profile.buffer,{
+        const safeName=profile.originalname.replace(/[^a-zA-Z0-9.\-_]/g,"_");
+        const path=`profile-pictures/${user._id}/${Date.now()}-${safeName}`;
+        const {data:uploadData,error:uploadError}=await supabase
+        .storage
+        .from("UserFiles")
+        .upload(path,profile.buffer,{
             contentType:profile.mimetype
         });
         if(uploadError){
