@@ -41,7 +41,8 @@ const uploadFile=async(req,res)=>{
         const now=new Date();
         const date=getDateString(now);
         const time=getTimeString(now);
-        const path=`${loggedInUser._id}/${date}-${time}-${file.originalname}`;
+        const safeName=file.originalname.replace(/[^a-zA-Z0-9.\-_]/g,"_");
+        const path=`${loggedInUser._id}/${date}-${time}-${safeName}`;
         const {error:uploadError,data:uploadData}=await supabase
         .storage
         .from("UserFiles")
@@ -55,7 +56,7 @@ const uploadFile=async(req,res)=>{
                 error:uploadError.message
             });
         }
-        const {data}=supabase
+        const {data}=await supabase
         .storage
         .from("UserFiles")
         .getPublicUrl(uploadData.path);
