@@ -75,7 +75,7 @@ const LoginPage=()=>{
                   <label className="text-gray-800">Password</label>
                   <input type="password" name="password" value={loginData.password} onChange={(e)=>handleChange("password",e.target.value)} required placeholder="Enter password" className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
                 </div>
-                <button type="submit" className="w-2/3 mt-5 px-5 py-2 rounded-full bg-blue-600 text-white cursor-pointer">Log In</button>
+                <button type="submit" className="w-2/3 mt-5 px-5 py-2 rounded-full bg-blue-600 text-white cursor-pointer active:scale-[95%] duration-250 ease-in-out hover:bg-blue-700">Log In</button>
                 <p className="text-sm">Don't have an account? <span className="text-blue-600 cursor-pointer"><Link to="/signup-page">Create Account</Link></span></p>
               </form>
               <ToastContainer position="top-left" />

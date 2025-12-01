@@ -141,20 +141,20 @@ const DropdownProfile=()=>{
                     <div className='profilePicture h-25 w-25 bg-cover border-none overflow-hidden rounded-full flex justify-center items-center'>
                         <img src={profileUrl||"/default-profile.jpg"} className='text-xs' alt="profile picture"/>
                     </div>
-                    {profileUrl?<p onClick={handleRemoveProfile} className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-red-500 hover:text-white duration-300 border-2 border-red-400 hover:border-0 ease-in-out rounded-md text-red-500 shadow-md shadow-black/10'>Remove profile</p>:
+                    {profileUrl?<p onClick={handleRemoveProfile} className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-red-500 hover:text-white duration-300 border-2 border-red-400 hover:border-0 ease-in-out rounded-md text-red-500 shadow-md active:scale-[95%] shadow-black/10'>Remove profile</p>:
                     <>
                     <label>
                         <input type="file" hidden onChange={(e)=>setProfile(e.target.files[0])}/>
-                        {!profile&&<p className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-blue-700 hover:text-white duration-300 ease-in-out rounded-full text-blue-600 shadow-md shadow-black/10'>Select profile</p>}
+                        {!profile&&<p className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-blue-700 hover:text-white duration-300 active:scale-[95%] ease-in-out rounded-full text-blue-600 shadow-md shadow-black/10'>Select profile</p>}
                     </label>
-                    {profile&&<button type='submit' className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-green-700 hover:text-white duration-300 ease-in-out rounded-full text-green-600 shadow-md shadow-black/10'>Click to Add</button>}
+                    {profile&&<button type='submit' className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-green-700 hover:text-white duration-300 ease-in-out active:scale-[95%] rounded-full text-green-600 shadow-md shadow-black/10'>Click to Add</button>}
                     </>}
                 </form>
                 <div className='flex flex-col gap-2'>
-                    <div className='text-red-500 px-5 py-1 rounded-md shadow-md shadow-black/10 text-sm cursor-pointer hover:bg-red-500 border-2 border-red-400 hover:border-0 hover:text-white duration-300 ease-in-out' onClick={handleLogout}>
+                    <div className='text-red-500 px-5 py-1 rounded-md shadow-md shadow-black/10 text-sm cursor-pointer hover:bg-red-500 border-2 border-red-400 active:scale-[95%] hover:border-0 hover:text-white duration-300 ease-in-out' onClick={handleLogout}>
                         <p>Log Out</p>
                     </div>
-                    <div onClick={handleAccountDelete} className='text-red-500 shadow-md shadow-black/10 px-5 py-1 rounded-md text-sm cursor-pointer border-2 border-red-400 hover:border-0 hover:bg-red-500 hover:text-white duration-300 ease-in-out'>
+                    <div onClick={handleAccountDelete} className='text-red-500 shadow-md shadow-black/10 px-5 py-1 rounded-md text-sm cursor-pointer border-2 border-red-400 active:scale-[95%] hover:border-0 hover:bg-red-500 hover:text-white duration-300 ease-in-out'>
                         <p>Delete Account</p>
                     </div>
                 </div>

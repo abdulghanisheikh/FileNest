@@ -68,7 +68,7 @@ const RegisterPage=()=>{
                   <label className="text-gray-800">Password</label>
                   <input value={newUser.password} name="password" onChange={(e)=>handleChange("password",e.target.value)} type="password" placeholder="Enter password" required className="bg-gray-300 text-gray-500 outline-none rounded-md py-2 px-4 w-2/3"/>
                 </div>
-                <button type="submit" className="w-2/3 mt-5 px-5 py-2 rounded-full bg-blue-600 text-white cursor-pointer">Create Account</button>
+                <button type="submit" className="w-2/3 mt-5 px-5 py-2 rounded-full bg-blue-600 text-white cursor-pointer hover:bg-blue-700 active:scale-[95%] duration-250 ease-in-out">Create Account</button>
                 <p className="text-sm">Already have an account? <span className="text-blue-600 cursor-pointer"><Link to="/">Log In</Link></span></p>
               </form>
               <ToastContainer position="top-left" />
