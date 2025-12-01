@@ -138,7 +138,8 @@ const uploadProfile=async(req,res)=>{
         await user.save();
         return res.status(200).json({
             success:true,
-            message:"Profile set successfully."
+            message:"Profile set successfully.",
+            publicUrl:user.profilePicture
         });
     }
     catch(err){

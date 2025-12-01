@@ -45,9 +45,10 @@ const DropdownProfile=()=>{
                 withCredentials:true,
                 headers:{"Content-Type":"multipart/form-data"}
             });
-            const {success,message}=res.data;
+            const {success,message,publicUrl}=res.data;
             if(success){
                 toast.success(message);
+                localStorage.setItem("profile",publicUrl);
             }
             else{
                 toast.error(message);
@@ -66,9 +67,9 @@ const DropdownProfile=()=>{
             const {success,message,profileUrl}=res.data;
             if(success){
                 setProfileUrl(profileUrl);
-                localStorage.setItem("profile",profileUrl);
             }
             else{
+                localStorage.setItem("profile",profileUrl);
                 toast.error(message);
             }
         }
@@ -141,7 +142,7 @@ const DropdownProfile=()=>{
                     <div className='profilePicture h-25 w-25 bg-cover border-none overflow-hidden rounded-full flex justify-center items-center'>
                         <img src={profileUrl||"/default-profile.jpg"} className='text-xs' alt="profile picture"/>
                     </div>
-                    {profileUrl?<p onClick={handleRemoveProfile} className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-red-500 hover:text-white duration-300 border-2 border-red-400 hover:border-0 ease-in-out rounded-md text-red-500 shadow-md active:scale-[95%] shadow-black/10'>Remove profile</p>:
+                    {profileUrl?<p onClick={handleRemoveProfile} className='px-5 text-sm cursor-pointer hover:bg-red-500 hover:text-white duration-300 border-2 border-red-400 hover:border-0 ease-in-out rounded-md text-red-500 shadow-md active:scale-[95%] shadow-black/10'>Remove profile</p>:
                     <>
                     <label>
                         <input type="file" hidden onChange={(e)=>setProfile(e.target.files[0])}/>
