@@ -140,4 +140,4 @@ FileNest/
 This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
 
 ## 👥 Authors
-- **Maintainers**: Abdul Ghani
+Abdul Ghani
