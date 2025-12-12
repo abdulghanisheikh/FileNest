@@ -76,7 +76,12 @@ const DropdownProfile=()=>{
             }
         }
         catch(err){
-            toast.error(err.response?.data?.message);
+            if(err.response?.status===401){ //Token expired -> logout
+                localStorage.removeItem("loggedInUser");
+                navigate("/login-page");
+                return;
+            }
+            toast.error(err.response?.data?.message||"Failed to load profile.");
         }
     }
 
@@ -122,9 +127,7 @@ const DropdownProfile=()=>{
     }
 
     useEffect(()=>{
-        if(!profileUrl){
-            fetchProfile();
-        }
+        fetchProfile();
     },[]);
     
     return(
