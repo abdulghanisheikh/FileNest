@@ -148,6 +148,6 @@ async function uploadProfile(req,res){
             error:err.message
         });
     }
-};
+}
 
 module.exports={uploadFile,uploadProfile,docType,imageType,mediaType};
