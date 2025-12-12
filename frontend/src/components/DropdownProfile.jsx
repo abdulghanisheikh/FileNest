@@ -50,7 +50,6 @@ const DropdownProfile=()=>{
             const {success,message,publicUrl}=data;
             if(success){
                 setProfileUrl(publicUrl);
-                setProfile(null);
                 toast.success(message);
             }
             else{
@@ -115,6 +114,7 @@ const DropdownProfile=()=>{
             const {success,message}=data;
             if(success){
                 setProfileUrl("");
+                setProfile(null);
                 toast.success(message);
             }
             else{
@@ -149,7 +149,7 @@ const DropdownProfile=()=>{
                     <>
                     <label>
                         <input type="file" hidden onChange={(e)=>setProfile(e.target.files[0])}/>
-                        {!profileUrl&&<p className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-blue-700 hover:text-white duration-300 active:scale-[95%] ease-in-out rounded-full text-blue-600 shadow-md shadow-black/10'>Select profile</p>}
+                        {!profile&&<p className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-blue-700 hover:text-white duration-300 active:scale-[95%] ease-in-out rounded-full text-blue-600 shadow-md shadow-black/10'>Select profile</p>}
                     </label>
                     {profile&&<button type='submit' className='px-5 text-sm cursor-pointer hover:border-none hover:bg-green-700 hover:text-white duration-300 ease-in-out active:scale-[95%] border-2 border-green-700 rounded-full text-green-600 shadow-md shadow-black/10'>Click to Add</button>}
                     </>}
