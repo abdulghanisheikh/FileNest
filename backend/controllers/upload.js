@@ -100,14 +100,13 @@ async function uploadFile(req,res){
 
 async function uploadProfile(req,res){
     try{
-        const loggedInUser=req.user;
-        if(!loggedInUser){
+        if(!req.user){
             return res.status(401).json({
                 success:false,
-                message:"Invalid user, auth denied."
+                message:"No token, auth denied."
             });
         }
-        let user=await userModel.findById(loggedInUser.id);
+        let user=await userModel.findById(req.user.id);
         if(!user){
             return res.status(400).json({
                 success:false,
