@@ -61,15 +61,15 @@ const Doc=({filename,filesize,filetype,addedOn,publicUrl,deleteFile})=>{
     const time=getTimeStamp(addedOn);
     const MB=1000000;
     return(
-      <div className="doc justify-between shadow-sm shadow-black/20 flex flex-col p-5 bg-white h-40 min-w-50 text-sm rounded-2xl tracking-tighter">
+      <div className="doc justify-between shadow-sm shadow-black/20 flex flex-col p-5 bg-white w-50 h-40 text-sm rounded-2xl tracking-tighter">
           <div className="flex justify-between items-center">
               <div className='rounded-full p-3 bg-pink-700 text-white'>
                 {renderIcon()}
               </div>
-              <div className='flex flex-col justify-between h-15 items-end gap-1'>
+              <div className='flex flex-col justify-between items-end gap-1'>
                 <div onClick={()=>setOpen(!open)} className='relative cursor-pointer p-1 rounded-full bg-sky-700 text-white'>
                     {!open?<BsThreeDotsVertical size={18} />:<MdOutlineRemove size={18}/>}
-                    {open&&<div className='absolute top-0 right-7 h-fit w-20 flex flex-col rounded-md bg-sky-800 opacity-95 text-white text-xs font-semibold'>
+                    {open&&<div className='absolute top-0 right-7 w-20 flex flex-col rounded-md bg-sky-800 text-white text-xs font-semibold'>
                         <a href={publicUrl} target="_blank" className='cursor-pointer text-center w-full hover:bg-white active:scale-95 hover:text-blue-500 duration-300 ease-in-out p-1 rounded-t-md'>View</a>
                         <button onClick={deleteFile} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-red-500 duration-300 ease-in-out rounded-b-md'>Delete</button>
                     </div>}
@@ -78,7 +78,7 @@ const Doc=({filename,filesize,filetype,addedOn,publicUrl,deleteFile})=>{
               </div>
           </div>
           <div className="flex flex-col">
-              <p className='font-semibold'>{filename}</p>
+              <p className='font-semibold truncate'>{filename}</p>
               <p className="text-black/60 text-xs">{formattedDate}, {time}</p>
           </div>
       </div>

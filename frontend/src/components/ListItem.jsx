@@ -6,9 +6,9 @@ const ListItem=({item,idx,renderIcon,getMinutesAgo,deleteFile})=>{
     const [open,setOpen]=useState(false);
     return <li
         key={idx}
-        className='flex w-full h-12 rounded-full px-5 items-center justify-between shadow-sm shadow-black/20 bg-white text-black text-xs'>
+        className='flex rounded-full px-3 py-2 items-center justify-between shadow-sm shadow-black/20 bg-white text-black text-xs'>
             <div className='flex justify-center items-center p-1 text-lg rounded-full'>{renderIcon()}</div>
-            <p>You added <span className='font-semibold'>{item.originalname}</span></p>
+            <p className="font-semibold truncate w-80">{item.originalname}</p>
             <p>{getMinutesAgo()}</p>
             <div className='cursor-pointer relative rounded-full p-1 bg-sky-700 text-white' onClick={()=>setOpen(!open)}>
                 {open?<MdOutlineRemove size={18}/>:<BsThreeDotsVertical size={18}/>}

@@ -23,7 +23,7 @@ function Dashboard(){
         otherTime:null
     });
     const MB=1000000;
-    const {refresh}=useContext(UpdateContext);
+    const {refresh,setRefresh}=useContext(UpdateContext);
     const [uploadHistory,setUploadHistory]=useState([]);
     const baseUrl=import.meta.env.VITE_BASE_URL;
 
@@ -106,7 +106,7 @@ function Dashboard(){
             else toast.error(message);
         }
         catch(err){
-            toast.error(err.message);
+            toast.error(err.response?.data?.message);
         }
     }
     
@@ -119,12 +119,17 @@ function Dashboard(){
 
     //Run whenever refresh becomes true
     useEffect(()=>{
-        if(refresh){
-            fetchEachStorage();
-            fetchUsedStorage();
-            fetchUploadHistory();
+        if(!refresh) return;
+        async function reloadAll(){
+            await Promise.all([
+                fetchUsedStorage(),
+                fetchEachStorage(),
+                fetchUploadHistory()
+            ]);
+            setRefresh(false);
         }
-    },[refresh]);
+        reloadAll();
+    },[refresh,setRefresh]);
 
     return(
         <div className='flex w-full min-h-screen bg-zinc-100'>

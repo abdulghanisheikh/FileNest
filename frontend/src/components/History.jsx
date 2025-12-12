@@ -2,6 +2,7 @@ import {useContext} from 'react';
 import axios from "axios";
 import {UpdateContext} from "../context/Update";
 import ListItem from './ListItem';
+import {toast,ToastContainer} from "react-toastify";
 
 const History=({uploadHistory})=>{
     const {setRefresh}=useContext(UpdateContext);
@@ -63,13 +64,14 @@ const History=({uploadHistory})=>{
             {uploadHistory.map((item,idx)=>{
                 return <ListItem
                 item={item} 
-                idx={idx} 
-                getMinutesAgo={()=>getMinutesAgo(item.addedOn)} 
-                renderIcon={()=>renderIcon(item.fileType)} 
+                key={idx}
+                getMinutesAgo={()=>getMinutesAgo(item.addedOn)}
+                renderIcon={()=>renderIcon(item.fileType)}
                 deleteFile={()=>deleteFile(item.path)}
                 />
             })}
-          </ul>:<p className='text-center text-sm'>No uploads today.</p>}
+          </ul>:<p className='text-center text-sm'>No uploads today.</p>} 
+          <ToastContainer position="top-left"/>
       </div>
     )
 }

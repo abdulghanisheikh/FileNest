@@ -2,18 +2,18 @@ const supabase=require("../config/supabase.config.js");
 const userModel=require("../models/user.model.js");
 const fileModel=require("../models/file.model.js");
 
-const getDateString=(now)=>{
+function getDateString(now){
     const day=String(now.getDate()).padStart(2,"0");
     const month=String(now.getMonth()+1).padStart(2,"0");
     const year=now.getFullYear();
     return `${year}.${month}.${day}`;
 };
 
-const getTimeString=(now)=>{
+function getTimeString(now){
     let hours=now.getHours();
     const minutes=String(now.getMinutes()).padStart(2,"0");
     const seconds=String(now.getSeconds()).padStart(2,"0");
-    hours=hours%12; //24hr -> 12hr format
+    hours=hours%12; //24hr->12hr format
     if(hours===0) hours=12;
     return `${hours}.${minutes}.${seconds}`;
 }
@@ -22,7 +22,7 @@ const docType=["application/pdf","application/msword","application/vnd.openxmlfo
 const imageType=["image/png","image/gif","image/jpeg","image/svg+xml","image/x-icon","image/webp"];
 const mediaType=["video/mp4","audio/mpeg"];
 
-const uploadFile=async(req,res)=>{
+async function uploadFile(req,res){
     try{
         const loggedInUser=await userModel.findById(req.user.id);
         if(!loggedInUser){
@@ -98,7 +98,7 @@ const uploadFile=async(req,res)=>{
     }
 };
 
-const uploadProfile=async(req,res)=>{
+async function uploadProfile(req,res){
     try{
         const loggedInUser=req.user;
         if(!loggedInUser){
@@ -106,7 +106,7 @@ const uploadProfile=async(req,res)=>{
                 success:false,
                 message:"Invalid user, auth denied."
             });
-        }  
+        }
         let user=await userModel.findById(loggedInUser.id);
         if(!user){
             return res.status(400).json({
@@ -114,7 +114,7 @@ const uploadProfile=async(req,res)=>{
                 message:"User not exists."
             });
         }
-        const profile=req.file; //this is how you get file when you send file using multer in formData.
+        const profile=req.file;
         const safeName=profile.originalname.replace(/[^a-zA-Z0-9.\-_]/g,"_");
         const path=`profile-pictures/${user._id}/${Date.now()}-${safeName}`;
         const {data:uploadData,error:uploadError}=await supabase

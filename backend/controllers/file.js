@@ -250,11 +250,21 @@ const getMedia=async(req,res)=>{
 
 const getUserProfile=async(req,res)=>{
     try{
-        let user=await userModel.findById(loggedInUser.id);
-        if(!user) return res.status(400).json({success:false,message:"User Invalid"});
-        const profileUrl=user.profilePicture;
-        if(!profileUrl) return res.status(400).json({success:false,message:"No profile uploaded."});
-        return res.status(200).json({success:true,message:"Profile fetched successfully.",profileUrl});
+        let user=await userModel.findById(req.user.id);
+        if(!user){
+            return res.status(400).json({
+                success:false,
+                message:"User not exists."
+            });
+        }
+        const profileUrl=user.profilePicture&&user.profilePicture.trim()!==""
+        ?user.profilePicture
+        :null;
+        return res.status(200).json({
+            success:true,
+            message:"Profile fetched successfully.",
+            profileUrl
+        });
     }
     catch(err){
         return res.status(500).json({
@@ -334,7 +344,7 @@ const getAllFiles=async(req,res)=>{
 
 async function deleteFolder(foldername){
     try{
-        const limit=1000;
+        const limit=100;
         const offset=0;
         const {data:files,error}=await supabase
         .storage
@@ -350,7 +360,7 @@ async function deleteFolder(foldername){
         if(!files||files.length===0){
             return{
                 success:false,
-                message:"No files found in profile folder"
+                message:"No files found in profile folder."
             };
         }
         let filesPath=files.map(file=>`${foldername}/${file.name}`);
@@ -367,7 +377,7 @@ async function deleteFolder(foldername){
         }
         return{
             success:true,
-            message:"Profile removed."
+            message:"Profile picture removed."
         }
     }
     catch(err){
@@ -385,7 +395,7 @@ async function removeProfile(req,res){
         if(!user){
             return res.status(400).json({
                 success:false,
-                message:"User not exists."
+                message:"User does not exists."
             });
         }
         user.profilePicture="";

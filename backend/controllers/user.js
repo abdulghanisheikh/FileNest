@@ -20,7 +20,7 @@ async function deleteFolder(folderName){
         if(!files||files.length===0){
             return{
                 success:true,
-                message:"no files, nothing to delete"
+                message:"No files, nothing to delete."
             }
         }
         const filePaths=files.map(file=>`${folderName}/${file.name}`);

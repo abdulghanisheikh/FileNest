@@ -41,13 +41,13 @@ const FileUpload=()=>{
     }
     return(
         <div className='flex flex-col gap-5 relative justify-center items-center main h-screen w-full bg-zinc-100 p-10'>
-            <div className='px-5 py-1 rounded-md bg-blue-500 text-white absolute top-5 right-5 cursor-pointer'>
+            <div className='px-5 py-1 rounded-md bg-blue-500 text-white absolute top-5 right-5 cursor-pointer active:scale-[95%] duration-300 ease-in-out'>
                 <Link to="/dashboard">Back to dashboard</Link>
             </div>
             <h1 className='text-3xl text-sky-950 tracking-tighter'>Upload Your File</h1>
-            <form onSubmit={handleUpload} encType="multipart/form-data" className='flex flex-col shadow-md shadow-black/10 justify-around items-center h-60 w-120 bg-white rounded-3xl p-5'>
+            <form onSubmit={handleUpload} encType="multipart/form-data" className='flex border-b-4 border-r-4 border-b-black/20 border-r-black/20 flex-col duration-300 ease-linear justify-center align-center gap-2 items-center h-60 w-120 bg-white rounded-3xl p-5'>
                 <label 
-                className='cursor-pointer px-5 py-3 w-2/3 rounded-md outline-none border border-gray-800'
+                className='cursor-pointer px-5 py-3 w-2/3 rounded-md outline-none border border-gray-800 truncate'
                 >
                     <input
                     hidden
@@ -57,7 +57,8 @@ const FileUpload=()=>{
                     />
                     {file?`${file.name}`:"Drag & drop or Choose a file"}
                 </label>
-                <button type="submit" className="w-2/3 py-3 hover:bg-blue-500 shadow-md shadow-black/20 duration-300 ease-in-out bg-blue-600 cursor-pointer text-white rounded-xl">Upload</button>
+                <p className="text-sm font-semibold text-black/80">Max. size 10MB</p>
+                <button type="submit" className="w-2/3 py-3 mt-6 duration-300 ease-in-out cursor-pointer text-blue-600 border-2 border-blue-500 rounded-xl active:scale-[95%] font-semibold hover:border-0 hover:bg-blue-600 hover:text-white">Upload</button>
             </form>
             <ToastContainer position="top-left"/>
         </div>

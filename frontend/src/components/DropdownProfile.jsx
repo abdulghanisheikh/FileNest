@@ -9,8 +9,9 @@ const DropdownProfile=()=>{
     const [profileUrl,setProfileUrl]=useState("");
     const [profile,setProfile]=useState(null);
     const navigate=useNavigate();
-    const username=JSON.parse(localStorage.getItem("loggedInUser")).fullname;
-    const email=JSON.parse(localStorage.getItem("loggedInUser")).email;
+    const userLS=JSON.parse(localStorage.getItem("loggedInUser")||"{}");
+    const username=userLS.fullname;
+    const email=userLS.email;
     const baseUrl=import.meta.env.VITE_BASE_URL;
 
     async function handleLogout(){
@@ -31,24 +32,26 @@ const DropdownProfile=()=>{
             }
        }
         catch(err){
-            toast.error(err.message);
+            toast.error(err.response?.data?.message);
         }
     }
 
     async function handleProfile(e){
         e.preventDefault();
+        if(!profile) return;
         try{
             const formData=new FormData();
             formData.append("profile",profile);
-            const res=await axios.post(`${baseUrl}/user/uploadProfile`,formData,
+            const {data}=await axios.post(`${baseUrl}/user/uploadProfile`,formData,
             {
                 withCredentials:true,
                 headers:{"Content-Type":"multipart/form-data"}
             });
-            const {success,message,publicUrl}=res.data;
+            const {success,message,publicUrl}=data;
             if(success){
+                setProfileUrl(publicUrl);
+                setProfile(null);
                 toast.success(message);
-                localStorage.setItem("profile",publicUrl);
             }
             else{
                 toast.error(message);
@@ -61,19 +64,19 @@ const DropdownProfile=()=>{
 
     async function fetchProfile(){
         try{
-            const res=await axios.get(`${baseUrl}/user/getProfile`,{
+            const {data}=await axios.get(`${baseUrl}/user/getProfile`,{
                 withCredentials:true
             });
-            const {success,message,profileUrl}=res.data;
+            const {success,message,profileUrl}=data;
             if(success){
-                setProfileUrl(profileUrl);
+                setProfileUrl(profileUrl||"");
             }
             else{
                 toast.error(message);
             }
         }
         catch(err){
-            toast.error(err.message);
+            toast.error(err.response?.data?.message);
         }
     }
 
@@ -101,12 +104,12 @@ const DropdownProfile=()=>{
 
     async function handleRemoveProfile(){
         try{
-            const res=await axios.delete(`${baseUrl}/user/removeProfile`,{
+            const {data}=await axios.delete(`${baseUrl}/user/removeProfile`,{
                 withCredentials:true
             });
-            const {success,message}=res.data;
+            const {success,message}=data;
             if(success){
-                localStorage.removeItem("profile");
+                setProfileUrl("");
                 toast.success(message);
             }
             else{
@@ -119,15 +122,11 @@ const DropdownProfile=()=>{
     }
 
     useEffect(()=>{
-        let profilePicture=localStorage.getItem("profile");
-        if(profilePicture&&profilePicture!=="null"){
-            setProfileUrl(profilePicture);
-        }
-        else{
+        if(!profileUrl){
             fetchProfile();
         }
     },[]);
-
+    
     return(
         <div className='relative flex flex-col gap-1 rounded-md z-[2]'>
             <button type="button" onClick={()=>setOpen(!open)} className='px-5 py-1 rounded-md shadow-sm hover:scale-103 duration-300 ease-in-out shadow-black/30 cursor-pointer bg-white active:scale-95'>👋 {username}</button>
@@ -139,15 +138,17 @@ const DropdownProfile=()=>{
                 <form onSubmit={handleProfile} encType="multipart/form-data" className='flex flex-col gap-2 items-center justify-around'>
                     <h1 className='text-xs text-black/70'>{email}</h1>
                     <div className='profilePicture h-25 w-25 bg-cover border-none overflow-hidden rounded-full flex justify-center items-center'>
-                        <img src={profileUrl||"/default-profile.jpg"} className='text-xs' alt="profile picture"/>
+                        <img src={
+                            profileUrl&&profileUrl!=="null"&&profileUrl.trim()!==""?profileUrl:"/default-profile.jpg"
+                        } className="text-xs" alt="profile picture"/>
                     </div>
-                    {profileUrl?<p onClick={handleRemoveProfile} className='px-5 text-sm cursor-pointer hover:bg-red-500 hover:text-white duration-300 border-2 border-red-400 hover:border-0 ease-in-out rounded-md text-red-500 shadow-md active:scale-[95%] shadow-black/10'>Remove profile</p>:
+                    {profileUrl?<p onClick={handleRemoveProfile} className='px-5 text-sm cursor-pointer hover:bg-red-500 hover:text-white duration-300 border-2 border-red-400 hover:border-none ease-in-out rounded-md text-red-500 shadow-md active:scale-[95%] shadow-black/10'>Remove profile</p>:
                     <>
                     <label>
                         <input type="file" hidden onChange={(e)=>setProfile(e.target.files[0])}/>
                         {!profile&&<p className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-blue-700 hover:text-white duration-300 active:scale-[95%] ease-in-out rounded-full text-blue-600 shadow-md shadow-black/10'>Select profile</p>}
                     </label>
-                    {profile&&<button type='submit' className='px-5 text-sm cursor-pointer hover:scale-102 hover:bg-green-700 hover:text-white duration-300 ease-in-out active:scale-[95%] rounded-full text-green-600 shadow-md shadow-black/10'>Click to Add</button>}
+                    {profile&&<button type='submit' className='px-5 text-sm cursor-pointer hover:border-none hover:bg-green-700 hover:text-white duration-300 ease-in-out active:scale-[95%] border-2 border-green-700 rounded-full text-green-600 shadow-md shadow-black/10'>Click to Add</button>}
                     </>}
                 </form>
                 <div className='flex flex-col gap-2'>
@@ -158,7 +159,7 @@ const DropdownProfile=()=>{
                         <p>Delete Account</p>
                     </div>
                 </div>
-                <ToastContainer position="top-left" />
+                <ToastContainer position="top-left"/>
             </div>
             }
         </div>

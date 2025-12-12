@@ -8,20 +8,25 @@ const cors=require("cors");
 const authRouter=require("./routes/auth.routes.js");
 const userRouter=require("./routes/user.routes.js");
 const fileRouter=require("./routes/file.routes.js");
+const summaryRouter=require("./routes/summary.routes.js");
+
 //Middlewares
 app.use(cors({
     origin:["http://localhost:5173",process.env.FRONTEND],
     methods:["GET","POST","PUT","DELETE","PATCH","OPTIONS"],
     credentials:true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
+
 //Routes
 app.use("/auth",authRouter);
 app.use("/user",userRouter);
 app.use("/file",fileRouter);
-const PORT=process.env.PORT||3000;
-app.listen(PORT,()=>{
-    console.log(`server is running at ${PORT}`);
+app.use("/",summaryRouter);
+const port=process.env.PORT||3000;
+app.listen(port,()=>{
+    console.log(`server is running at ${port}`);
 });
