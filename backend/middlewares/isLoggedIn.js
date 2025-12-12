@@ -4,19 +4,28 @@ function isLoggedIn(req,res,next){
     try{
         const token=req.cookies.token;
         if(!token){
-            return res.status(400).json({
+            return res.status(401).json({
                 success:false,
-                message:"No token, auth denied"
+                message:"Not Authenticated"
             });
         }
-        const decoded=jwt.verify(token,process.env.JWT_SECRET);
+        let decoded;
+        try{
+            decoded=jwt.verify(token,process.env.JWT_SECRET);
+        }
+        catch(err){
+            return res.status(401).json({
+                success:false,
+                message:"Invalid or expired token"
+            });
+        }
         req.user=decoded;
-        return next();
+        next();
     }
     catch(err){
         return res.status(500).json({
             success:false,
-            message:"Something went wrong",
+            message:"Server error",
             error:err.message
         });
     }
