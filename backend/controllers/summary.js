@@ -1,9 +1,9 @@
 const supabase = require("../config/supabase.config");
 const fileModel=require("../models/file.model.js");
-const groq=require("../config/groq-api.config.js");
+const {ChatGroq}=require("@langchain/groq");
 
 async function generateSummary(fileContent){
-    const prompt=`Summarize the following document's content using the EXACT structure below:
+    const systemPrompt=`You are helpful AI Assistant who summarize the following document's content using the EXACT structure below:
     ## 📝 Short Summary
     - 4-6 sentences summarizing the entire document.
     ## 🔑 Key Points / Insights
@@ -14,33 +14,29 @@ async function generateSummary(fileContent){
     Do NOT add any introduction or phrases like "Here is the summary".
     Do NOT wrap the output in backticks or markdown code blocks.
 
-    Document content:
-    """
-    ${fileContent}
-    """`;
+    Document content: ${fileContent}`;
     try{
-        const response=await groq.chat.completions.create({
-        model:"llama-3.1-8b-instant",
-        messages:[
-            {
-                role:"system",
-                content:"You are an expert AI assistant specializing in summarizing documents clearly and concisely. Always respond in clean, well-formatted Markdown WITHOUT using code fences or backticks. Follow the exact structure provided below and never add extra text, warnings, or introductions."
-            },
-            {
-                role:"user",
-                content:prompt
-            }
-        ]
+        const llm=new ChatGroq({
+            apiKey:process.env.GROQ_API_KEY,
+            model:"openai/gpt-oss-120b",
+            temperature:0,
+            maxRetries:2
         });
-        let summary=response.choices[0].message;
-        return summary;
+        const aiMsg=await llm.invoke({
+            role:"assistant",
+            content:systemPrompt
+        },{
+            role:"user",
+            content:fileContent
+        });
+        console.log(aiMsg);
     }
     catch(err){
-        return err;
+        return err.message;
     }
 }
 
-async function extractContent(blob,fileType){ //blob or uint8Array from supabase
+async function extractContent(blob,fileType){
     try{
         let buffer;
         if(blob instanceof Uint8Array){

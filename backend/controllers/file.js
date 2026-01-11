@@ -259,7 +259,7 @@ const getUserProfile=async(req,res)=>{
         }
         const profileUrl=user.profilePicture&&user.profilePicture.trim()!==""
         ?user.profilePicture
-        :null;
+        :"";
         return res.status(200).json({
             success:true,
             message:"Profile fetched successfully.",
