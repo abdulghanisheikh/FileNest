@@ -30,23 +30,7 @@ async function generateSummary(fileContent){
     - List the major topics or sections covered
     - Brief description of each topic
 
-    3. Main Points and Findings
-    - Core ideas, arguments, or conclusions
-    - Important facts, definitions, or claims
-
-    4. Important Details
-    - Dates, names, figures, statistics, or references (if present)
-    - Processes, steps, or methodologies (if described)
-
-    5. Outcomes or Conclusions
-    - Final conclusions, results, or recommendations
-    - Decisions or actions proposed in the document
-
-    6. Limitations or Gaps
-    - Any missing, incomplete, or ambiguous information
-    - Explicit limitations mentioned in the document
-
-    7. One-Paragraph Executive Summary
+    3. One-Paragraph Executive Summary
     - A concise paragraph summarizing the entire document for quick understanding
 
     Formatting rules:
