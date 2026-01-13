@@ -9,6 +9,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { RiFileExcel2Line } from "react-icons/ri";
 import { LiaFileAudioSolid } from "react-icons/lia";
 import { CiVideoOn } from "react-icons/ci";
+import { SiGooglegemini } from "react-icons/si";
 
 function getDateString(addedOn){
     const date=new Date(addedOn);
@@ -30,7 +31,7 @@ function getTimeStamp(addedOn){
     return `${hours}:${minutes} ${ampm}`;
 }
 
-const Doc=({filename,filesize,filetype,addedOn,publicUrl,deleteFile})=>{
+const Doc=({filename,filesize,filetype,addedOn,publicUrl,deleteFile,getSummary})=>{
     const [open,setOpen]=useState(false);
     const imageTypes=["image/png","image/gif","image/jpeg","image/svg+xml","image/x-icon","image/webp"];
     function renderIcon(){
@@ -69,9 +70,13 @@ const Doc=({filename,filesize,filetype,addedOn,publicUrl,deleteFile})=>{
               <div className='flex flex-col justify-between items-end gap-1'>
                 <div onClick={()=>setOpen(!open)} className='relative cursor-pointer p-1 rounded-full bg-sky-700 text-white'>
                     {!open?<BsThreeDotsVertical size={18} />:<MdOutlineRemove size={18}/>}
-                    {open&&<div className='absolute top-0 right-7 w-20 flex flex-col rounded-md bg-sky-800 text-white text-xs font-semibold'>
+                    {open&&<div className='absolute top-0 right-7 w-25 flex flex-col rounded-md bg-sky-800 text-white text-xs font-semibold'>
                         <a href={publicUrl} target="_blank" className='cursor-pointer text-center w-full hover:bg-white active:scale-95 hover:text-blue-500 duration-300 ease-in-out p-1 rounded-t-md'>View</a>
                         <button onClick={deleteFile} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-red-500 duration-300 ease-in-out rounded-b-md'>Delete</button>
+                        <button onClick={getSummary} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-green-600 duration-300 ease-in-out rounded-b-md flex justify-center items-center gap-1'>
+                            <p>Summarize</p>
+                            <SiGooglegemini />
+                        </button>
                     </div>}
                 </div>
                 <p>{(filesize/MB).toFixed(2)} MB</p>

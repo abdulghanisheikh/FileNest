@@ -1,123 +1,156 @@
-const supabase = require("../config/supabase.config");
+const supabase=require("../config/supabase.config");
 const fileModel=require("../models/file.model.js");
-const {ChatGroq}=require("@langchain/groq");
+const llm=require("../config/llm.config.js");
+const { PDFLoader }=require("@langchain/community/document_loaders/fs/pdf");
+const {Document}=require("@langchain/core/documents");
+const mammoth=require("mammoth");
+const { CharacterTextSplitter }=require("@langchain/textsplitters");
 
 async function generateSummary(fileContent){
-    const systemPrompt=`You are helpful AI Assistant who summarize the following document's content using the EXACT structure below:
-    ## 📝 Short Summary
-    - 4-6 sentences summarizing the entire document.
-    ## 🔑 Key Points / Insights
-    - 5-10 bullet points
-    - Each bullet should be clear and concise
-    ## 🎯 Overall Purpose
-    - 2-3 sentences describing the document's main purpose
-    Do NOT add any introduction or phrases like "Here is the summary".
-    Do NOT wrap the output in backticks or markdown code blocks.
+    const systemPrompt=`You are an expert document analysis and summarization agent.
+    Your task is to read the provided document content and produce a clear, accurate, and structured summary.
+    You must rely strictly on the given content and must not introduce external knowledge, assumptions, or opinions.
 
-    Document content: ${fileContent}`;
+    Follow these rules carefully:
+    - Do NOT hallucinate or infer information that is not explicitly present.
+    - If information is missing or unclear, state that it is not specified in the document.
+    - Preserve factual accuracy, terminology, and intent.
+    - Be concise but complete.
+    - Use clear headings and bullet points.
+    - Do not include unnecessary commentary, disclaimers, or explanations.
+
+    Output the summary using the following structure exactly:
+
+    1. Document Overview
+    - Purpose of the document
+    - Type of document (e.g., research paper, legal document, report, article, manual, etc.)
+    - Intended audience (if identifiable)
+
+    2. Key Topics and Sections
+    - List the major topics or sections covered
+    - Brief description of each topic
+
+    3. Main Points and Findings
+    - Core ideas, arguments, or conclusions
+    - Important facts, definitions, or claims
+
+    4. Important Details
+    - Dates, names, figures, statistics, or references (if present)
+    - Processes, steps, or methodologies (if described)
+
+    5. Outcomes or Conclusions
+    - Final conclusions, results, or recommendations
+    - Decisions or actions proposed in the document
+
+    6. Limitations or Gaps
+    - Any missing, incomplete, or ambiguous information
+    - Explicit limitations mentioned in the document
+
+    7. One-Paragraph Executive Summary
+    - A concise paragraph summarizing the entire document for quick understanding
+
+    Formatting rules:
+    - Use markdown headings and bullet points.
+    - Do not exceed necessary length; avoid repetition.
+    - Do not quote large blocks of text unless essential.
+    - Keep language neutral, professional, and precise.
+
+    If the document is very long, prioritize the most important and representative information.`;
     try{
-        const llm=new ChatGroq({
-            apiKey:process.env.GROQ_API_KEY,
-            model:"openai/gpt-oss-120b",
-            temperature:0,
-            maxRetries:2
-        });
-        const aiMsg=await llm.invoke({
-            role:"assistant",
-            content:systemPrompt
-        },{
-            role:"user",
-            content:fileContent
-        });
-        console.log(aiMsg);
+        const aiMsg=await llm.invoke([
+            {role:"system",content:systemPrompt},
+            {role:"user",content:fileContent}
+        ]);
+        return aiMsg.content;
     }
     catch(err){
-        return err.message;
-    }
-}
-
-async function extractContent(blob,fileType){
-    try{
-        let buffer;
-        if(blob instanceof Uint8Array){
-            buffer=Buffer.from(blob);
-        }
-        else{
-            const bufferArray=await blob.arrayBuffer();
-            buffer=Buffer.from(bufferArray);
-        }
-        if(fileType==="application/pdf"){
-            const pdf=require("pdf-parse");
-            const pdfData=await pdf(buffer);
-            return pdfData.text||"";
-        }
-        if(fileType==="text/plain"||fileType==="application/json"||fileType==="text/markdown"){
-            return buffer.toString("utf8");
-        }
-        if(fileType==="application/msword"||fileType==="application/vnd.ms-powerpoint"){
-            const textract=require("textract");
-            return await new Promise((resolve,reject)=>{
-                textract.fromBufferWithMime(fileType,buffer,(error,text)=>{
-                    if(error) return reject(error);
-                    resolve(text||"");
-                });
-            });
-        }
-        if(fileType==="application/vnd.openxmlformats-officedocument.wordprocessingml.document"){ //docx
-            const mammoth=require("mammoth");
-            const data=await mammoth.extractRawText({buffer});
-            return data.value;
-        }
-        if(fileType.includes("presentationml")){ //pptx
-            const officeParser=require("officeparser");
-            return await new Promise((resolve,reject)=>{
-                officeParser.parseOfficeAsync(buffer,(error,text)=>{
-                    if(error) return reject(error);
-                    resolve(text||"");
-                });
-            });
-        }
-        return "Unsupported file format";
-    }
-    catch(err){
-        console.error("Extraction Error");
         return err;
     }
 }
 
+async function extractContent(blob){
+    const documentType=blob.type;
+    switch(documentType){
+        case "application/pdf":{
+            const loader=new PDFLoader(blob,{
+                splitPages:true
+            });
+            return await loader.load();
+        }
+        case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":{
+            const buffer=Buffer.from(await blob.arrayBuffer());
+            const result=await mammoth.extractRawText({buffer});
+            return [
+                new Document({
+                    pageContent:result.value,
+                    metadata:{type:"text"},
+                })
+            ];
+        }
+        case "text/plain":{
+            const text=await blob.text();
+            return [
+                new Document({
+                    pageContent:text,
+                    metadata:{type:"text"},
+                })
+            ];
+        }
+        default:
+            throw new Error("Unsupported file type.");
+    }
+}
+
+function doChunks(docs){
+    const splitter=new CharacterTextSplitter({
+        chunkSize:1000,
+        chunkOverlap:200
+    });
+    return splitter.splitDocuments(docs);
+}
+
 async function getSummary(req,res){
     try{
-        const {filePath}=req.body;
-        if(!filePath){
+        const {filepath}=req.query;
+        if(!filepath){
             return res.status(400).json({
                 success:false,
-                message:"Filepath is required."
+                message:"file path is required."
             });
         }
-        const file=await fileModel.findOne({
-            path:filePath
+        const metaData=await fileModel.findOne({
+            path:filepath
         });
-        if(!file){
+        if(!metaData){
             return res.status(400).json({
                 success:false,
                 message:"File does not exist."
             });
         }
-        const {data,error}=await supabase.storage.from("UserFiles").download(file.path);
+        const {data:blob,error}=await supabase
+        .storage
+        .from("UserFiles")
+        .download(metaData.path);
         if(error){
             return res.status(400).json({
                 success:false,
-                message:"failed to download file from supabase."
+                message:"Error in fetching file from supabase",
+                error:error.toArray()
             });
         }
-        const fileContent=await extractContent(data,file.fileType);
-        if(!fileContent||fileContent==="Unsupported file format"){
+        const docs=await extractContent(blob);
+        if(!docs||!docs[0].pageContent.trim()){
             return res.status(400).json({
                 success:false,
-                message:"No content in file."
+                message:"Document contains no extractable text."
             });
         }
-        const summary=await generateSummary(`${fileContent}`);
+        const chunks=await doChunks(docs);
+        let content="";
+        chunks.forEach((chunk)=>{
+            content+=chunk.pageContent+"\n";
+        });
+        const summary=await generateSummary(content);
         return res.status(200).json({
             success:true,
             message:"Summary generated successfully",

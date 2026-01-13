@@ -1,4 +1,4 @@
-import React, { useEffect,useState,useContext } from "react";
+import { useEffect,useState,useContext } from "react";
 import axios from "axios";
 import Doc from "../components/Doc";
 import Navbar from "../components/Navbar";
@@ -29,6 +29,7 @@ function Documents(){
 			toast.error(err.message);
 		}
 	}
+
 	async function deleteFile(filepath){
 		try{
 			const {data}=await axios.delete(`${baseUrl}/file/delete`,{
@@ -49,6 +50,23 @@ function Documents(){
 		}
 	}
 
+	async function getDocumentSummary(filepath){
+		try{
+			const res=await axios.get(`${baseUrl}/summarize?filepath=${filepath}`,{
+				withCredentials:true
+			});
+			const {success,message,summary}=res.data;
+			if(success){
+				console.log(summary);
+				toast.success(summary);
+			}
+			else toast.error(message);
+		}
+		catch(err){
+			toast.error(err.response?.data?.message);
+		}
+	}
+
 	useEffect(()=>{
 		fetchFiles();
 	},[]);
@@ -65,15 +83,16 @@ function Documents(){
 					<h1 className="text-4xl">Documents</h1>
 					<div className='flex gap-2 flex-wrap justify-start w-full'>
 						{filteredDocs.length===0?<p className="text-sm">No documents uploaded yet.</p>:
-						filteredDocs.map((item,id)=>{
+						filteredDocs.map((doc,id)=>{
 							return <Doc
 							key={id}
-							filename={item.originalname}
-							filesize={item.fileSize}
-							filetype={item.fileType}
-							addedOn={item.addedOn}
-							publicUrl={item.publicUrl}
-							deleteFile={()=>deleteFile(item.path)}
+							getSummary={()=>getDocumentSummary(doc.path)}
+							filename={doc.originalname}
+							filesize={doc.fileSize}
+							filetype={doc.fileType}
+							addedOn={doc.addedOn}
+							publicUrl={doc.publicUrl}
+							deleteFile={()=>deleteFile(doc.path)}
 							/>
 						})}
 					</div>
