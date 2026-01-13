@@ -9,7 +9,7 @@ const { CharacterTextSplitter }=require("@langchain/textsplitters");
 async function generateSummary(fileContent){
     const systemPrompt=`You are a helpful and expert document summarization assistant.
 
-Your task is to summarize the given document text in a **concise, well-structured Markdown format**.
+Your task is to summarize the given document text in a **concise, well-structured, well-indented Markdown format**.
 
 Strict rules:
 - The summary MUST be significantly shorter than the original content.
@@ -19,19 +19,21 @@ Strict rules:
 - If something is unclear or missing, state “Not specified in the document.”
 
 Formatting rules:
+- Make the section's title bold and large
 - Use Markdown headings and bullet points.
 - Keep sections minimal.
+- There must be two new lines after every section.
 - Avoid long paragraphs.
 - Prefer short bullet points.
 
 Use the following structure ONLY:
 
 ## Overview
-- Purpose and type of the document (if identifiable)
+- Purpose and type of the document (if identifiable) \n\n
 
 ## Key Points
 - Main ideas, arguments, or findings
-- Important facts or details (only if relevant)
+- Important facts or details (only if relevant)  \n\n
 
 ## Conclusion
 - Final outcome, conclusion, or takeaway (if any)

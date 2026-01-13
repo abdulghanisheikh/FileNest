@@ -5,13 +5,16 @@ import Navbar from "../components/Navbar";
 import { ToastContainer,toast } from "react-toastify";
 import {UpdateContext} from "../context/Update";
 import Sidepanel from "../components/Sidepanel";
-import ReactMarkdown from "react-markdown";
+import SummaryComponent from "../components/SummaryComponent";
 
 function Documents(){ 
 	const [docs,setDocs]=useState([]);
 	const [query,setQuery]=useState("");
 	const [loading,setLoading]=useState(false);
-	const [summary,setSummary]=useState("");
+	const [summary,setSummary]=useState({
+		docName:"",
+		summary:""
+	});
 	const {setRefresh}=useContext(UpdateContext);
 	const baseUrl=import.meta.env.VITE_BASE_URL;
 
@@ -53,7 +56,7 @@ function Documents(){
 		}
 	}
 
-	async function getDocumentSummary(filepath){
+	async function getDocumentSummary(filepath,filename){
 		try{
 			setLoading(true);
 			const res=await axios.get(`${baseUrl}/summarize?filepath=${filepath}`,{
@@ -61,7 +64,10 @@ function Documents(){
 			});
 			const {success,message,summary}=res.data;
 			if(success){
-				setSummary(summary);
+				setSummary({
+					documentName:filename,
+					summary
+				});
 			}
 			else toast.error(message);
 		}
@@ -88,16 +94,12 @@ function Documents(){
 				<div className='main flex flex-col p-5 gap-5 bg-blue-100 min-h-screen rounded-md justify-start'>
 					<h1 className="text-4xl">Documents</h1>
 					<div className='relative flex gap-2 flex-wrap justify-start w-full'>
-						{summary&&(
-							<div className="h-100 w-1/2 py-5 px-10 bg-blue-950 rounded-lg text-white absolute top-1/2 left-1/2 -translate-1/2 z-[5] overflow-auto">
-								<ReactMarkdown>{summary}</ReactMarkdown>
-							</div>
-						)}
+						{summary.summary&&<SummaryComponent summary={summary} setSummary={setSummary}/>}
 						{filteredDocs.length===0?<p className="text-sm">No documents uploaded yet.</p>:
 						filteredDocs.map((doc,id)=>{
 							return <Doc
 							key={id}
-							getSummary={()=>getDocumentSummary(doc.path)}
+							getSummary={()=>getDocumentSummary(doc.path,doc.originalname)}
 							filename={doc.originalname}
 							filesize={doc.fileSize}
 							filetype={doc.fileType}
