@@ -15,7 +15,7 @@ async function generateSummary(fileContent){
     - Do NOT hallucinate or infer information that is not explicitly present.
     - If information is missing or unclear, state that it is not specified in the document.
     - Preserve factual accuracy, terminology, and intent.
-    - Be concise but complete.
+    - Be concise.
     - Use clear headings and bullet points.
     - Do not include unnecessary commentary, disclaimers, or explanations.
 
@@ -27,8 +27,7 @@ async function generateSummary(fileContent){
     - Intended audience (if identifiable)
 
     2. Key Topics and Sections
-    - List the major topics or sections covered
-    - Brief description of each topic
+    - List the major topics or sections covered in 4-5 points.
 
     3. One-Paragraph Executive Summary
     - A concise paragraph summarizing the entire document for quick understanding
