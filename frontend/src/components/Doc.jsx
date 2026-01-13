@@ -61,6 +61,8 @@ const Doc=({filename,filesize,filetype,addedOn,publicUrl,deleteFile,getSummary})
     const formattedDate=getDateString(addedOn);
     const time=getTimeStamp(addedOn);
     const MB=1000000;
+    const types=["application/pdf","text/plain","application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+
     return(
       <div className="doc justify-between shadow-sm shadow-black/20 flex flex-col p-5 bg-white w-50 h-40 text-sm rounded-2xl tracking-tighter">
           <div className="flex justify-between items-center">
@@ -73,10 +75,10 @@ const Doc=({filename,filesize,filetype,addedOn,publicUrl,deleteFile,getSummary})
                     {open&&<div className='absolute top-0 right-7 w-25 flex flex-col rounded-md bg-sky-800 text-white text-xs font-semibold'>
                         <a href={publicUrl} target="_blank" className='cursor-pointer text-center w-full hover:bg-white active:scale-95 hover:text-blue-500 duration-300 ease-in-out p-1 rounded-t-md'>View</a>
                         <button onClick={deleteFile} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-red-500 duration-300 ease-in-out rounded-b-md'>Delete</button>
-                        <button onClick={getSummary} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-green-600 duration-300 ease-in-out rounded-b-md flex justify-center items-center gap-1'>
+                        {types.includes(filetype)&&<button onClick={getSummary} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-green-600 duration-300 ease-in-out rounded-b-md flex justify-center items-center gap-1'>
                             <p>Summarize</p>
                             <SiGooglegemini />
-                        </button>
+                        </button>}
                     </div>}
                 </div>
                 <p>{(filesize/MB).toFixed(2)} MB</p>

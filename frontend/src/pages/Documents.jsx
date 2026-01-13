@@ -5,10 +5,13 @@ import Navbar from "../components/Navbar";
 import { ToastContainer,toast } from "react-toastify";
 import {UpdateContext} from "../context/Update";
 import Sidepanel from "../components/Sidepanel";
+import ReactMarkdown from "react-markdown";
 
 function Documents(){ 
 	const [docs,setDocs]=useState([]);
 	const [query,setQuery]=useState("");
+	const [loading,setLoading]=useState(false);
+	const [summary,setSummary]=useState("");
 	const {setRefresh}=useContext(UpdateContext);
 	const baseUrl=import.meta.env.VITE_BASE_URL;
 
@@ -52,18 +55,21 @@ function Documents(){
 
 	async function getDocumentSummary(filepath){
 		try{
+			setLoading(true);
 			const res=await axios.get(`${baseUrl}/summarize?filepath=${filepath}`,{
 				withCredentials:true
 			});
 			const {success,message,summary}=res.data;
 			if(success){
-				console.log(summary);
-				toast.success(summary);
+				setSummary(summary);
 			}
 			else toast.error(message);
 		}
 		catch(err){
 			toast.error(err.response?.data?.message);
+		}
+		finally{
+			setLoading(false);
 		}
 	}
 
@@ -81,7 +87,12 @@ function Documents(){
 				<Navbar query={query} setQuery={setQuery}/>
 				<div className='main flex flex-col p-5 gap-5 bg-blue-100 min-h-screen rounded-md justify-start'>
 					<h1 className="text-4xl">Documents</h1>
-					<div className='flex gap-2 flex-wrap justify-start w-full'>
+					<div className='relative flex gap-2 flex-wrap justify-start w-full'>
+						{summary&&(
+							<div className="h-100 w-1/2 py-5 px-10 bg-blue-950 rounded-lg text-white absolute top-1/2 left-1/2 -translate-1/2 z-[5] overflow-auto">
+								<ReactMarkdown>{summary}</ReactMarkdown>
+							</div>
+						)}
 						{filteredDocs.length===0?<p className="text-sm">No documents uploaded yet.</p>:
 						filteredDocs.map((doc,id)=>{
 							return <Doc

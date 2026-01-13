@@ -7,38 +7,36 @@ const mammoth=require("mammoth");
 const { CharacterTextSplitter }=require("@langchain/textsplitters");
 
 async function generateSummary(fileContent){
-    const systemPrompt=`You are an expert document analysis and summarization agent.
-    Your task is to read the provided document content and produce a clear, accurate, and structured summary.
-    You must rely strictly on the given content and must not introduce external knowledge, assumptions, or opinions.
+    const systemPrompt=`You are a helpful and expert document summarization assistant.
 
-    Follow these rules carefully:
-    - Do NOT hallucinate or infer information that is not explicitly present.
-    - If information is missing or unclear, state that it is not specified in the document.
-    - Preserve factual accuracy, terminology, and intent.
-    - Be concise.
-    - Use clear headings and bullet points.
-    - Do not include unnecessary commentary, disclaimers, or explanations.
+Your task is to summarize the given document text in a **concise, well-structured Markdown format**.
 
-    Output the summary using the following structure exactly:
+Strict rules:
+- The summary MUST be significantly shorter than the original content.
+- Use ONLY the information present in the document.
+- Do NOT add assumptions, interpretations, or external knowledge.
+- Be precise, factual, and concise.
+- If something is unclear or missing, state “Not specified in the document.”
 
-    1. Document Overview
-    - Purpose of the document
-    - Type of document (e.g., research paper, legal document, report, article, manual, etc.)
-    - Intended audience (if identifiable)
+Formatting rules:
+- Use Markdown headings and bullet points.
+- Keep sections minimal.
+- Avoid long paragraphs.
+- Prefer short bullet points.
 
-    2. Key Topics and Sections
-    - List the major topics or sections covered in 4-5 points.
+Use the following structure ONLY:
 
-    3. One-Paragraph Executive Summary
-    - A concise paragraph summarizing the entire document for quick understanding
+## Overview
+- Purpose and type of the document (if identifiable)
 
-    Formatting rules:
-    - Use markdown headings and bullet points.
-    - Do not exceed necessary length; avoid repetition.
-    - Do not quote large blocks of text unless essential.
-    - Keep language neutral, professional, and precise.
+## Key Points
+- Main ideas, arguments, or findings
+- Important facts or details (only if relevant)
 
-    If the document is very long, prioritize the most important and representative information.`;
+## Conclusion
+- Final outcome, conclusion, or takeaway (if any)
+
+If the document is very short, keep the summary proportionally short.`;
     try{
         const aiMsg=await llm.invoke([
             {role:"system",content:systemPrompt},
