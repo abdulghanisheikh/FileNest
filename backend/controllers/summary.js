@@ -86,8 +86,8 @@ async function extractContent(blob){
 
 function doChunks(docs){
     const splitter=new CharacterTextSplitter({
-        chunkSize:1000,
-        chunkOverlap:200
+        chunkSize:500,
+        chunkOverlap:0
     });
     return splitter.splitDocuments(docs);
 }

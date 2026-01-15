@@ -6,6 +6,7 @@ import { ToastContainer,toast } from "react-toastify";
 import {UpdateContext} from "../context/Update";
 import Sidepanel from "../components/Sidepanel";
 import SummaryComponent from "../components/SummaryComponent";
+import {InfinitySpin} from "react-loader-spinner";
 
 function Documents(){ 
 	const [docs,setDocs]=useState([]);
@@ -94,7 +95,12 @@ function Documents(){
 				<div className='main flex flex-col p-5 gap-5 bg-blue-100 min-h-screen rounded-md justify-start'>
 					<h1 className="text-4xl">Documents</h1>
 					<div className='relative flex gap-2 flex-wrap justify-start w-full'>
-						{summary.summary&&<SummaryComponent summary={summary} setSummary={setSummary}/>}
+						{loading?
+						<div className="flex items-center justify-center absolute top-1/2 left-[40%] -translate-[50%] z-[2] bg-black/80 text-white py-0.5 px-3 rounded-md">
+							<p className="text-lg font-semibold">Generating Summary</p>
+							<InfinitySpin color="white" width="160"/>
+						</div>:
+						(summary.summary&&<SummaryComponent summary={summary} setSummary={setSummary}/>)}
 						{filteredDocs.length===0?<p className="text-sm">No documents uploaded yet.</p>:
 						filteredDocs.map((doc,id)=>{
 							return <Doc
