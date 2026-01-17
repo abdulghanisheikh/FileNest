@@ -3,14 +3,17 @@ import {Link} from "react-router-dom";
 import axios from "axios";
 import {ToastContainer,toast} from "react-toastify";
 import {UpdateContext} from "../context/Update";
+import { ThreeDots } from 'react-loader-spinner';
 
 const FileUpload=()=>{
     const [file,setFile]=useState(null);
+    const [loading,setLoading]=useState(false);
     const {setRefresh}=useContext(UpdateContext);
     const baseUrl=import.meta.env.VITE_BASE_URL;
 
     async function handleUpload(e){
         e.preventDefault();
+        setLoading(true);
         try{
             let user=JSON.parse(localStorage.getItem("loggedInUser"));
             if(!user){
@@ -38,9 +41,27 @@ const FileUpload=()=>{
         catch(err){
             toast.error(err.message);
         }
+        finally{
+            setLoading(false);
+        }
     }
     return(
         <div className='flex flex-col gap-5 relative justify-center items-center main h-screen w-full bg-zinc-100 p-10'>
+            {loading&&(
+                <div className="flex gap-3 items-center justify-center absolute top-10 left-[50%] -translate-[50%] z-[4]">
+                    <p className="text-xl font-semibold text-sky-600">Saving File</p>
+                    <ThreeDots
+                    visible={true}
+                    height="30"
+                    width="50"
+                    color="blue"
+                    radius="9"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                    />
+                </div>
+            )}
             <div className='px-5 py-1 rounded-md bg-blue-500 text-white absolute top-5 right-5 cursor-pointer active:scale-[95%] duration-300 ease-in-out'>
                 <Link to="/dashboard">Back to dashboard</Link>
             </div>

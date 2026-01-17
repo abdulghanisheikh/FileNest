@@ -74,7 +74,7 @@ const Doc=({filename,filesize,filetype,addedOn,publicUrl,deleteFile,getSummary})
                     {!open?<BsThreeDotsVertical size={18} />:<MdOutlineRemove size={18}/>}
                     {open&&<div className='absolute top-0 right-7 w-25 flex flex-col rounded-md bg-sky-800 text-white text-xs font-semibold'>
                         <a href={publicUrl} target="_blank" className='cursor-pointer text-center w-full hover:bg-white active:scale-95 hover:text-blue-500 duration-300 ease-in-out p-1 rounded-t-md'>View</a>
-                        <button onClick={deleteFile} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-red-500 duration-300 ease-in-out rounded-b-md'>Delete</button>
+                        <button onClick={deleteFile} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-red-500 duration-300 ease-in-out'>Delete</button>
                         {types.includes(filetype)&&<button onClick={getSummary} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-green-600 duration-300 ease-in-out rounded-b-md flex justify-center items-center gap-1'>
                             <p>Summarize</p>
                             <SiGooglegemini />

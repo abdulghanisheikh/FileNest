@@ -5,7 +5,7 @@ import DropdownProfile from "../components/DropdownProfile";
 
 const Navbar=({query,setQuery})=>{
   return(
-    <div className='navbar flex w-full py-4 rounded-md px-5 justify-between items-center gap-2'>
+    <div className='navbar flex w-full py-4 rounded-md px-5 justify-between items-center gap-2 shadow-md shadow-black/10'>
         <input className='h-10 w-1/2 shadow-sm shadow-black/10 rounded-full outline-none bg-white px-5' type="text" placeholder="Find a file" name="search" onChange={(e)=>setQuery(e.target.value)} value={query} />
         <div className="flex gap-2 items-center">
             <Link to="/upload-file">

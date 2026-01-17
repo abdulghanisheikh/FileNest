@@ -2,9 +2,11 @@ import { useState } from "react";
 import axios from "axios";
 import {Link,useNavigate} from "react-router-dom";
 import {ToastContainer,toast} from "react-toastify";
+import {ThreeDots} from "react-loader-spinner";
 
 const LoginPage=()=>{
   const navigate=useNavigate();
+  const [loading,setLoading]=useState(false);
   const [loginData,setLoginData]=useState({
     email:"",
     password:""
@@ -18,6 +20,7 @@ const LoginPage=()=>{
 
   async function handleSubmit(e){
     e.preventDefault();
+    setLoading(true);
     try{
         const baseUrl=import.meta.env.VITE_BASE_URL;
         const {data}=await axios.post(`${baseUrl}/auth/login`,loginData,{
@@ -38,11 +41,29 @@ const LoginPage=()=>{
     catch(err){
         toast.error(err.response?.data?.message||"Something went wrong");
     }
+    finally{
+      setLoading(false);
+    }
   }
 
   return(
     <>
       <div className="h-screen w-full flex">
+        {loading&&(
+          <div className="flex gap-3 items-center justify-center absolute top-1/2 left-[40%] -translate-[50%] z-[4]">
+							<p className="text-xl font-semibold text-blue-600">Logging In</p>
+							<ThreeDots
+              visible={true}
+              height="30"
+              width="50"
+              color="blue"
+              radius="9"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              />
+					</div>
+        )}
         <div className="flex flex-col w-[50%] bg-sky-200 p-20 justify-between items-center">
           <div className="flex flex-col gap-10 h-1/2">
             <div className="flex flex-col">

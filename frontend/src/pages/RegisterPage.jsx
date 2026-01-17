@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import axios from "axios";
 import {Link,useNavigate} from "react-router-dom";
 import {ToastContainer,toast} from "react-toastify";
+import {ThreeDots} from "react-loader-spinner";
 
 const RegisterPage=()=>{
   const [newUser,setNewUser]=useState({fullname:"",email:"",password:""});
+  const [loading,setLoading]=useState(false);
   const navigate=useNavigate();
   function handleChange(name,value){
     setNewUser((prev)=>({...prev,[name]:value}));
   }
   async function handleSubmit(e){
+    setLoading(true);
     e.preventDefault();
     try{
       const baseUrl=import.meta.env.VITE_BASE_URL;
@@ -29,10 +32,28 @@ const RegisterPage=()=>{
     catch(err){
       console.log(err.message);
     }
+    finally{
+      setLoading(false);
+    }
   }
   return(
     <>
       <div className="h-screen w-full flex">
+        {loading&&(
+          <div className="flex gap-3 items-center justify-center absolute top-1/2 left-[40%] -translate-[50%] z-[4]">
+							<p className="text-xl font-semibold text-sky-600">Creating Account</p>
+							<ThreeDots
+              visible={true}
+              height="30"
+              width="50"
+              color="blue"
+              radius="9"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              />
+						</div>
+        )}
         <div className="flex flex-col w-[50%] bg-sky-200 px-20 py-20 justify-between items-center">
           <div className="flex flex-col gap-10 h-1/2">
             <div className="flex flex-col">

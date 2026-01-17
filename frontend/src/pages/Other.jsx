@@ -55,11 +55,11 @@ const Other=()=>{
         return file.originalname.toLowerCase().includes(query.toLowerCase());
     });
     return(
-        <div className='flex w-full min-h-screen gap-5 bg-zinc-100'>
+        <div className='flex w-full min-h-screen bg-zinc-100'>
                 <Sidepanel/>
                 <div className='flex flex-col min-h-screen w-[80%] rounded-md gap-1'>
                     <Navbar query={query} setQuery={setQuery}/>
-                    <div className='main flex flex-col p-5 gap-5 bg-blue-100 rounded-md min-h-screen justify-around'>
+                    <div className='main flex flex-col p-5 gap-5 rounded-md min-h-screen justify-around'>
                         <h1 className="text-4xl">Others</h1>
                         <div className='flex gap-2 flex-wrap justify-start h-full w-full'>
                             {filteredFiles.length===0?<p className='text-sm'>No file uploaded yet.</p>:
