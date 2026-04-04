@@ -1,33 +1,34 @@
 require("dotenv").config();
-const express=require("express");
-const app=express();
-const cookieParser=require("cookie-parser");
-const connectDB=require("./config/db.config.js");
-connectDB();
-const cors=require("cors");
-const authRouter=require("./routes/auth.routes.js");
-const userRouter=require("./routes/user.routes.js");
-const fileRouter=require("./routes/file.routes.js");
-const summaryRouter=require("./routes/summary.routes.js");
+const express = require("express");
+const app = express();
+const cookieParser = require("cookie-parser");
+const connectToDB = require("./config/db.config.js");
+connectToDB();
+const cors = require("cors");
+
+const authRouter = require("./routes/auth.routes.js");
+const userRouter = require("./routes/user.routes.js");
+const fileRouter = require("./routes/file.routes.js");
+const summaryRouter = require("./routes/summary.routes.js");
 
 //Middlewares
 app.use(cors({
-    origin:["http://localhost:5173",process.env.FRONTEND],
-    methods:["GET","POST","PUT","DELETE","PATCH","OPTIONS"],
-    credentials:true
+    origin: ["http://localhost:5174", process.env.FRONTEND],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    credentials: true
 }));
 
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 //Routes
-app.use("/auth",authRouter);
-app.use("/user",userRouter);
-app.use("/file",fileRouter);
-app.use("/",summaryRouter);
+app.use("/auth", authRouter);
+app.use("/user", userRouter);
+app.use("/file", fileRouter);
+app.use("/", summaryRouter);
 
-const port=process.env.PORT||3000;
-app.listen(port,()=>{
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
     console.log(`server is running at ${port}`);
 });
