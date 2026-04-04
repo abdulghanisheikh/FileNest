@@ -1,6 +1,7 @@
 const supabase = require("../config/supabase.config.js");
 const userModel = require("../models/user.model.js");
 const fileModel = require("../models/file.model.js");
+const uploadToImagekit = require("../config/imagekit.config.js");
 
 function getDateString(now) {
   const day = String(now.getDate()).padStart(2, "0");
@@ -125,58 +126,39 @@ async function uploadFile(req, res) {
   }
 }
 
-async function uploadProfile(req, res) {
-  try {
-    if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        message: "No token, auth denied.",
-      });
-    }
-    let user = await userModel.findById(req.user.id);
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: "User not exists.",
-      });
-    }
+const uploadProfile = async(req, res) => {
+	try {
+		const profile = req.file;
+		
+		if(!profile) {
+			return res.status(404).json({
+				success: false,
+				message: "Profile image not provided"
+			});
+		}
 
-    const profile = req.file;
-    const safeName = profile.originalname.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const path = `profile-pictures/${user._id}/${Date.now()}-${safeName}`;
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from("UserFiles")
-      .upload(path, profile.buffer, {
-        contentType: profile.mimetype,
-    });
+		const uploadedProfile = await uploadToImagekit({
+			buffer: profile.buffer,
+			fileName: profile.originalname,
+			folder: `/filenest/${req.user.id}`
+		});
 
-    if (uploadError) {
-      return res.status(400).json({
-        success: false,
-        message: "Upload failed.",
-        error: uploadError.message,
-      });
-    }
+		const user = await userModel.findOne({_id: req.user.id});
+		user.profilePicture = uploadedProfile.url;
+		await user.save();
 
-    const { data: publicData } = supabase.storage
-      .from("UserFiles")
-    .getPublicUrl(path);
-
-    user.profilePicture = publicData.publicUrl;
-    await user.save();
-
-    return res.status(200).json({
-      success: true,
-      message: "Profile set successfully.",
-      publicUrl: user.profilePicture,
-    });
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-      error: err.message,
-    });
-  }
+		res.status(200).json({
+			success: true,
+			message: "Profile picture uploaded",
+			url: user.profilePicture
+		});
+	} catch(err) {
+		return res.status(500).json({
+			success: false,
+			message: "Something went wrong",
+			error: err.message
+		});
+	}
 }
 
 module.exports = {

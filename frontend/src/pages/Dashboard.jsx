@@ -25,7 +25,13 @@ function Dashboard() {
   const MB = 1000000;
   const { refresh, setRefresh } = useContext(UpdateContext);
   const [uploadHistory, setUploadHistory] = useState([]);
-  const baseUrl = import.meta.env.VITE_BASE_URL;
+  
+  let baseUrl;
+  if(import.meta.env.VITE_ENVIRONMENT === "development") {
+    baseUrl = "http://localhost:3000";
+  } else {
+    baseUrl = import.meta.env.VITE_BASE_URL;
+  }
 
   async function fetchUsedStorage() {
     try {
@@ -126,9 +132,15 @@ function Dashboard() {
 
   //Run once, when component mounts
   useEffect(() => {
-    fetchUsedStorage();
-    fetchEachStorage();
-    fetchUploadHistory();
+    const reloadAll = async() => {
+      await Promise.all([
+        fetchUsedStorage(),
+        fetchEachStorage(),
+        fetchUploadHistory()
+      ]);
+    }
+
+    reloadAll();
   }, []);
 
   //Run whenever refresh becomes true

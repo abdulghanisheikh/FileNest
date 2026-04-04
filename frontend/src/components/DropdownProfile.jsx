@@ -12,7 +12,13 @@ const DropdownProfile = () => {
   const userLS = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const username = userLS.fullname;
   const email = userLS.email;
-  const baseUrl = import.meta.env.VITE_BASE_URL;
+
+  let baseUrl;
+  if(import.meta.env.VITE_ENVIRONMENT === "development") {
+    baseUrl = "http://localhost:3000"
+  } else {
+    baseUrl = import.meta.env.VITE_BASE_URL;
+  }
 
   async function handleLogout() {
     try {
@@ -41,9 +47,11 @@ const DropdownProfile = () => {
   async function handleProfile(e) {
     e.preventDefault();
     if (!profile) return;
+
     try {
       const formData = new FormData();
       formData.append("profile", profile);
+
       const { data } = await axios.post(
         `${baseUrl}/user/uploadProfile`,
         formData,
@@ -52,7 +60,9 @@ const DropdownProfile = () => {
           headers: { "Content-Type": "multipart/form-data" },
         },
       );
+
       const { success, message, publicUrl } = data;
+      
       if (success) {
         setProfileUrl(publicUrl);
         toast.success(message);
