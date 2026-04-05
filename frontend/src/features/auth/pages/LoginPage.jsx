@@ -6,11 +6,17 @@ import {useAuth} from "../hooks/useAuth.js";
 import { AuthContext } from "../auth.context.jsx";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
 
   const {handleLogin} = useAuth();
+
   const context = useContext(AuthContext);
 
-  const {loading} = context;
+  const {loading, user} = context;
+
+  if(!loading && user) {
+    navigate("/dashboard");
+  }
 
   const [loginData, setLoginData] = useState({
     email: "",
@@ -27,11 +33,19 @@ const LoginPage = () => {
     e.preventDefault();
 
     const {email, password} = loginData;
-    await handleLogin({email, password});
+    const data = await handleLogin({email, password});
+
     setLoginData({
       email: "",
       password: ""
     });
+
+    if(data.success) {
+      toast.success(data.message);
+      navigate("/dashboard");
+    } else {
+      toast.error(data.message);
+    }
   }
 
   return (

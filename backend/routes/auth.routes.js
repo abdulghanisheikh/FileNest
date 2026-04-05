@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
-const { signup, login, logout } = require("../controllers/auth.js");
+const { signup, login, logout, getMe } = require("../controllers/auth.js");
 const userModel = require("../models/user.model.js");
 const isLoggedIn = require("../middlewares/isLoggedIn.js");
 

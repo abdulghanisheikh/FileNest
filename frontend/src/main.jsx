@@ -4,11 +4,14 @@ import "react-toastify/ReactToastify.css";
 import './app/index.css';
 import App from './app/App.jsx';
 import {UpdateProvider} from "./context/Update.jsx";
+import { AuthContextProvider } from './features/auth/auth.context.jsx';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
   <UpdateProvider>
-    <App />
+    <AuthContextProvider>
+      <App />
+    </AuthContextProvider>
   </UpdateProvider>
   </BrowserRouter>
 );

@@ -1,12 +1,13 @@
-import {login, register, getMe} from "../service/auth.api.js";
+import {login, register, getMe, logout} from "../service/auth.api.js";
 import { useContext } from "react";
 import { AuthContext } from "../auth.context.jsx";
 import { useNavigate } from "react-router-dom";
 
 export const useAuth = () => {
+    const navigate = useNavigate();
+
     const context = useContext(AuthContext);
     const {setUser, setLoading, setError} = context;
-    const navigate = useNavigate();
     
     const handleLogin = async({email, password}) => {
         try {
@@ -17,10 +18,11 @@ export const useAuth = () => {
 
             if(success) {
                 setUser(user);
-                navigate("/dashboard");
             } else {
                 setError(message);
             }
+            
+            return data;
         } catch(err) {
             setError(err?.response?.data?.message || "Login failed");
         } finally {
@@ -37,10 +39,11 @@ export const useAuth = () => {
 
             if(success) {
                 setUser(user);
-                navigate("/dashboard");
             } else {
                 setError(message);
             }
+
+            return data;
         } catch(err) {
             setError(err?.response?.data?.message || "Registration failed");
         } finally {
@@ -66,5 +69,26 @@ export const useAuth = () => {
         }
     }
 
-    return {handleLogin, handleRegister, handleGetMe};
+    const handleLogout = async() => {
+        try {
+            setLoading(true);
+
+            const {data} = await logout();
+
+            if(data.success) {
+                setUser(null);
+                navigate("/login-page");
+            } else {
+                setError(data.message);
+            }
+
+            return data;
+        } catch(err) {
+            setError(err?.response?.data?.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return {handleLogin, handleRegister, handleGetMe, handleLogout};
 }

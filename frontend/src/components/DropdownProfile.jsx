@@ -1,17 +1,19 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
+import { useAuth } from "../features/auth/hooks/useAuth";
+import { AuthContext } from "../features/auth/auth.context";
 
 const DropdownProfile = () => {
   const [open, setOpen] = useState(false);
-
-  const userLS = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-  const username = userLS.fullname;
-  const email = userLS.email;
-
   const navigate = useNavigate();
+
+  const {handleLogout} = useAuth();
+
+  const context = useContext(AuthContext);
+  const {user} = context;
 
   const [profile, setProfile] = useState("");
   const profileImageInputFieldRef = useRef();
@@ -21,30 +23,6 @@ const DropdownProfile = () => {
     baseUrl = "http://localhost:3000"
   } else {
     baseUrl = import.meta.env.VITE_BASE_URL;
-  }
-
-  async function handleLogout() {
-    try {
-      const res = await axios.post(
-        `${baseUrl}/auth/logout`,
-        {},
-        {
-          withCredentials: true, //to send httpOnly cookie to backend
-        },
-      );
-      const { success, message } = res.data;
-      if (success) {
-        toast.success(message);
-        localStorage.removeItem("loggedInUser");
-        setTimeout(() => {
-          navigate("/login-page");
-        }, 2000);
-      } else {
-        toast.error(message);
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.message);
-    }
   }
 
   async function handleAccountDelete() {
@@ -128,7 +106,7 @@ const DropdownProfile = () => {
         onClick={() => setOpen(!open)}
         className="px-5 py-1 rounded-md shadow-sm hover:scale-103 duration-300 ease-in-out shadow-black/30 cursor-pointer bg-white active:scale-95"
       >
-        👋 {username}
+        👋 {user?.fullname}
       </button>
 
       {open && (
@@ -142,7 +120,7 @@ const DropdownProfile = () => {
 
           <div className="flex flex-col items-center">
             <input type="file" name="profile" onChange={handleUserProfile} hidden ref={profileImageInputFieldRef} />
-            <p className="text-xs text-black/60 mb-5">{email}</p>
+            <p className="text-xs text-black/60 mb-5">{user?.email}</p>
 
             <img src={
               profile === "" ? "https://ik.imagekit.io/AbdulGhani/filenest/default_profile.jpg?updatedAt=1775324017230" : profile

@@ -112,21 +112,24 @@ const logout = async (req, res) => {
 };
 
 const getMe = async(req, res) => {
-  try {
-    const user = await userModel.findById(req.user.id);
+	try {
+		const user = await userModel.findById(req.user.id);
 
-    res.status(200).json({
-      success: true,
-      message: "User fetched",
-      user
-    });
-  } catch(err) {
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong",
-      error: err.message
-    });
-  }
+		res.status(200).json({
+			success: true,
+			message: "User fetched",
+			user: {
+				username: user.fullname,
+				email: user.email,
+			}
+		});
+	} catch(err) {
+		return res.status(500).json({
+			success: false,
+			message: "Something went wrong",
+			error: err.message
+		});
+	}
 }
 
 module.exports = { signup, login, logout, getMe };
