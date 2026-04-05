@@ -14,4 +14,4 @@ const uploadToImagekit = async({buffer, fileName, folder = ""}) => {
     return uploadedFile;
 }
 
-module.exports = uploadToImagekit;
+module.exports = {uploadToImagekit, imagekit};

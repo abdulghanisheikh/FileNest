@@ -56,6 +56,7 @@ const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     const userData = user.toObject();
     delete userData.password;
+
     if (!isMatch) {
       return res.status(400).json({
         message: "Email or password is incorrect",
@@ -68,10 +69,10 @@ const login = async (req, res) => {
       { expiresIn: "24h" },
     );
     res.cookie("token", token, {
-      httpOnly: true, //JS can't access cookies in frontend
+      httpOnly: true, // JS can't access cookies in frontend
       secure: true,
-      maxAge: 24*60*60*1000, //1 day
-      sameSite: "none", //Allow cross-origin domain
+      maxAge: 24*60*60*1000, // 1 day
+      sameSite: "none", // allow cross-origin domain
     });
     return res.status(200).json({
       success: true,

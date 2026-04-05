@@ -285,33 +285,6 @@ const getMedia = async (req, res) => {
   }
 };
 
-const getUserProfile = async (req, res) => {
-  try {
-    let user = await userModel.findById(req.user.id);
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: "User not exists.",
-      });
-    }
-    const profileUrl =
-      user.profilePicture && user.profilePicture.trim() !== ""
-        ? user.profilePicture
-        : "";
-    return res.status(200).json({
-      success: true,
-      message: "Profile fetched successfully.",
-      profileUrl,
-    });
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-      error: err.message,
-    });
-  }
-};
-
 const getOthers = async (req, res) => {
   try {
     let user = await userModel.findById(req.user.id).populate({
@@ -388,6 +361,7 @@ const deleteFolder = async(foldername) => {
     const { data: files, error } = await supabase.storage
       .from("UserFiles")
       .list(foldername, { limit, offset });
+
     if (error) {
       return {
         success: false,
@@ -395,16 +369,20 @@ const deleteFolder = async(foldername) => {
         error: error.message,
       };
     }
+
     if (!files || files.length === 0) {
       return {
         success: false,
         message: "No files found in profile folder.",
       };
     }
+
     let filesPath = files.map((file) => `${foldername}/${file.name}`);
+
     const { error: deleteError } = await supabase.storage
       .from("UserFiles")
       .remove(filesPath);
+
     if (deleteError) {
       return {
         success: false,
@@ -412,6 +390,7 @@ const deleteFolder = async(foldername) => {
         error: deleteError.message,
       };
     }
+
     return {
       success: true,
       message: "Profile picture removed.",
@@ -425,31 +404,6 @@ const deleteFolder = async(foldername) => {
   }
 }
 
-const removeProfile = async(req, res) => {
-  try {
-    let user = await userModel.findById(req.user.id);
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: "User does not exists.",
-      });
-    }
-    user.profilePicture = "";
-    await user.save();
-    const result = await deleteFolder(`profile-pictures/${user._id}`);
-    if (result.success) {
-      return res.status(200).json(result);
-    } else {
-      return res.status(400).json(result);
-    }
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: "Server error, try again",
-      error: err.message,
-    });
-  }
-}
 
 module.exports = {
   fileStorage,
@@ -458,8 +412,6 @@ module.exports = {
   getEachStorage,
   getImages,
   getMedia,
-  getUserProfile,
   getOthers,
   getAllFiles,
-  removeProfile,
 };

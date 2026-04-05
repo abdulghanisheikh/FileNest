@@ -1,8 +1,9 @@
 const userModel=require("../models/user.model.js");
 const fileModel=require("../models/file.model.js");
 const supabase=require("../config/supabase.config.js");
+const { imagekit } = require("../config/imagekit.config.js");
 
-async function deleteFolder(folderName){
+const deleteFolder = async(folderName) => {
     try{
         const limit=1000;
         const offset=0;
@@ -49,7 +50,7 @@ async function deleteFolder(folderName){
     }
 }
 
-async function deleteAccount(req,res){
+const deleteAccount = async(req, res) => {
     try{
         let userId=req.user.id;
         let deletedUser=await userModel.findByIdAndDelete(userId);
@@ -83,4 +84,52 @@ async function deleteAccount(req,res){
     }
 }
 
-module.exports=deleteAccount;
+const getUserProfile = async(req, res) => {
+    try {
+        const user = await userModel.findOne({_id: req.user.id});
+
+        res.status(200).json({
+            success: true,
+            message: "User profile fetched",
+            profileUrl: user.profilePicture
+        });
+    } catch(err) {
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+            error: err.message
+        });
+    }
+}
+
+const removeUserProfile = async(req, res) => {
+   try {
+        const user = await userModel.findById(req.user.id);
+
+        if(!user.profilePicture && !user.profileId) {
+            return res.status(404).json({
+                success: false,
+                message: "Profile does not exist"
+            });
+        }
+
+        await imagekit.files.delete(user.profileId);
+
+        user.profilePicture = "";
+        user.profileId = "";
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: "User profile removed"
+        });
+   } catch(err) {
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+            error: err.message
+        });
+   }
+}
+
+module.exports= { deleteAccount, removeUserProfile, getUserProfile };

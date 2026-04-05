@@ -1,7 +1,7 @@
 const supabase = require("../config/supabase.config.js");
 const userModel = require("../models/user.model.js");
 const fileModel = require("../models/file.model.js");
-const uploadToImagekit = require("../config/imagekit.config.js");
+const {uploadToImagekit, imagekit} = require("../config/imagekit.config.js");
 
 function getDateString(now) {
   const day = String(now.getDate()).padStart(2, "0");
@@ -130,27 +130,32 @@ const uploadProfile = async(req, res) => {
 	try {
 		const profile = req.file;
 		
-		if(!profile) {
+    if(!profile) {
 			return res.status(404).json({
 				success: false,
 				message: "Profile image not provided"
 			});
 		}
 
-		const uploadedProfile = await uploadToImagekit({
+    const user = await userModel.findOne({_id: req.user.id});
+
+    if(user.profileId) {
+      await imagekit.files.delete(user.profileId);
+    }
+
+		const uploaded = await uploadToImagekit({
 			buffer: profile.buffer,
 			fileName: profile.originalname,
 			folder: `/filenest/${req.user.id}`
 		});
 
-		const user = await userModel.findOne({_id: req.user.id});
-		user.profilePicture = uploadedProfile.url;
+    user.profileId = uploaded.fileId;
+		user.profilePicture = uploaded.url;
 		await user.save();
 
 		res.status(200).json({
 			success: true,
-			message: "Profile picture uploaded",
-			url: user.profilePicture
+			message: "Profile picture uploaded"
 		});
 	} catch(err) {
 		return res.status(500).json({
@@ -162,9 +167,9 @@ const uploadProfile = async(req, res) => {
 }
 
 module.exports = {
-    uploadFile, 
-    uploadProfile, 
-    docType, 
-    imageType, 
-    mediaType 
+  uploadFile, 
+  uploadProfile, 
+  docType, 
+  imageType, 
+  mediaType 
 };

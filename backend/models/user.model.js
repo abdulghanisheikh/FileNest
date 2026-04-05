@@ -7,7 +7,11 @@ const userSchema = new mongoose.Schema({
     },
     profilePicture: {
         type: String,
-        default: "https://ik.imagekit.io/AbdulGhani/filenest/default_profile.jpg?updatedAt=1775324017230",
+        default: "",
+    },
+    profileId: {
+        type: String,
+        default: ""
     },
     email: {
         type: String,
