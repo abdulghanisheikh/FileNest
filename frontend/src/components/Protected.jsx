@@ -1,9 +1,7 @@
 import React from 'react'
 
-const Protected = () => {
-  return (
-    <div>Protected</div>
-  )
+const Protected = ({children}) => {
+    
 }
 
-export default Protected
+export default Protected;

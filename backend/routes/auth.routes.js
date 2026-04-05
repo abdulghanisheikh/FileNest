@@ -3,6 +3,7 @@ const router = express.Router();
 const { body } = require("express-validator");
 const { signup, login, logout } = require("../controllers/auth.js");
 const userModel = require("../models/user.model.js");
+const isLoggedIn = require("../middlewares/isLoggedIn.js");
 
 const signupValidation = [
   body("fullname").trim().isLength({ min: 3 }),
@@ -37,6 +38,11 @@ router.post("/login", loginValidation, login);
 /**
  * @route POST /auth/logout
  */
-router.post("/logout", logout);
+router.post("/logout", isLoggedIn, logout);
+
+/**
+ * @route GET /auth/getMe
+ */
+router.get("/getMe", isLoggedIn, getMe);
 
 module.exports = router;

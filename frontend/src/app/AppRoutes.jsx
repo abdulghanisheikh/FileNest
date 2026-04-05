@@ -1,8 +1,8 @@
 import {Routes, Route, Navigate} from "react-router-dom";
 import FileUpload from "../pages/FileUpload";
 import Documents from "../pages/Documents";
-import LoginPage from "../pages/LoginPage";
-import RegisterPage from "../pages/RegisterPage";
+import LoginPage from "../features/auth/pages/LoginPage";
+import RegisterPage from "../features/auth/pages/RegisterPage";
 import Dashboard from "../pages/Dashboard";
 import Images from "../pages/Images";
 import Media from "../pages/Media";

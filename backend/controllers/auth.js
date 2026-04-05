@@ -63,17 +63,20 @@ const login = async (req, res) => {
         success: false,
       });
     }
+
     const token = jwt.sign(
       { email: user.email, id: user._id },
       process.env.JWT_SECRET,
       { expiresIn: "24h" },
     );
+    
     res.cookie("token", token, {
       httpOnly: true, // JS can't access cookies in frontend
       secure: true,
       maxAge: 24*60*60*1000, // 1 day
       sameSite: "none", // allow cross-origin domain
     });
+    
     return res.status(200).json({
       success: true,
       message: "Login Successfull",
@@ -108,4 +111,22 @@ const logout = async (req, res) => {
   }
 };
 
-module.exports = { signup, login, logout };
+const getMe = async(req, res) => {
+  try {
+    const user = await userModel.findById(req.user.id);
+
+    res.status(200).json({
+      success: true,
+      message: "User fetched",
+      user
+    });
+  } catch(err) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      error: err.message
+    });
+  }
+}
+
+module.exports = { signup, login, logout, getMe };
