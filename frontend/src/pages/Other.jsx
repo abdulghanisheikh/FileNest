@@ -10,7 +10,14 @@ const Other=()=>{
     const [otherFiles,setOtherFiles]=useState([]);
     const {setRefresh}=useContext(UpdateContext);
     const [query,setQuery]=useState("");
-    const baseUrl=import.meta.env.VITE_BASE_URL;
+
+    let baseUrl;
+    if(import.meta.env.VITE_ENVIRONMENT === "development") {
+        baseUrl = "http://localhost:3000"
+    } else {
+        baseUrl = import.meta.env.VITE_BASE_URL;
+    }
+    
     const fetchOtherFiles=async()=>{
         try{
             const res=await axios.get(`${baseUrl}/file/get-others`,{

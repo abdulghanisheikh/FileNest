@@ -9,6 +9,13 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  let baseUrl;
+  if(import.meta.env.VITE_ENVIRONMENT === "development") {
+    baseUrl = "http://localhost:3000"
+  } else {
+    baseUrl = import.meta.env.VITE_BASE_URL;
+  }
+
   function handleChange(name, value) {
     setNewUser((prev) => ({ ...prev, [name]: value }));
   }
@@ -18,14 +25,6 @@ const RegisterPage = () => {
     e.preventDefault();
 
     try {
-      let baseUrl;
-
-      if(import.meta.env.VITE_ENVIRONMENT === "development") {
-        baseUrl = "http://localhost:3000"
-      } else {
-        baseUrl = import.meta.env.VITE_BASE_URL;
-      }
-
       const {fullname, email, password} = newUser;
       const { data } = await axios.post(`${baseUrl}/auth/create`, {
         fullname,

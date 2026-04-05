@@ -10,7 +10,14 @@ const Media=()=>{
 	const [mediaFiles,setMediaFiles]=useState([]);
 	const {setRefresh}=useContext(UpdateContext);
 	const [query,setQuery]=useState("");
-	const baseUrl=import.meta.env.VITE_BASE_URL;
+
+	let baseUrl;
+    if(import.meta.env.VITE_ENVIRONMENT === "development") {
+        baseUrl = "http://localhost:3000"
+    } else {
+        baseUrl = import.meta.env.VITE_BASE_URL;
+    }
+	
 	const fetchMediaFiles=async()=>{
 		try{
 			const res=await axios.get(`${baseUrl}/file/get-media`,{

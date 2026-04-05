@@ -9,7 +9,13 @@ const FileUpload=()=>{
     const [file,setFile]=useState(null);
     const [loading,setLoading]=useState(false);
     const {setRefresh}=useContext(UpdateContext);
-    const baseUrl=import.meta.env.VITE_BASE_URL;
+
+    let baseUrl;
+    if(import.meta.env.VITE_ENVIRONMENT === "development") {
+        baseUrl = "http://localhost:3000"
+    } else {
+        baseUrl = import.meta.env.VITE_BASE_URL;
+    }
 
     async function handleUpload(e){
         e.preventDefault();

@@ -10,7 +10,14 @@ const Images=()=>{
     const [imageFiles,setImageFiles]=useState([]);
     const [query,setQuery]=useState("");
     const {setRefresh}=useContext(UpdateContext);
-    const baseUrl=import.meta.env.VITE_BASE_URL;
+
+    let baseUrl;
+    if(import.meta.env.VITE_ENVIRONMENT === "development") {
+        baseUrl = "http://localhost:3000"
+    } else {
+        baseUrl = import.meta.env.VITE_BASE_URL;
+    }
+    
     const fetchImages=async()=>{
         try{
             const {data}=await axios.get(`${baseUrl}/file/get-images`,{

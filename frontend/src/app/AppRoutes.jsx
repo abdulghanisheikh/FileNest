@@ -1,12 +1,12 @@
 import {Routes, Route, Navigate} from "react-router-dom";
-import FileUpload from "./pages/FileUpload";
-import Documents from "./pages/Documents";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import Dashboard from "./pages/Dashboard";
-import Images from "./pages/Images";
-import Media from "./pages/Media";
-import Other from "./pages/Other";
+import FileUpload from "../pages/FileUpload";
+import Documents from "../pages/Documents";
+import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
+import Dashboard from "../pages/Dashboard";
+import Images from "../pages/Images";
+import Media from "../pages/Media";
+import Other from "../pages/Other";
 
 const AppRoutes = () => {
   return <Routes>

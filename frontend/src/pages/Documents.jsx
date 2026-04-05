@@ -16,8 +16,15 @@ function Documents() {
     docName: "",
     summary: "",
   });
+
   const { setRefresh } = useContext(UpdateContext);
-  const baseUrl = import.meta.env.VITE_BASE_URL;
+
+  let baseUrl;
+  if (import.meta.env.VITE_ENVIRONMENT === "development") {
+    baseUrl = "http://localhost:3000"
+  } else {
+    baseUrl = import.meta.env.VITE_BASE_URL;
+  }
 
   async function fetchFiles() {
     try {
@@ -56,10 +63,12 @@ function Documents() {
   async function getDocumentSummary(filepath, filename) {
     try {
       setLoading(true);
-      const res = await axios.get(`${baseUrl}/summarize?filepath=${filepath}`, {
+      const {data} = await axios.get(`${baseUrl}/summarize?filepath=${filepath}`, {
         withCredentials: true,
       });
-      const { success, message, summary } = res.data;
+
+      const { success, message, summary } = data;
+
       if (success) {
         setSummary({
           documentName: filename,
@@ -85,9 +94,9 @@ function Documents() {
     <div className="flex w-full relative min-h-screen bg-zinc-100">
       {summary.summary && (
         <div onClick={() => setSummary({
-			docName: "",
-			summary: ""
-		})} className="absolute inset-0 w-full h-full bg-black/50 z-[3] backdrop-blur-sm"></div>
+          docName: "",
+          summary: ""
+        })} className="absolute inset-0 w-full h-full bg-black/50 z-[3] backdrop-blur-sm"></div>
       )}
 
       <Sidepanel />
