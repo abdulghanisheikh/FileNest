@@ -21,7 +21,7 @@ const Sidepanel=()=>{
     }];
 
     return(
-    <div className='sidepanel flex flex-col w-[20%] gap-10 p-5 min-h-screen shadow-md shadow-black/50'>
+    <div className='sidepanel flex flex-col w-[20%] gap-10 p-5 min-h-screen border-r-3 border-blue-950'>
         <h1 className='text-4xl text-sky-950'>FileNest</h1>
         <div className='sidebar flex flex-col gap-5'>
             {links.map((item,id)=>{
