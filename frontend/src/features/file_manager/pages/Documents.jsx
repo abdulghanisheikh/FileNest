@@ -1,63 +1,35 @@
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import Doc from "../components/Doc";
-import Navbar from "../components/Navbar";
+import Doc from "../../../components/Doc";
+import Navbar from "../../../components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
-import { UpdateContext } from "../context/Update";
-import Sidepanel from "../components/Sidepanel";
-import SummaryComponent from "../components/SummaryComponent";
+import Sidepanel from "../../../components/Sidepanel";
+import SummaryComponent from "../../../components/SummaryComponent";
 import { ThreeDots } from "react-loader-spinner";
+import { useFileManager } from "../hooks/useFileManager";
+import { FileManagerContext } from "../file_manager.context";
 
 function Documents() {
-  const [docs, setDocs] = useState([]);
   const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState({
     docName: "",
     summary: "",
   });
 
-  const { setRefresh } = useContext(UpdateContext);
+  const {handleFetchDocs, handleFileDelete} = useFileManager();
 
-  let baseUrl;
-  if (import.meta.env.VITE_ENVIRONMENT === "development") {
-    baseUrl = "http://localhost:3000"
-  } else {
-    baseUrl = import.meta.env.VITE_BASE_URL;
-  }
+  const context = useContext(FileManagerContext);
+  const {loading, docs} = context;
 
-  async function fetchFiles() {
-    try {
-      const { data } = await axios.get(`${baseUrl}/file/get-docs`, {
-        withCredentials: true,
-      });
-      const { success, message, files } = data;
-      if (success) {
-        setDocs(files);
-      } else {
-        toast.error(message);
-      }
-    } catch (err) {
-      toast.error(err.message);
-    }
-  }
+  const deleteFile = async(filepath) => {
+	const data = await handleFileDelete({filepath});
+	const {success, message} = data;
 
-  async function deleteFile(filepath) {
-    try {
-      const { data } = await axios.delete(`${baseUrl}/file/delete`, {
-        data: { filepath },
-        withCredentials: true,
-      });
-      const { success, message } = data;
-      if (success) {
-        setRefresh(true);
-        fetchFiles();
-      } else {
-        toast.error(message);
-      }
-    } catch (err) {
-      toast.error(err.message);
-    }
+	if(success) {
+		toast.success(message);
+	} else {
+		toast.error(message);
+	}
   }
 
   async function getDocumentSummary(filepath, filename) {
@@ -83,7 +55,7 @@ function Documents() {
   }
 
   useEffect(() => {
-    fetchFiles();
+    handleFetchDocs();
   }, []);
 
   const filteredDocs = docs.filter((doc) => {
@@ -143,7 +115,7 @@ function Documents() {
                     filetype={doc.fileType}
                     addedOn={doc.addedOn}
                     publicUrl={doc.publicUrl}
-                    deleteFile={() => deleteFile(doc.path)}
+                    deleteFile={() => deleteFile(doc.filepath)}
                   />
                 );
               })
