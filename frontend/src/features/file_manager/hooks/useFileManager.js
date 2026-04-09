@@ -29,9 +29,10 @@ export const useFileManager = () => {
         try {
             setLoading(true);
             const {data} = await deleteFile({filepath});
+            
             return data;
         } catch(err) {
-            setError(err?.response?.data?.message || "Deletion failed");
+            setError(err?.response?.data?.message || "Delete operation failed");
         } finally {
             setLoading(false);
         }
@@ -47,6 +48,8 @@ export const useFileManager = () => {
             if(success) {
                 setRefresh(true);
             }
+
+            return data;
         } catch(err) {
             setError(err?.response?.data?.message || "File upload failed");
         } finally {

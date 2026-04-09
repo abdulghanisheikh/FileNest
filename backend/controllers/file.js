@@ -71,82 +71,92 @@ const fetchDocs = async (req, res) => {
 };
 
 const deleteFile = async (req, res) => {
-  try {
-    const docType = [
-      "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "text/plain",
-      "application/json",
-      "text/csv",
-      "text/markdown",
-    ];
-    const imageType = [
-      "image/png",
-      "image/gif",
-      "image/jpeg",
-      "image/svg+xml",
-      "image/x-icon",
-      "image/webp",
-    ];
-    const mediaType = ["video/mp4", "audio/mpeg"];
-    const { filepath } = req.body;
-    if (!filepath || typeof filepath !== "string") {
-      return res.status(400).json({
-        success: false,
-        message: "file path is required",
-      });
-    }
-    const { data, error } = await supabase.storage
-      .from("UserFiles")
-      .remove([filepath]);
-    if (error) {
-      return res.status(400).json({
-        success: false,
-        message: "Deletion failed",
-        error: error.message,
-      });
-    }
-    const deletedFile = await fileModel.findOneAndDelete({ path: filepath });
-    if (!deletedFile) {
-      return res.status(400).json({
-        success: false,
-        message: "File not found in DB",
-      });
-    }
-    let user = await userModel.findById(req.user.id); //it expects user files array of ObjectIds
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: "User not exists",
-      });
-    }
-    user.files = user.files.filter((file) => {
-      //user.files -> array of objectIds
-      return file._id.toString() !== deletedFile._id.toString();
-    });
-    if (docType.includes(deletedFile.fileType)) {
-      user.docUpdate = new Date();
-    } else if (imageType.includes(deletedFile.fileType)) {
-      user.imageUpdate = new Date();
-    } else if (mediaType.includes(deletedFile.fileType)) {
-      user.mediaUpdate = new Date();
-    } else {
-      user.otherUpdate = new Date();
-    }
-    await user.save();
-    return res.status(200).json({
-      success: true,
-      message: "File deleted successfully",
-      data,
-    });
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-      error: err.message,
-    });
-  }
+	try {
+		const docType = [
+		"application/pdf",
+		"application/msword",
+		"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+		"text/plain",
+		"application/json",
+		"text/csv",
+		"text/markdown",
+		];
+		const imageType = [
+		"image/png",
+		"image/gif",
+		"image/jpeg",
+		"image/svg+xml",
+		"image/x-icon",
+		"image/webp",
+		];
+		const mediaType = ["video/mp4", "audio/mpeg"];
+
+		const {filepath} = req.query;
+
+		if (!filepath || typeof filepath !== "string") {
+			return res.status(400).json({
+				success: false,
+				message: "file path is required",
+			});
+		}
+		const { data, error } = await supabase.storage
+			.from("UserFiles")
+			.remove([filepath]);
+		
+		if (error) {
+			return res.status(400).json({
+				success: false,
+				message: "Deletion failed",
+				error: error.message,
+			});
+		}
+
+		const deletedFile = await fileModel.findOneAndDelete({ path: filepath });
+		
+		if (!deletedFile) {
+			return res.status(400).json({
+				success: false,
+				message: "File not found in DB",
+			});
+		}
+		
+		let user = await userModel.findById(req.user.id); //it expects user files array of ObjectIds
+		
+		if (!user) {
+		return res.status(400).json({
+			success: false,
+			message: "User not exists"
+		});
+		}
+
+		user.files = user.files.filter((file) => {
+			//user.files -> array of objectIds
+			return file._id.toString() !== deletedFile._id.toString();
+		});
+		if (docType.includes(deletedFile.fileType)) {
+			user.docUpdate = new Date();
+		} else if (imageType.includes(deletedFile.fileType)) {
+			user.imageUpdate = new Date();
+		} else if (mediaType.includes(deletedFile.fileType)) {
+			user.mediaUpdate = new Date();
+		} else {
+			user.otherUpdate = new Date();
+		}
+		
+		await user.save();
+
+		return res.status(200).json({
+			success: true,
+			message: "File deleted successfully"
+		});
+
+	} catch (err) {
+		return res.status(500).json({
+			success: false,
+			message: "Server error",
+			error: err.message
+		});
+	}
 };
 
 const getEachStorage = async (req, res) => {

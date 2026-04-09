@@ -4,7 +4,7 @@ export const FileManagerContext = createContext();
 
 export const FileManagerContextProvider = ({children}) => {
     const [docs, setDocs] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [refresh, setRefresh] = useState(false);
     

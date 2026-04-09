@@ -5,6 +5,11 @@ const { fetchDocs, deleteFile, getEachStorage, getImages, getMedia, getOthers } 
 
 router.get("/get-docs", isLoggedIn, fetchDocs);
 
+/**
+ * @route DELETE /file/delete
+ * @description delete the file
+ * @access private
+ */
 router.delete("/delete", isLoggedIn, deleteFile);
 
 router.get("/eachStorage", isLoggedIn, getEachStorage);
