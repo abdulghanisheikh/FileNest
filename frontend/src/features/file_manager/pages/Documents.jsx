@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from "react";
-import axios from "axios";
 import Doc from "../../../components/Doc";
 import Navbar from "../../../components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
@@ -27,7 +26,7 @@ function Documents() {
 
 		if(success) {
 			toast.success(message);
-			handleFetchDocs();
+			await handleFetchDocs();
 		} else {
 			toast.error(message);
 		}

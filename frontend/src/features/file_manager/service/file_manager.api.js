@@ -29,3 +29,8 @@ export const uploadFile = async({file}) => {
     const response = await api.post(`${baseURL}/user/upload`, formData);
     return response;
 }
+
+export const fetchImages = async() => {
+    const response = await api.get(`${baseURL}/file/get-images`);
+    return response;
+}

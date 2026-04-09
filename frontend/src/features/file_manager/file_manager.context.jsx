@@ -7,8 +7,9 @@ export const FileManagerContextProvider = ({children}) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [refresh, setRefresh] = useState(false);
+    const [imageFiles, setImageFiles] = useState([]);
     
-    return <FileManagerContext.Provider value={{docs, setDocs, loading, setLoading, error, setError, refresh, setRefresh}}>
+    return <FileManagerContext.Provider value={{docs, setDocs, imageFiles, setImageFiles, loading, setLoading, error, setError, refresh, setRefresh}}>
         {children}
     </FileManagerContext.Provider>
 }
