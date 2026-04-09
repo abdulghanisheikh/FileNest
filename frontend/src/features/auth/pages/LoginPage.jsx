@@ -1,29 +1,29 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
 import { ThreeDots } from "react-loader-spinner";
 import {useAuth} from "../hooks/useAuth.js";
 import { AuthContext } from "../auth.context.jsx";
 
 const LoginPage = () => {
-  const navigate = useNavigate();
-
   const {handleLogin} = useAuth();
 
-  const context = useContext(AuthContext);
-
-  const {loading, user} = context;
-
-  if(!loading && user) {
-    navigate("/dashboard");
-  }
+  const navigate = useNavigate();
 
   const [loginData, setLoginData] = useState({
     email: "",
     password: ""
   });
 
-  function handleChange(name, value) {
+  const context = useContext(AuthContext);
+  const {loading, user} = context;
+
+  if(!loading && user) {
+    return <Navigate to='/dashboard'></Navigate>;
+  }
+
+  const handleChange = (name, value) => {
     setLoginData(function (prev) {
       return { ...prev, [name]: value };
     });

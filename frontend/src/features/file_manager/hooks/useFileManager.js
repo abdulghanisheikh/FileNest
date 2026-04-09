@@ -1,4 +1,4 @@
-import { fetchDocs, deleteFile, uploadFile, fetchImages } from "../service/file_manager.api";
+import { fetchDocs, deleteFile, uploadFile, fetchImages } from "../services/file_manager.api";
 import { useContext } from "react";
 import { FileManagerContext } from "../file_manager.context";
 

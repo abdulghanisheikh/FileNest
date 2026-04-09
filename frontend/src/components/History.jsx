@@ -1,17 +1,19 @@
 import { useContext } from 'react';
 import axios from "axios";
-import { UpdateContext } from "../context/Update";
+import { FileManagerContext } from '../features/file_manager/file_manager.context';
 import ListItem from './ListItem';
 import { toast, ToastContainer } from "react-toastify";
 
 const History = ({ uploadHistory }) => {
-    const { setRefresh } = useContext(UpdateContext);
+    const context = useContext(FileManagerContext);
+    const {setRefresh} = context;
+
     const docType = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.  document", "text/plain", "application/json", "text/csv", "text/markdown"];
     const imageType = ["image/png", "image/gif", "image/jpeg", "image/svg+xml", "image/x-icon", "image/webp"];
     
     let baseUrl;
     if(import.meta.env.VITE_ENVIRONMENT === "development") {
-        baseUrl = "http://localhost:3000"
+        baseUrl = "http://localhost:3000";
     } else {
         baseUrl = import.meta.env.VITE_BASE_URL;
     }

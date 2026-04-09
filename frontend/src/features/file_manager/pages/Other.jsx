@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { ToastContainer, toast } from "react-toastify";
-import Navbar from "../../../components/Navbar";
+import Navbar from "../../shared/components/Navbar";
 import axios from "axios";
 import Sidepanel from "../../../components/Sidepanel";
 import Doc from "../../../components/Doc";

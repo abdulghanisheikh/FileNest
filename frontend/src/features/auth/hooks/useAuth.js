@@ -1,4 +1,4 @@
-import {login, register, getMe, logout} from "../service/auth.api.js";
+import {login, register, getMe, logout} from "../services/auth.api.js";
 import { useContext } from "react";
 import { AuthContext } from "../auth.context.jsx";
 import { useNavigate } from "react-router-dom";

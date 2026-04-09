@@ -1,11 +1,11 @@
 import { useEffect, useState, useContext } from "react";
 import Doc from "../../../components/Doc";
-import Navbar from "../../../components/Navbar";
+import Navbar from "../../shared/components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
 import Sidepanel from "../../../components/Sidepanel";
 import SummaryComponent from "../../../components/SummaryComponent";
 import { ThreeDots } from "react-loader-spinner";
-import { useFileManager } from "../hooks/useFileManager";
+import { useFileManager } from "../hooks/useFileManager.js";
 import { FileManagerContext } from "../file_manager.context";
 
 function Documents() {

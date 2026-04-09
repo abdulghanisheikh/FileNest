@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useContext } from "react";
-import { UpdateContext } from "../context/Update";
+import { useEffect, useState, useContext } from "react";
+import {FileManagerContext} from "../features/file_manager/file_manager.context.jsx";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import ProgressBar from "../components/ProgressBar";
 import History from "../components/History";
 import ContentBox from "../components/ContentBox";
-import Navbar from "../components/Navbar";
+import Navbar from "../features/shared/components/Navbar";
 import Sidepanel from "../components/Sidepanel";
 
 function Dashboard() {
@@ -23,7 +23,6 @@ function Dashboard() {
     otherTime: null,
   });
   const MB = 1000000;
-  const { refresh, setRefresh } = useContext(UpdateContext);
   const [uploadHistory, setUploadHistory] = useState([]);
   
   let baseUrl;
@@ -32,6 +31,9 @@ function Dashboard() {
   } else {
     baseUrl = import.meta.env.VITE_BASE_URL;
   }
+
+  const context = useContext(FileManagerContext);
+  const {refresh, setRefresh} = context;
 
   async function fetchUsedStorage() {
     try {
