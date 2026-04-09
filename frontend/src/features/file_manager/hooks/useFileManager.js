@@ -1,11 +1,11 @@
-import { fetchDocs, deleteFile, uploadFile, fetchImages } from "../services/file_manager.api";
+import { fetchDocs, deleteFile, uploadFile, fetchImages, fetchMedia, fetchOtherFiles } from "../services/file_manager.api";
 import { useContext } from "react";
 import { FileManagerContext } from "../file_manager.context";
 
 export const useFileManager = () => {
     const context = useContext(FileManagerContext);
 
-    const {setDocs, setLoading, setError, setImageFiles, setRefresh} = context;
+    const {setDocs, setLoading, setError, setImageFiles, setRefresh, setMediaFiles, setOtherFiles} = context;
 
     const handleFetchDocs = async() => {
         try {
@@ -80,6 +80,45 @@ export const useFileManager = () => {
             setLoading(false);
         }
     }
+     
+    const handleFetchMedia = async() => {
+        try {
+            setLoading(true);
 
-    return {handleFetchDocs, handleFileDelete, handleUploadFile, handleFetchImages};
+            const {data} = await fetchMedia();
+
+            const {success, media} = data;
+
+            if(success) {
+                setMediaFiles(media);
+            }
+
+            return data;
+        } catch(err) {
+            setError(err?.response?.data?.message || "Media fetch failed");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleFetchOtherFiles = async() => {
+        try {
+            setLoading(true);
+            const {data} = await fetchOtherFiles();
+
+            const {success, others} = data;
+
+            if(success) {
+                setOtherFiles(others);
+            }
+
+            return data;
+        } catch(err) {
+            setError(err?.response?.data?.message || "Other file fetched failed");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return {handleFetchDocs, handleFileDelete, handleUploadFile, handleFetchImages, handleFetchMedia, handleFetchOtherFiles};
 }

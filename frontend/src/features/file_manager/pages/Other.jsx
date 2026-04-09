@@ -1,66 +1,39 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { ToastContainer, toast } from "react-toastify";
 import Navbar from "../../shared/components/Navbar";
-import axios from "axios";
 import Sidepanel from "../../../components/Sidepanel";
 import Doc from "../../../components/Doc";
-import { UpdateContext } from "../../../context/Update";
+import {FileManagerContext} from "../file_manager.context.jsx";
+import { useFileManager } from '../hooks/useFileManager';
 
 const Other = () => {
-    const [otherFiles, setOtherFiles] = useState([]);
-    const { setRefresh } = useContext(UpdateContext);
     const [query, setQuery] = useState("");
 
-    let baseUrl;
-    if (import.meta.env.VITE_ENVIRONMENT === "development") {
-        baseUrl = "http://localhost:3000";
-    } else {
-        baseUrl = import.meta.env.VITE_BASE_URL;
-    }
+    const context = useContext(FileManagerContext);
+    const {otherFiles} = context;
 
-    const fetchOtherFiles = async () => {
-        try {
-            const res = await axios.get(`${baseUrl}/file/get-others`, {
-                withCredentials: true
-            });
-            const { success, message, others } = res.data;
-            if (success) {
-                setOtherFiles(others);
-            }
-            else {
-                toast.error(message);
-            }
-        }
-        catch (err) {
-            toast.error(err.message);
-        }
-    }
+    const {handleFetchOtherFiles, handleFileDelete} = useFileManager();
 
-    const deleteFile = async (filepath) => {
-        try {
-            const res = await axios.delete(`${baseUrl}/file/delete`, {
-                data: { filepath },
-                withCredentials: true
-            });
-            const { success, message } = res.data;
-            if (success) {
-                setRefresh(true);
-                fetchOtherFiles();
-            }
-            else toast.error(message);
-        }
-        catch (err) {
-            toast.error(err.message);
+    const deleteFile = async(filepath) => {
+        const data = await handleFileDelete({filepath});
+        const {success, message} = data;
+
+        if(success) {
+            toast.success(message);
+            await handleFetchOtherFiles();
+        } else {
+            toast.error(message);
         }
     }
 
     useEffect(() => {
-        fetchOtherFiles();
+        handleFetchOtherFiles();
     }, []);
 
     const filteredFiles = otherFiles.filter((file) => {
         return file.originalname.toLowerCase().includes(query.toLowerCase());
     });
+
     return (
         <div className='flex w-full min-h-screen bg-zinc-100'>
             <Sidepanel />

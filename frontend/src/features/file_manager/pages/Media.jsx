@@ -1,67 +1,41 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { ToastContainer, toast } from "react-toastify";
 import Navbar from "../../shared/components/Navbar";
-import axios from "axios";
 import Sidepanel from "../../../components/Sidepanel";
 import Doc from "../../../components/Doc";
-import { UpdateContext } from "../../../context/Update";
+import { FileManagerContext } from '../file_manager.context';
+import { useFileManager } from '../hooks/useFileManager';
 
 const Media = () => {
-	const [mediaFiles, setMediaFiles] = useState([]);
-	const { setRefresh } = useContext(UpdateContext);
 	const [query, setQuery] = useState("");
 
-	let baseUrl;
-	if (import.meta.env.VITE_ENVIRONMENT === "development") {
-		baseUrl = "http://localhost:3000"
-	} else {
-		baseUrl = import.meta.env.VITE_BASE_URL;
-	}
+	const context = useContext(FileManagerContext);
+	const {mediaFiles} = context;
 
-	const fetchMediaFiles = async () => {
-		try {
-			const res = await axios.get(`${baseUrl}/file/get-media`, {
-				withCredentials: true
-			});
-			const { success, message, media } = res.data;
-			if (success) {
-				setMediaFiles(media);
-			}
-			else {
-				toast.error(message);
-			}
-		}
-		catch (err) {
-			toast.error(err.message);
-		}
-	}
+	const {handleFetchMedia, handleFileDelete} = useFileManager();
 
-	const deleteFile = async (filepath) => {
-		try {
-			const res = await axios.delete(`${baseUrl}/file/delete`, {
-				data: { filepath },
-				withCredentials: true
-			});
-			const { success, message } = res.data;
-			if (success) {
-				setRefresh(true);
-				fetchMediaFiles();
-			}
-			else toast.error(message);
-		}
-		catch (err) {
-			toast.error(err.message);
+	const deleteFile = async(filepath) => {
+		const data = await handleFileDelete({filepath});
+
+		const {success, message} = data;
+
+		if(success) {
+			toast.success(message);
+			await handleFetchMedia();
+		} else {
+			toast.error(message);
 		}
 	}
 
 	useEffect(() => {
-		fetchMediaFiles();
+		handleFetchMedia();
 	}, []);
 
 	//No need of state as it is derived from query and media files
 	const filteredMedia = mediaFiles.filter((media) => {
 		return media.originalname.toLowerCase().includes(query.toLowerCase());
 	});
+
 	return (
 		<div className='flex w-full min-h-screen bg-zinc-100'>
 			<Sidepanel />

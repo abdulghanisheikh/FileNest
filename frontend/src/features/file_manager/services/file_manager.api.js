@@ -34,3 +34,13 @@ export const fetchImages = async() => {
     const response = await api.get(`${baseURL}/file/get-images`);
     return response;
 }
+
+export const fetchMedia = async() => {
+    const response = await api.get(`${baseURL}/file/get-media`);
+    return response;
+}
+
+export const fetchOtherFiles = async() => {
+    const response = await api.get(`${baseURL}/file/get-others`);
+    return response;
+}
