@@ -7,7 +7,7 @@ const Protected = ({children}) => {
     const {user} = context;
 
     if(!user) {
-        return <Navigate to="/login-page"></Navigate>
+        return <Navigate to='/login-page' />
     }
 
     return children;

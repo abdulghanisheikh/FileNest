@@ -27,7 +27,10 @@ const RegisterPage = () => {
 
     if(data.success) {
       toast.success(data.message);
-      navigate("/dashboard");
+
+      setTimeout(() => {
+        navigate("/login-page");
+      }, 1000);
     } else {
       toast.error(data.error);
     }

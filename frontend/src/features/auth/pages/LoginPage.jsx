@@ -20,7 +20,7 @@ const LoginPage = () => {
   const {loading, user} = context;
 
   if(!loading && user) {
-    return <Navigate to='/dashboard'></Navigate>;
+    return <Navigate to='/dashboard'></Navigate>
   }
 
   const handleChange = (name, value) => {

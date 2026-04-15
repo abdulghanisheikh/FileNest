@@ -20,7 +20,17 @@ const SummaryComponent = ({ summary, setSummary }) => {
         <SiGooglegemini size={20} />
       </div>
       <div className="overflow-auto">
-        <ReactMarkdown>{summary.summary}</ReactMarkdown>
+        <ReactMarkdown
+          components={{
+            p: ({children}) => <p className="mb-2 last:mb-0">{children}</p>,
+            ul: ({children}) => <p className="mb-2 list-disc pl-5">{children}</p>,
+            ol: ({children}) => <p className="mb-2 list-decimal pl-5">{children}</p>,
+            code: ({children}) => <code className="rounded bg-white/10 px-1 py-0.5">{children}</code>,
+            pre: ({children}) => <pre className="mb-2 overflow-x-auto rounded-xl bg-black/30 p-3">{children}</pre>
+          }}
+          >
+            {summary.summary}
+        </ReactMarkdown>
       </div>
     </div>
   );

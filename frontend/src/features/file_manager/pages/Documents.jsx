@@ -7,6 +7,7 @@ import SummaryComponent from "../../../components/SummaryComponent";
 import { ThreeDots } from "react-loader-spinner";
 import { useFileManager } from "../hooks/useFileManager.js";
 import { FileManagerContext } from "../file_manager.context";
+import axios from "axios";
 
 function Documents() {
 	const [query, setQuery] = useState("");
@@ -34,23 +35,22 @@ function Documents() {
 
 	async function getDocumentSummary(filepath, filename) {
 		try {
-		setLoading(true);
-		const {data} = await axios.get(`${baseUrl}/summarize?filepath=${filepath}`, {
-			withCredentials: true,
-		});
-
-		const { success, message, summary } = data;
-
-		if (success) {
-			setSummary({
-			documentName: filename,
-			summary,
+			const {data} = await axios.get(`http://localhost:3000/summarize?filepath=${filepath}`, {
+				withCredentials: true,
 			});
-		} else toast.error(message);
-		} catch (err) {
-		toast.error(err.response?.data?.message);
-		} finally {
-		setLoading(false);
+
+			const { success, message, summary } = data;
+
+			if (success) {
+				setSummary({
+				documentName: filename,
+				summary,
+				});
+			} else {
+				toast.error(message);
+			}
+		} catch(err) {
+			toast.error(err.response?.data?.message);
 		}
 	}
 

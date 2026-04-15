@@ -15,9 +15,11 @@ const AppRoutes = () => {
             <FileUpload />
         </Protected>}></Route>
 
-        <Route path="/documents" element={<Protected>
-            <Documents />
-        </Protected>}></Route>
+        <Route path="/documents" element={
+            <Protected>
+                <Documents />
+            </Protected>
+        }></Route>
 
         <Route path="/login-page" element={<LoginPage />}></Route>
         <Route path="/" element={<Navigate to="/login-page"/>}></Route>
