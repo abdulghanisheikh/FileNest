@@ -3,23 +3,27 @@ import Doc from "../../../components/Doc";
 import Navbar from "../../shared/components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
 import Sidepanel from "../../../components/Sidepanel";
-import SummaryComponent from "../../../components/SummaryComponent";
+import SummaryComponent from "../../ai_summary/components/SummaryComponent.jsx";
 import { ThreeDots } from "react-loader-spinner";
 import { useFileManager } from "../hooks/useFileManager.js";
 import { FileManagerContext } from "../file_manager.context";
-import axios from "axios";
+import { useSummary } from "../../ai_summary/hooks/useSummary.js";
+import { SummaryContext } from "../../ai_summary/summary.context.jsx";
 
 function Documents() {
 	const [query, setQuery] = useState("");
-	const [summary, setSummary] = useState({
+	const [summaryData, setSummaryData] = useState({
 		docName: "",
 		summary: "",
 	});
 
-	const {handleFetchDocs, handleFileDelete} = useFileManager();
+	const {handleGetSummary} = useSummary();
+	const summaryContext = useContext(SummaryContext);
+	const {loading, summary} = summaryContext;
 
+	const {handleFetchDocs, handleFileDelete} = useFileManager();
 	const context = useContext(FileManagerContext);
-	const {loading, docs} = context;
+	const {docs} = context;
 
 	const deleteFile = async(filepath) => {
 		const data = await handleFileDelete({filepath});
@@ -33,24 +37,14 @@ function Documents() {
 		}
 	}
 
-	async function getDocumentSummary(filepath, filename) {
-		try {
-			const {data} = await axios.get(`http://localhost:3000/summarize?filepath=${filepath}`, {
-				withCredentials: true,
+	const getDocumentSummary = async({filepath, filename}) => {
+		const data = await handleGetSummary(filepath);
+		
+		if(data.success) {
+			setSummaryData({
+				docName: filename,
+				summary: summary
 			});
-
-			const { success, message, summary } = data;
-
-			if (success) {
-				setSummary({
-				documentName: filename,
-				summary,
-				});
-			} else {
-				toast.error(message);
-			}
-		} catch(err) {
-			toast.error(err.response?.data?.message);
 		}
 	}
 
@@ -65,10 +59,11 @@ function Documents() {
 	return (
 		<div className="flex w-full relative min-h-screen bg-zinc-100">
 		{summary.summary && (
-			<div onClick={() => setSummary({
-			docName: "",
-			summary: ""
-			})} className="absolute inset-0 w-full h-full bg-black/50 z-[3] backdrop-blur-sm"></div>
+			<div onClick={() => setSummaryData({
+				docName: "",
+				summary: ""
+			})}
+			className="absolute inset-0 w-full h-full bg-black/50 z-[3] backdrop-blur-sm"></div>
 		)}
 
 		<Sidepanel />
@@ -81,23 +76,21 @@ function Documents() {
 			<div className="flex gap-2 flex-wrap justify-start w-full">
 
 				{loading ? (
-				<div className="flex gap-3 items-center justify-center absolute top-1/2 left-1/2 -translate-1/2 z-[4] bg-white text-black py-0.5 px-3 rounded-md shadow-md shadow-black/30">
-					<p className="text-lg">Loading...</p>
-					<ThreeDots
-					visible={true}
-					height="20"
-					width="40"
-					color="black"
-					radius="9"
-					ariaLabel="three-dots-loading"
-					wrapperStyle={{}}
-					wrapperClass=""
-					/>
-				</div>
+					<div className="flex gap-3 items-center justify-center absolute top-1/2 left-1/2 -translate-1/2 z-[4] bg-white text-black py-0.5 px-3 rounded-md shadow-md shadow-black/30">
+						<p className="text-lg">Loading...</p>
+						<ThreeDots
+						visible={true}
+						height="20"
+						width="40"
+						color="black"
+						radius="9"
+						ariaLabel="three-dots-loading"
+						wrapperStyle={{}}
+						wrapperClass=""
+						/>
+					</div>
 				) : (
-				summary.summary && (
-					<SummaryComponent summary={summary} setSummary={setSummary} />
-				)
+					summaryData.summary && <SummaryComponent summary={summaryData} setSummary={setSummaryData} />
 				)}
 
 				{filteredDocs.length === 0 ? (
@@ -107,9 +100,10 @@ function Documents() {
 					return (
 					<Doc
 						key={index}
-						getSummary={() =>
-						getDocumentSummary(doc.path, doc.originalname)
-						}
+						getSummary={() => getDocumentSummary({
+							filepath: doc.path,
+							filename: doc.originalname
+						})}
 						filename={doc.originalname}
 						filesize={doc.fileSize}
 						filetype={doc.fileType}

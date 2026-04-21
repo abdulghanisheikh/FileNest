@@ -84,34 +84,39 @@ async function extractContent(blob) {
 }
 
 function doChunks(docs) {
-  const splitter = new CharacterTextSplitter({
-    chunkSize: 500,
-    chunkOverlap: 0,
-  });
-  return splitter.splitDocuments(docs);
+    const splitter = new CharacterTextSplitter({
+      chunkSize: 500,
+      chunkOverlap: 0,
+    });
+    return splitter.splitDocuments(docs);
 }
 
 async function getSummary(req, res) {
   try {
     const { filepath } = req.query;
+    
     if (!filepath) {
       return res.status(400).json({
         success: false,
         message: "file path is required.",
       });
     }
+    
     const metaData = await fileModel.findOne({
       path: filepath,
     });
+    
     if (!metaData) {
       return res.status(400).json({
         success: false,
         message: "File does not exist.",
       });
     }
+    
     const { data: blob, error } = await supabase.storage
       .from("UserFiles")
       .download(metaData.path);
+    
     if (error) {
       return res.status(400).json({
         success: false,
@@ -119,24 +124,32 @@ async function getSummary(req, res) {
         error: error.toArray(),
       });
     }
+    
     const docs = await extractContent(blob);
+  
     if (!docs || !docs[0].pageContent.trim()) {
       return res.status(400).json({
         success: false,
         message: "Document contains no extractable text.",
       });
     }
+    
     const chunks = await doChunks(docs);
+    
     let content = "";
+
     chunks.forEach((chunk) => {
       content += chunk.pageContent + "\n";
     });
+
     const summary = await generateSummary(content);
+
     return res.status(200).json({
       success: true,
       message: "Summary generated successfully",
       summary,
     });
+
   } catch (err) {
     return res.status(500).json({
       success: false,
