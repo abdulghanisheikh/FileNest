@@ -11,7 +11,6 @@ const userRouter = require("./routes/user.routes.js");
 const fileRouter = require("./routes/file.routes.js");
 const summaryRouter = require("./routes/summary.routes.js");
 
-//Middlewares
 app.use(cors({
     origin: ["http://localhost:5173", process.env.FRONTEND],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
@@ -22,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-//Routes
+// routes
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/file", fileRouter);

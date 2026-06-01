@@ -1,10 +1,10 @@
-const { ChatGroq } = require("@langchain/groq");
+const {ChatMistralAI} = require("@langchain/mistralai");
 
-const llm = new ChatGroq({
-  apiKey: process.env.GROQ_API_KEY,
-  model: "openai/gpt-oss-120b",
+const mistralModel = new ChatMistralAI({
+  model: "mistral-small-latest",
   temperature: 0,
   maxRetries: 2,
+  apiKey: process.env.MISTRAL_API_KEY
 });
 
-module.exports = llm;
+module.exports = mistralModel;

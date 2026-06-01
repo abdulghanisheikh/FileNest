@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const userSchema = new mongoose.Schema({
     fullname: {
         type: String,
@@ -45,5 +46,6 @@ const userSchema = new mongoose.Schema({
         ref: "file"
     }]
 });
+
 const userModel = mongoose.model("user", userSchema);
 module.exports = userModel;

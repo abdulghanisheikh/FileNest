@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import Doc from "../../../components/Doc";
 import Navbar from "../../shared/components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
@@ -12,14 +12,13 @@ import { SummaryContext } from "../../ai_summary/summary.context.jsx";
 
 function Documents() {
 	const [query, setQuery] = useState("");
-	const [summaryData, setSummaryData] = useState({
-		docName: "",
-		summary: "",
-	});
+
+	const summaryComponentReference = useRef(null);
 
 	const {handleGetSummary} = useSummary();
+	
 	const summaryContext = useContext(SummaryContext);
-	const {loading, summary} = summaryContext;
+	const {loading, summaryData, setSummaryData} = summaryContext;
 
 	const {handleFetchDocs, handleFileDelete} = useFileManager();
 	const context = useContext(FileManagerContext);
@@ -38,13 +37,12 @@ function Documents() {
 	}
 
 	const getDocumentSummary = async({filepath, filename}) => {
-		const data = await handleGetSummary(filepath);
+		const data = await handleGetSummary({filepath, filename});
 		
-		if(data.success) {
-			setSummaryData({
-				docName: filename,
-				summary: summary
-			});
+		const {success, message} = data;
+
+		if(success) {
+			console.log(message);
 		}
 	}
 
@@ -58,8 +56,9 @@ function Documents() {
 
 	return (
 		<div className="flex w-full relative min-h-screen bg-zinc-100">
-		{summary.summary && (
-			<div onClick={() => setSummaryData({
+		{summaryData.summary && (
+			<div 
+			onClick={() => setSummaryData({
 				docName: "",
 				summary: ""
 			})}
@@ -90,7 +89,12 @@ function Documents() {
 						/>
 					</div>
 				) : (
-					summaryData.summary && <SummaryComponent summary={summaryData} setSummary={setSummaryData} />
+					summaryData.summary && 
+					<SummaryComponent 
+					summaryComponentReference={summaryComponentReference} 
+					summary={summaryData} 
+					setSummary={setSummaryData} 
+					/>
 				)}
 
 				{filteredDocs.length === 0 ? (
@@ -100,10 +104,12 @@ function Documents() {
 					return (
 					<Doc
 						key={index}
-						getSummary={() => getDocumentSummary({
-							filepath: doc.path,
-							filename: doc.originalname
-						})}
+						getSummary={() => {
+							getDocumentSummary({
+								filepath: doc.path,
+								filename: doc.originalname
+							});
+						}}
 						filename={doc.originalname}
 						filesize={doc.fileSize}
 						filetype={doc.fileType}

@@ -4,9 +4,9 @@ import { useContext } from "react";
 
 export const useSummary = () => {
     const context = useContext(SummaryContext);
-    const {setSummary, setLoading, setError} = context;
+    const {setSummaryData, setLoading, setError} = context;
 
-    const handleGetSummary = async(filepath) => {
+    const handleGetSummary = async({filepath, filename}) => {
         try {
             setLoading(true);
             
@@ -15,7 +15,10 @@ export const useSummary = () => {
             const {success, summary} = data;
 
             if(success) {
-                setSummary(summary);
+                setSummaryData({
+                    summary,
+                    docName: filename
+                });
             }
 
             return data;

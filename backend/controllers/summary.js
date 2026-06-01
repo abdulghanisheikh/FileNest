@@ -1,6 +1,6 @@
 const supabase = require("../config/supabase.config");
 const fileModel = require("../models/file.model.js");
-const llm = require("../config/llm.config.js");
+const mistralModel = require("../config/llm.config.js");
 const { PDFLoader } = require("@langchain/community/document_loaders/fs/pdf");
 const { Document } = require("@langchain/core/documents");
 const mammoth = require("mammoth");
@@ -39,11 +39,13 @@ Use the following structure ONLY:
 - Final outcome, conclusion, or takeaway (if any)
 
 If the document is very short, keep the summary proportionally short.`;
+
   try {
-    const aiMsg = await llm.invoke([
+    const aiMsg = await mistralModel.invoke([
       { role: "system", content: systemPrompt },
       { role: "user", content: fileContent },
     ]);
+
     return aiMsg.content;
   } catch (err) {
     return err;
@@ -109,7 +111,7 @@ async function getSummary(req, res) {
     if (!metaData) {
       return res.status(400).json({
         success: false,
-        message: "File does not exist.",
+        message: "File does not exist",
       });
     }
     
@@ -121,7 +123,7 @@ async function getSummary(req, res) {
       return res.status(400).json({
         success: false,
         message: "Error in fetching file from supabase",
-        error: error.toArray(),
+        error: error.message
       });
     }
     

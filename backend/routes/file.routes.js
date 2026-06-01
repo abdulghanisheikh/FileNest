@@ -3,6 +3,11 @@ const router = express.Router();
 const isLoggedIn = require("../middlewares/isLoggedIn.js");
 const { fetchDocs, deleteFile, getEachStorage, getImages, getMedia, getOthers } = require("../controllers/file.js");
 
+/**
+ * @route GET /file/delete
+ * @description delete the file
+ * @access private
+ */
 router.get("/get-docs", isLoggedIn, fetchDocs);
 
 /**

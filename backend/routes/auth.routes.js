@@ -20,6 +20,7 @@ const signupValidation = [
     }),
   body("password").trim().isLength({ min: 5 }),
 ];
+
 const loginValidation = [
   body("email").trim().isEmail().normalizeEmail(),
   body("password").trim().isLength({ min: 5 }),

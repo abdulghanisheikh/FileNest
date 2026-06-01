@@ -25,14 +25,18 @@ const RegisterPage = () => {
     const {fullname, email, password} = newUser;
     const data = await handleRegister({fullname, email, password});
 
-    if(data.success) {
-      toast.success(data.message);
+
+    const {success, message, error} = data;
+
+    if(success) {
+      toast.success(message);
 
       setTimeout(() => {
         navigate("/login-page");
       }, 1000);
+
     } else {
-      toast.error(data.error);
+      toast.error(error);
     }
   }
 
@@ -49,7 +53,6 @@ const RegisterPage = () => {
               color="blue"
               radius="9"
               ariaLabel="three-dots-loading"
-              wrapperStyle={{}}
               wrapperClass=""
             />
           </div>
