@@ -1,7 +1,7 @@
 import React from 'react';
 import { FiUploadCloud } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import DropdownProfile from "../../profile_manager/components/DropdownProfile";
+import DropdownProfile from "../../auth/components/DropdownProfile";
 
 const Navbar = ({ query, setQuery }) => {
   return (

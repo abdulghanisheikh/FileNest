@@ -56,11 +56,10 @@ export const useAuth = () => {
             setLoading(true);
             const {data} = await getMe();
 
-            const {success, user, message} = data;
+            const {success, user} = data;
+
             if(success) {
                 setUser(user);
-            } else {
-                setError(message);
             }
         } catch(err) {
             setError(err?.response?.data?.message || "Get me failed");

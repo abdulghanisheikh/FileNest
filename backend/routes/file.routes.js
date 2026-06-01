@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const isLoggedIn = require("../middlewares/isLoggedIn.js");
-const { fetchDocs, deleteFile, getEachStorage, getImages, getMedia, getOthers } = require("../controllers/file.js");
+const { fetchDocs, deleteFile, getEachStorage, getImages, getMedia, getOthers } = require("../controllers/file.controller.js");
 
 /**
  * @route GET /file/delete

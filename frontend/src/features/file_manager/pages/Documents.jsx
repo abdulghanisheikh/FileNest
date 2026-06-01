@@ -16,7 +16,7 @@ function Documents() {
 	const summaryComponentReference = useRef(null);
 
 	const {handleGetSummary} = useSummary();
-	
+
 	const summaryContext = useContext(SummaryContext);
 	const {loading, summaryData, setSummaryData} = summaryContext;
 
@@ -35,17 +35,7 @@ function Documents() {
 			toast.error(message);
 		}
 	}
-
-	const getDocumentSummary = async({filepath, filename}) => {
-		const data = await handleGetSummary({filepath, filename});
-		
-		const {success, message} = data;
-
-		if(success) {
-			console.log(message);
-		}
-	}
-
+	
 	useEffect(() => {
 		handleFetchDocs();
 	}, []);
@@ -104,12 +94,7 @@ function Documents() {
 					return (
 					<Doc
 						key={index}
-						getSummary={() => {
-							getDocumentSummary({
-								filepath: doc.path,
-								filename: doc.originalname
-							});
-						}}
+						getSummary={async() => await handleGetSummary({filepath: doc.path, filename: doc.originalname})}
 						filename={doc.originalname}
 						filesize={doc.fileSize}
 						filetype={doc.fileType}

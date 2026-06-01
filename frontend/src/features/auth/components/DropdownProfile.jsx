@@ -1,19 +1,20 @@
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useRef, useContext } from "react";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { ToastContainer, toast } from "react-toastify";
-import { useAuth } from "../../auth/hooks/useAuth";
-import { useProfileManager } from "../hooks/useProfileManager";
-import { ProfileManagerContext } from "../profile_manager.context";
-import { AuthContext } from "../../auth/auth.context";
+import { useAuth } from "../hooks/useAuth.js";
+import { AuthContext } from "../auth.context.jsx";
+import { useProfileManager } from "../hooks/useProfileManager.js";
 
 const DropdownProfile = () => {
 	const [open, setOpen] = useState(false);
 
-	const {handleLogout} = useAuth();
-	const {handleAccountDelete, handleUploadUserProfile, handleGetUserProfile, handleRemoveUserProfile} = useProfileManager();
+	const { handleLogout } = useAuth();
 
-	const profileContext = useContext(ProfileManagerContext);
-	const {profile} = profileContext;
+	const {
+		handleUploadUserProfile,
+		handleRemoveProfile,
+		handleDeleteAccount
+	} = useProfileManager();
 
 	const context = useContext(AuthContext);
 	const {user} = context;
@@ -21,7 +22,7 @@ const DropdownProfile = () => {
 	const profileImageInputFieldRef = useRef();
 
 	const deleteAccount = async() => {
-		const data = await handleAccountDelete();
+		const data = await handleDeleteAccount();
 
 		const {success, message} = data;
 		if(success) {
@@ -46,10 +47,6 @@ const DropdownProfile = () => {
 		}
 	}
 
-	useEffect(() => {
-		handleGetUserProfile();
-	}, []);
-
 	return (
 		<div className="relative flex flex-col gap-1 rounded-md z-[2]">
 		<button
@@ -57,7 +54,7 @@ const DropdownProfile = () => {
 			onClick={() => setOpen(!open)}
 			className="px-5 py-1 rounded-md shadow-sm hover:scale-103 duration-300 ease-in-out shadow-black/30 cursor-pointer bg-white active:scale-95"
 		>
-			👋 {user?.fullname}
+			👋 {user.username}
 		</button>
 
 		{open && (
@@ -74,14 +71,18 @@ const DropdownProfile = () => {
 				<p className="text-xs text-black/60 mb-5">{user?.email}</p>
 
 				<img src={
-				profile === "" ? "https://ik.imagekit.io/AbdulGhani/filenest/default_profile.jpg?updatedAt=1775324017230" : profile
+				user?.profilePicture === "" ? "https://ik.imagekit.io/AbdulGhani/filenest/default_profile.jpg?updatedAt=1775324017230" : user?.profilePicture
 				} className="h-25 w-25 rounded-full p-2 object-cover" alt="" />
 
-				{profile ?
+				{user?.profilePicture ?
 				(<p className="text-xs cursor-pointer py-0.5 px-3 bg-red-500 text-white rounded-lg" onClick={async() => {
-					await handleRemoveUserProfile();
+					await handleRemoveProfile();
 				}}>Remove profile</p>) :
-				(<p className="text-xs cursor-pointer py-0.5 px-3 bg-blue-500 text-white rounded-lg" onClick={() => profileImageInputFieldRef.current.click()}>Select profile</p>)}
+				(<p 
+				className="text-xs cursor-pointer py-0.5 px-3 bg-blue-500 text-white rounded-lg" 
+				onClick={() => profileImageInputFieldRef.current.click()}>
+					Select profile</p>
+				)}
 			</div>
 
 			<div className="flex flex-col gap-2">

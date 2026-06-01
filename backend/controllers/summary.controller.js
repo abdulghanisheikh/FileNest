@@ -1,4 +1,4 @@
-const supabase = require("../config/supabase.config");
+const supabase = require("../config/supabase.config.js");
 const fileModel = require("../models/file.model.js");
 const mistralModel = require("../config/llm.config.js");
 const { PDFLoader } = require("@langchain/community/document_loaders/fs/pdf");

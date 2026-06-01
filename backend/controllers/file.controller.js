@@ -1,7 +1,7 @@
 const userModel = require("../models/user.model.js");
 const fileModel = require("../models/file.model.js");
 const supabase = require("../config/supabase.config.js");
-const { docType, imageType, mediaType } = require("./upload.js");
+const { docType, imageType, mediaType } = require("./upload.controller.js");
 
 const fileStorage = async(req, res) => {
   try {

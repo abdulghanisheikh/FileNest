@@ -119,10 +119,12 @@ const logout = async (req, res) => {
       secure: true,
       sameSite: "none",
     });
+
     return res.status(200).json({
       success: true,
-      message: "Logout successfull.",
+      message: "Logout successfull",
     });
+
   } catch (err) {
     return res.status(500).json({
       success: false,
@@ -142,6 +144,7 @@ const getMe = async(req, res) => {
 			user: {
 				username: user.fullname,
 				email: user.email,
+        profilePicture: user.profilePicture
 			}
 		});
 	} catch(err) {

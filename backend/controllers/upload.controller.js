@@ -129,6 +129,8 @@ async function uploadFile(req, res) {
 const uploadProfile = async(req, res) => {
 	try {
 		const profile = req.file;
+
+    console.log("user profile:", profile);
 		
     if(!profile) {
 			return res.status(404).json({
@@ -138,10 +140,6 @@ const uploadProfile = async(req, res) => {
 		}
 
     const user = await userModel.findOne({_id: req.user.id});
-
-    if(user.profileId) {
-      await imagekit.files.delete(user.profileId);
-    }
 
 		const uploaded = await uploadToImagekit({
 			buffer: profile.buffer,
@@ -157,6 +155,7 @@ const uploadProfile = async(req, res) => {
 			success: true,
 			message: "Profile picture uploaded"
 		});
+    
 	} catch(err) {
 		return res.status(500).json({
 			success: false,
