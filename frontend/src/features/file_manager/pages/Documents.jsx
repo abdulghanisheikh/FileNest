@@ -66,7 +66,7 @@ function Documents() {
 
 				{loading ? (
 					<div className="flex gap-3 items-center justify-center absolute top-1/2 left-1/2 -translate-1/2 z-[4] bg-white text-black py-0.5 px-3 rounded-md shadow-md shadow-black/30">
-						<p className="text-lg">Loading...</p>
+						<p className="text-lg">Loading summary...</p>
 						<ThreeDots
 						visible={true}
 						height="20"

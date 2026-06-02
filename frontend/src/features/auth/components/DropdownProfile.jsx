@@ -59,12 +59,12 @@ const DropdownProfile = () => {
 				(<p className="text-xs cursor-pointer py-0.5 px-3 bg-red-500 text-white rounded-lg" onClick={async() => {
 					await handleRemoveProfile();
 				}}>{
-					loading ? "Removing...": "Remove profile"
+					loading === "remove profile" ? "Removing...": "Remove profile"
 				}</p>) :
 				(<p 
 				className="text-xs cursor-pointer py-0.5 px-3 bg-blue-500 text-white rounded-lg" 
 				onClick={() => profileImageInputFieldRef.current.click()}>
-					{loading ? "Setting profile...": "Select profile"}</p>
+					{loading === "profile" ? "Setting profile...": "Select profile"}</p>
 				)}
 			</div>
 
@@ -73,14 +73,14 @@ const DropdownProfile = () => {
 				className="text-red-500 px-5 py-1 rounded-md shadow-md shadow-black/10 text-sm cursor-pointer hover:bg-red-500 border-2 border-red-400 active:scale-[95%] hover:border-0 hover:text-white duration-300 ease-in-out"
 				onClick={handleLogout}
 				>
-				<p>Log Out</p>
+				<p>{loading === "logout" ? "Logging out..." : "Log Out"}</p>
 				</div>
 
 				<div
 				onClick={async() => await handleDeleteAccount()}
 				className="text-red-500 shadow-md shadow-black/10 px-5 py-1 rounded-md text-sm cursor-pointer border-2 border-red-400 active:scale-[95%] hover:border-0 hover:bg-red-500 hover:text-white duration-300 ease-in-out"
 				>
-				<p>Delete Account</p>
+				<p>{loading === "delete account" ? "Deleting..." : "Delete Account"}</p>
 				</div>
 
 			</div>

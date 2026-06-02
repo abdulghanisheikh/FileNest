@@ -51,9 +51,9 @@ const LoginPage = () => {
   return (
     <>
       <div className="h-screen w-full flex">
-        {loading && (
+        {loading === "login" && (
           <div className="flex gap-3 items-center justify-center absolute top-1/2 left-[40%] -translate-[50%] z-[4]">
-            <p className="text-xl font-semibold text-blue-600">Logging In</p>
+            <p className="text-xl font-semibold text-blue-600">Logging In...</p>
             <ThreeDots
               visible={true}
               height="30"
@@ -99,7 +99,7 @@ const LoginPage = () => {
               </div>
               
               <button type="submit" className="w-2/3 mt-5 px-5 py-2 rounded-full bg-blue-600 text-white cursor-pointer active:scale-[95%] duration-300 ease-in-out hover:bg-blue-700">{
-                loading ? "Please wait..." : "Login"
+                loading === "login" ? "Logging In..." : "Login"
               }</button>
 
               <p className="text-sm">Don't have an account? <span className="text-blue-600 cursor-pointer"><Link to="/signup-page">Create Account</Link></span></p>

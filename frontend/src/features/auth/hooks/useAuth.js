@@ -10,7 +10,7 @@ export const useAuth = () => {
     
     const handleLogin = async({email, password}) => {
         try {
-            setLoading(true);
+            setLoading("login");
             const {data} = await login({email, password});
 
             const {success, user, message} = data;
@@ -29,13 +29,13 @@ export const useAuth = () => {
         } catch(err) {
             toast.error(err?.response?.data?.message || "Error in Logging-In user");
         } finally {
-            setLoading(false);
+            setLoading("");
         }
     }
 
     const handleRegister = async({fullname, email, password}) => {
         try {
-            setLoading(true);
+            setLoading("register");
             const {data} = await register({fullname, email, password});
 
             const {success, user, message} = data;
@@ -49,7 +49,7 @@ export const useAuth = () => {
         } catch(err) {
             toast.error(err.response?.data?.message || "Error in registering user");
         } finally {
-            setLoading(false);
+            setLoading("");
         }
     }
 
@@ -69,7 +69,7 @@ export const useAuth = () => {
 
     const handleLogout = async() => {
         try {
-            setLoading(true);
+            setLoading("logout");
             const {data} = await logout();
 
             const {success, message} = data;
@@ -86,7 +86,7 @@ export const useAuth = () => {
         } catch(err) {
             toast.error(err?.response?.data?.message);
         } finally {
-            setLoading(false);
+            setLoading("");
         }
     }
 

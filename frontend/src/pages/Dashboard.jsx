@@ -132,7 +132,7 @@ function Dashboard() {
     }
   }
 
-  //Run once, when component mounts
+  // run once, when component mounts
   useEffect(() => {
     const reloadAll = async() => {
       await Promise.all([
@@ -145,7 +145,7 @@ function Dashboard() {
     reloadAll();
   }, []);
 
-  //Run whenever refresh becomes true
+  // run whenever refresh becomes true
   useEffect(() => {
     if (!refresh) return;
 

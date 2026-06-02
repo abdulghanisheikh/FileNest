@@ -9,7 +9,7 @@ export const useProfileManager = () => {
 
     const handleDeleteAccount = async() => {
         try {
-            setLoading(true);
+            setLoading("delete account");
 
             const {data} = await deleteAccount();
             const {success, message} = data;
@@ -21,13 +21,13 @@ export const useProfileManager = () => {
         } catch(err) {
             toast.error(err.message || "Error in deleting account");
         } finally {
-            setLoading(false);
+            setLoading("");
         }
     }
 
     const handleRemoveProfile = async() => {
         try {
-            setLoading(true);
+            setLoading("remove profile");
 
             const {data} = await removeUserProfile();
 
@@ -39,13 +39,13 @@ export const useProfileManager = () => {
         } catch(err) {
             toast.error(err.response?.data?.message || "Error in removing user profile");
         } finally {
-            setLoading(false);
+            setLoading("");
         }
     }
 
     const handleUploadUserProfile = async(file) => {
         try {
-            setLoading(true);
+            setLoading("profile");
             const {data} = await uploadUserProfile(file);
 
             const {success, message} = data;
@@ -56,7 +56,7 @@ export const useProfileManager = () => {
         } catch(err) {
             toast.error(err.response?.data?.message || "Error in uploading profile picture");
         } finally {
-            setLoading(false);
+            setLoading("");
         }
     }
 
