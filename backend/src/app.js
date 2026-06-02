@@ -2,8 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
-const connectToDB = require("./config/db.config.js");
-connectToDB();
 const cors = require("cors");
 
 const authRouter = require("./routes/auth.routes.js");
@@ -27,7 +25,4 @@ app.use("/user", userRouter);
 app.use("/file", fileRouter);
 app.use("/", summaryRouter);
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`server is running at ${port}`);
-});
+module.exports = {app};

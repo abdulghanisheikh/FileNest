@@ -22,11 +22,9 @@ export const deleteAccount = async() => {
     return response;
 }
 
-export const uploadUserProfile = async({file}) => {
+export const uploadUserProfile = async(file) => {
     const formData = new FormData();
     formData.append("profile", file);
-
-    console.log("file:", file);
 
     const response = await api.post("/user/uploadProfile", formData, {
         headers: {

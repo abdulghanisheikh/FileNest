@@ -51,10 +51,10 @@ export const useProfileManager = () => {
         }
     }
 
-    const handleUploadUserProfile = async({file}) => {
+    const handleUploadUserProfile = async(file) => {
         try {
             setLoading(true);
-            const {data} = await uploadUserProfile({file});
+            const {data} = await uploadUserProfile(file);
 
             return data;
         } catch(err) {

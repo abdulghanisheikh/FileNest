@@ -36,8 +36,7 @@ const DropdownProfile = () => {
 		const file = profileImageInputFieldRef.current.files[0];
 		if(!file) return;
 
-		const data = await handleUploadUserProfile({file});
-
+		const data = await handleUploadUserProfile(file);
 		const {success, message} = data;
 
 		if(success) {

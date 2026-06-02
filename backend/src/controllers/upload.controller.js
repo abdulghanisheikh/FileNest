@@ -129,8 +129,6 @@ async function uploadFile(req, res) {
 const uploadProfile = async(req, res) => {
 	try {
 		const profile = req.file;
-
-    console.log("user profile:", profile);
 		
     if(!profile) {
 			return res.status(404).json({
