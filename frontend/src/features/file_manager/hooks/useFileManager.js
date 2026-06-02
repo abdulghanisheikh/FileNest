@@ -9,7 +9,7 @@ export const useFileManager = () => {
 
     const handleFetchDocs = async() => {
         try {
-            setLoading(true);
+            setLoading("documents");
             const {data} = await fetchDocs();
             const {success, files} = data;
 
@@ -21,13 +21,13 @@ export const useFileManager = () => {
         } catch(err) {
             setError(err?.response?.data?.message || "Docs fetch failed");
         } finally {
-            setLoading(false);
+            setLoading("");
         }
     }
 
     const handleFileDelete = async({filepath}) => {
         try {
-            setLoading(true);
+            setLoading("delete");
             const {data} = await deleteFile({filepath});
             const {success} = data;
 
@@ -41,13 +41,13 @@ export const useFileManager = () => {
 
             return {success: false, message: err?.response?.data?.message || "Delete operation failed"};
         } finally {
-            setLoading(false);
+            setLoading("");
         }
     }
 
     const handleUploadFile = async({file}) => {
         try {
-            setLoading(true);
+            setLoading("upload");
             const {data} = await uploadFile({file});
 
             const {success} = data;
@@ -60,13 +60,13 @@ export const useFileManager = () => {
         } catch(err) {
             setError(err?.response?.data?.message || "File upload failed");
         } finally {
-            setLoading(false);
+            setLoading("");
         }
     }
 
     const handleFetchImages = async() => {
         try {
-            setLoading(true);
+            setLoading("images");
             
             const {data} = await fetchImages();
 
@@ -79,13 +79,13 @@ export const useFileManager = () => {
         } catch(err) {
             setError(err?.response?.data?.message || "Images fetch failed");
         } finally {
-            setLoading(false);
+            setLoading("");
         }
     }
      
     const handleFetchMedia = async() => {
         try {
-            setLoading(true);
+            setLoading("media");
 
             const {data} = await fetchMedia();
 
@@ -99,13 +99,13 @@ export const useFileManager = () => {
         } catch(err) {
             setError(err?.response?.data?.message || "Media fetch failed");
         } finally {
-            setLoading(false);
+            setLoading("");
         }
     }
 
     const handleFetchOtherFiles = async() => {
         try {
-            setLoading(true);
+            setLoading("others");
             const {data} = await fetchOtherFiles();
 
             const {success, others} = data;
@@ -118,7 +118,7 @@ export const useFileManager = () => {
         } catch(err) {
             setError(err?.response?.data?.message || "Other file fetched failed");
         } finally {
-            setLoading(false);
+            setLoading("");
         }
     }
 

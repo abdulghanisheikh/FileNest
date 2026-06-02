@@ -165,11 +165,16 @@ function Dashboard() {
   return (
     <div className="flex w-full min-h-screen bg-zinc-100">
       <Sidepanel />
+
       <div className="flex flex-col min-h-screen w-[80%] rounded-md">
+
         <Navbar />
+
         <div className="main flex rounded-2xl justify-between bg-zinc-100 px-10 py-5">
           <div className="flex flex-col items-center justify-center w-1/2 px-12 gap-3 h-full">
+
             <ProgressBar usedStorage={usedStorage} />
+
             <div className="flex gap-2 flex-wrap h-full w-full">
               <ContentBox
                 title="Documents"
@@ -178,9 +183,10 @@ function Dashboard() {
                 time={eachTimes.docTime ? getTimeStamp(eachTimes.docTime) : ""}
                 date={eachTimes.docTime ? getDateString(eachTimes.docTime) : ""}
               />
+
               <ContentBox
                 title="Images"
-                storage={(eachSizes.imageSize/MB).toFixed(2)}
+                storage={(eachSizes.imageSize / MB).toFixed(2)}
                 to="/images"
                 time={
                   eachTimes.imageTime ? getTimeStamp(eachTimes.imageTime) : ""
@@ -189,6 +195,7 @@ function Dashboard() {
                   eachTimes.imageTime ? getDateString(eachTimes.imageTime) : ""
                 }
               />
+
               <ContentBox
                 title="Media"
                 storage={(eachSizes.mediaSize/MB).toFixed(2)}
@@ -200,6 +207,7 @@ function Dashboard() {
                   eachTimes.mediaTime ? getDateString(eachTimes.mediaTime) : ""
                 }
               />
+
               <ContentBox
                 title="Others"
                 storage={(eachSizes.otherSize/MB).toFixed(2)}
@@ -216,6 +224,7 @@ function Dashboard() {
           <History uploadHistory={uploadHistory} />
         </div>
       </div>
+
       <ToastContainer position="top-left" />
     </div>
   );
