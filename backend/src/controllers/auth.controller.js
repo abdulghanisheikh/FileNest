@@ -6,6 +6,20 @@ const signup = (req, res) => {
 	try {
 		const { fullname, email, password } = req.body;
 
+		const existingUser = await userModel.findOne({
+			$or: [
+				{fullname},
+				{email}
+			]
+		});
+
+		if(existingUser) {
+			return res.status(400).json({
+				success: false,
+				message: "User already exist"
+			});
+		}
+
 		bcrypt.hash(password, 10, async (err, hash) => {
 
 			const newUser = await userModel.create({
