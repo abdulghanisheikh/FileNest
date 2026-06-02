@@ -1,53 +1,41 @@
 const userModel = require("../models/user.model.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { validationResult } = require("express-validator");
 
 const signup = (req, res) => {
 	try {
-		const errors = validationResult(req);
+		const { fullname, email, password } = req.body;
 
-		if (errors.isEmpty()) {
-			const { fullname, email, password } = req.body;
+		bcrypt.hash(password, 10, async (err, hash) => {
 
-			bcrypt.hash(password, 10, async (err, hash) => {
-
-				let newUser = await userModel.create({
-					fullname,
-					email,
-					password: hash,
-				});
-
-				const userData = newUser.toObject();
-				delete userData.password;
-
-				const token = jwt.sign(
-					{ id: newUser._id },
-					process.env.JWT_SECRET,
-					{ expiresIn: "24h" },
-				);
-
-				res.cookie("token", token, {
-					httpOnly: true, // JS can't access cookies in frontend
-					secure: true,
-					maxAge: 24 * 60 * 60 * 1000, // 1 day
-					sameSite: "none", // allow cross-origin domain
-				});
-
-				return res.status(201).json({
-					message: "User created",
-					success: true,
-					user: userData,
-				});
+			let newUser = await userModel.create({
+				fullname,
+				email,
+				password: hash,
 			});
 
-		} else {
-			return res.status(400).json({
-				message: "Validation failed",
-				success: false,
-				error: errors.array(),
+			const userData = newUser.toObject();
+			delete userData.password;
+
+			const token = jwt.sign(
+				{ id: newUser._id },
+				process.env.JWT_SECRET,
+				{ expiresIn: "24h" },
+			);
+
+			res.cookie("token", token, {
+				httpOnly: true, // JS can't access cookies in frontend
+				secure: true,
+				maxAge: 24 * 60 * 60 * 1000, // 1 day
+				sameSite: "none", // allow cross-origin domain
 			});
-		}
+
+			return res.status(201).json({
+				message: "User created",
+				success: true,
+				user: userData,
+			});
+		});
 	} catch (err) {
 		res.status(500).json({
 			message: "Server error",
@@ -59,15 +47,10 @@ const signup = (req, res) => {
 
 const login = async (req, res) => {
 	try {
-		const errors = validationResult(req);
-		if (!errors.isEmpty()) {
-			return res.status(400).json({
-				message: "Validation failed",
-				success: false,
-			});
-		}
 		const { email, password } = req.body;
+		
 		let user = await userModel.findOne({ email });
+
 		if (!user) {
 			return res.status(400).json({
 				message: "User not exists",
