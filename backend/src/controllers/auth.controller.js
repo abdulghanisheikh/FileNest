@@ -49,7 +49,7 @@ const login = async (req, res) => {
 	try {
 		const { email, password } = req.body;
 		
-		let user = await userModel.findOne({ email });
+		const user = await userModel.findOne({ email });
 
 		if (!user) {
 			return res.status(400).json({
@@ -57,10 +57,8 @@ const login = async (req, res) => {
 				success: false,
 			});
 		}
+		
 		const isMatch = await bcrypt.compare(password, user.password);
-		const userData = user.toObject();
-		delete userData.password;
-
 		if (!isMatch) {
 			return res.status(400).json({
 				message: "Email or password is incorrect",
@@ -84,7 +82,11 @@ const login = async (req, res) => {
 		return res.status(200).json({
 			success: true,
 			message: "Login Successfull",
-			user: userData,
+			user: {
+				username: user.fullname,
+				email: user.email,
+				profilePicture: user.profilePicture
+			},
 		});
 	} catch (err) {
 		res.status(500).json({
