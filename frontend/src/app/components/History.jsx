@@ -47,6 +47,8 @@ const History = ({ uploadHistory }) => {
 
         if(success) {
             toast.success(message);
+
+            setRefresh(true);
         } else {
             toast.error(message);
         }
