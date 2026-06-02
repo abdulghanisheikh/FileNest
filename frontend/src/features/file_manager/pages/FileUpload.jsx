@@ -65,7 +65,9 @@ const FileUpload = () => {
                     {file ? `${file.name}` : "Choose a file"}
                 </label>
                 <p className="text-sm font-semibold text-black/80">Max. size 10MB</p>
-                <button onClick={handleUploadClick} className="w-2/3 py-3 mt-6 duration-300 ease-in-out cursor-pointer text-blue-600 border-2 border-blue-500 rounded-xl active:scale-[95%] font-semibold hover:border-0 hover:bg-blue-600 hover:text-white">Upload</button>
+                <button onClick={handleUploadClick} className={`w-2/3 py-3 mt-6 duration-300 ease-in-out cursor-pointer text-blue-600 border-2 border-blue-500 rounded-xl active:scale-[95%] font-semibold hover:border-0 hover:bg-blue-600 hover:text-white ${loading && 'opacity-1/2 cursor-default'}`}>{
+                    loading ? "Uploading..." : "Upload"
+                }</button>
             </div>
 
             <ToastContainer position="top-left" />

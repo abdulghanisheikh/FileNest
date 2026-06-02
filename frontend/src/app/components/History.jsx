@@ -1,22 +1,17 @@
 import { useContext } from 'react';
-import axios from "axios";
-import { FileManagerContext } from '../features/file_manager/file_manager.context';
+import { FileManagerContext } from '../../features/file_manager/file_manager.context';
 import ListItem from './ListItem';
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import { useFileManager } from '../../features/file_manager/hooks/useFileManager';
 
 const History = ({ uploadHistory }) => {
     const context = useContext(FileManagerContext);
     const {setRefresh} = context;
 
+    const {handleFileDelete} = useFileManager();
+
     const docType = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.  document", "text/plain", "application/json", "text/csv", "text/markdown"];
     const imageType = ["image/png", "image/gif", "image/jpeg", "image/svg+xml", "image/x-icon", "image/webp"];
-    
-    let baseUrl;
-    if(import.meta.env.VITE_ENVIRONMENT === "development") {
-        baseUrl = "http://localhost:3000";
-    } else {
-        baseUrl = import.meta.env.VITE_BASE_URL;
-    }
 
     function getMinutesAgo(dateObj) {
         const date = new Date(dateObj);
@@ -45,28 +40,22 @@ const History = ({ uploadHistory }) => {
         else return "📄";
     }
 
-    async function deleteFile(filepath) {
-        try {
-            const { data } = await axios.delete(`${baseUrl}/file/delete`, {
-                data: { filepath },
-                withCredentials: true
-            });
-            const { success, message } = data;
-            if (success) {
-                setRefresh(true);
-            }
-            else {
-                toast.error(message);
-            }
-        }
-        catch (err) {
-            toast.error(err.message);
+    const handleFileDeleteClick = async(filepath) => {
+        const data = await handleFileDelete({filepath});
+
+        const {success, message} = data;
+
+        if(success) {
+            toast.success(message);
+        } else {
+            toast.error(message);
         }
     }
 
     return (
         <div className='history bg-sky-200 rounded-xl px-5 flex flex-col h-screen/90 w-1/2 gap-5 py-5'>
             <h1 className='text-3xl font-semibold'>Todays Uploads</h1>
+
             {uploadHistory.length > 0 ?
                 <ul className='space-y-2'>
                     {uploadHistory.map((item, idx) => {
@@ -75,10 +64,13 @@ const History = ({ uploadHistory }) => {
                             key={idx}
                             getMinutesAgo={() => getMinutesAgo(item.addedOn)}
                             renderIcon={() => renderIcon(item.fileType)}
-                            deleteFile={() => deleteFile(item.path)}
+                            deleteFile={() => handleFileDeleteClick(item.path)}
                         />
                     })}
-                </ul> : <p className='text-center text-sm'>No uploads today.</p>}
+
+                </ul> : <p className='text-center text-sm'>No uploads today.</p>
+            }
+
             <ToastContainer position="top-left" />
         </div>
     )

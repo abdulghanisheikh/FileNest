@@ -81,6 +81,7 @@ const deleteFile = async (req, res) => {
 		"text/csv",
 		"text/markdown",
 		];
+
 		const imageType = [
 		"image/png",
 		"image/gif",
@@ -89,6 +90,7 @@ const deleteFile = async (req, res) => {
 		"image/x-icon",
 		"image/webp",
 		];
+
 		const mediaType = ["video/mp4", "audio/mpeg"];
 
 		const {filepath} = req.query;
@@ -99,6 +101,7 @@ const deleteFile = async (req, res) => {
 				message: "file path is required",
 			});
 		}
+    
 		const { data, error } = await supabase.storage
 			.from("UserFiles")
 			.remove([filepath]);

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { ToastContainer, toast } from "react-toastify";
 import Navbar from "../../shared/components/Navbar";
-import Sidepanel from "../../../components/Sidepanel";
-import Doc from "../../../components/Doc";
+import Sidepanel from "../../../app/components/Sidepanel";
+import Doc from "../../../app/components/Doc";
 import { FileManagerContext } from '../file_manager.context';
 import { useFileManager } from '../hooks/useFileManager';
 

@@ -1,8 +1,8 @@
 import { useEffect, useState, useContext, useRef } from "react";
-import Doc from "../../../components/Doc";
+import Doc from "../../../app/components/Doc.jsx";
 import Navbar from "../../shared/components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
-import Sidepanel from "../../../components/Sidepanel";
+import Sidepanel from "../../../app/components/Sidepanel.jsx";
 import SummaryComponent from "../../ai_summary/components/SummaryComponent.jsx";
 import { ThreeDots } from "react-loader-spinner";
 import { useFileManager } from "../hooks/useFileManager.js";

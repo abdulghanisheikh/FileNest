@@ -2,11 +2,11 @@ import { useEffect, useState, useContext } from "react";
 import {FileManagerContext} from "../features/file_manager/file_manager.context.jsx";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import ProgressBar from "../components/ProgressBar";
-import History from "../components/History";
-import ContentBox from "../components/ContentBox";
+import ProgressBar from "../app/components/ProgressBar.jsx";
+import History from "../app/components/History.jsx";
+import ContentBox from "../app/components/ContentBox.jsx";
 import Navbar from "../features/shared/components/Navbar";
-import Sidepanel from "../components/Sidepanel";
+import Sidepanel from "../app/components/Sidepanel.jsx";
 
 function Dashboard() {
   const [usedStorage, setUsedStorage] = useState(0);

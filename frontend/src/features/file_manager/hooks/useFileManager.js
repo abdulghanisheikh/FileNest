@@ -38,6 +38,8 @@ export const useFileManager = () => {
             return data;
         } catch(err) {
             setError(err?.response?.data?.message || "Delete operation failed");
+
+            return {success: false, message: err?.response?.data?.message || "Delete operation failed"};
         } finally {
             setLoading(false);
         }
