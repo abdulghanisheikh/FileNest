@@ -11,9 +11,11 @@ import Protected from "../features/shared/pages/Protected";
 
 const AppRoutes = () => {
   return <Routes>
-        <Route path="/upload-file" element={<Protected>
-            <FileUpload />
-        </Protected>}></Route>
+        <Route path="/upload-file" element={
+            <Protected>
+                <FileUpload />
+            </Protected>
+        }></Route>
 
         <Route path="/documents" element={
             <Protected>

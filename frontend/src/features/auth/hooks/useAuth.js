@@ -1,10 +1,9 @@
 import {login, register, getMe, logout} from "../services/auth.api.js";
 import { useContext } from "react";
 import { AuthContext } from "../auth.context.jsx";
-import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const useAuth = () => {
-    const navigate = useNavigate();
 
     const context = useContext(AuthContext);
     const {setUser, setLoading, setError} = context;
@@ -17,14 +16,18 @@ export const useAuth = () => {
             const {success, user, message} = data;
 
             if(success) {
-                setUser(user);
-            } else {
-                setError(message);
+                toast.success(message, {
+                    autoClose: 1000
+                });
+                
+                setTimeout(() => {
+                    setUser(user);
+                }, 1000);
             }
             
             return data;
         } catch(err) {
-            setError(err?.response?.data?.message || "Login failed");
+            toast.error(err?.response?.data?.message || "Error in Logging-In user");
         } finally {
             setLoading(false);
         }
@@ -39,13 +42,12 @@ export const useAuth = () => {
 
             if(success) {
                 setUser(user);
-            } else {
-                setError(message);
+                toast.success(message);
             }
 
             return data;
         } catch(err) {
-            setError(err?.response?.data?.message || "Registration failed");
+            toast.error(err.response?.data?.message || "Error in registering user");
         } finally {
             setLoading(false);
         }
@@ -71,19 +73,21 @@ export const useAuth = () => {
     const handleLogout = async() => {
         try {
             setLoading(true);
-
             const {data} = await logout();
 
-            if(data.success) {
+            const {success, message} = data;
+
+            if(success) {                
+                toast.success(message, {
+                    autoClose: 1500
+                });
+
                 setUser(null);
-                navigate("/login-page");
-            } else {
-                setError(data.message);
             }
 
             return data;
         } catch(err) {
-            setError(err?.response?.data?.message);
+            toast.error(err?.response?.data?.message);
         } finally {
             setLoading(false);
         }

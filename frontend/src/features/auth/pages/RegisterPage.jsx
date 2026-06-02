@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { ThreeDots } from "react-loader-spinner";
 import { AuthContext } from "../auth.context.jsx";
 
@@ -25,18 +25,18 @@ const RegisterPage = () => {
     const {fullname, email, password} = newUser;
     const data = await handleRegister({fullname, email, password});
 
-
-    const {success, message, error} = data;
+    const {success} = data;
 
     if(success) {
-      toast.success(message);
+      setNewUser({
+        fullname: "",
+        email: "",
+        password: ""
+      });
 
       setTimeout(() => {
-        navigate("/login-page");
-      }, 1000);
-
-    } else {
-      toast.error(error);
+        navigate("/dashboard");
+      }, 2000);
     }
   }
 

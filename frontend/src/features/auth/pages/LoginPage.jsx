@@ -1,7 +1,6 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Navigate } from "react-router";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { ThreeDots } from "react-loader-spinner";
 import {useAuth} from "../hooks/useAuth.js";
 import { AuthContext } from "../auth.context.jsx";
@@ -20,7 +19,7 @@ const LoginPage = () => {
   const {loading, user} = context;
 
   if(!loading && user) {
-    return <Navigate to='/dashboard'></Navigate>
+    navigate("/dashboard");
   }
 
   const handleChange = (name, value) => {
@@ -35,16 +34,17 @@ const LoginPage = () => {
     const {email, password} = loginData;
     const data = await handleLogin({email, password});
 
-    setLoginData({
-      email: "",
-      password: ""
-    });
+    const {success} = data;
 
-    if(data.success) {
-      toast.success(data.message);
-      navigate("/dashboard");
-    } else {
-      toast.error(data.message);
+    if(success) {
+      setLoginData({
+        email: "",
+        password: ""
+      });
+      
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 2000);
     }
   }
 
@@ -100,6 +100,7 @@ const LoginPage = () => {
               <button type="submit" className="w-2/3 mt-5 px-5 py-2 rounded-full bg-blue-600 text-white cursor-pointer active:scale-[95%] duration-300 ease-in-out hover:bg-blue-700">Log In</button>
               <p className="text-sm">Don't have an account? <span className="text-blue-600 cursor-pointer"><Link to="/signup-page">Create Account</Link></span></p>
             </form>
+
             <ToastContainer position="top-left" />
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { useState, useRef, useContext } from "react";
 import { IoMdCloseCircleOutline } from "react-icons/io";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { useAuth } from "../hooks/useAuth.js";
 import { AuthContext } from "../auth.context.jsx";
 import { useProfileManager } from "../hooks/useProfileManager.js";
@@ -17,33 +17,15 @@ const DropdownProfile = () => {
 	} = useProfileManager();
 
 	const context = useContext(AuthContext);
-	const {user} = context;
+	const {user, loading} = context;
 
 	const profileImageInputFieldRef = useRef();
-
-	const deleteAccount = async() => {
-		const data = await handleDeleteAccount();
-
-		const {success, message} = data;
-		if(success) {
-			toast.success(message);
-		} else {
-			toast.error(message);
-		}
-	}
 
 	const handleUserProfile = async() => {
 		const file = profileImageInputFieldRef.current.files[0];
 		if(!file) return;
 
-		const data = await handleUploadUserProfile(file);
-		const {success, message} = data;
-
-		if(success) {
-			toast.success(message);
-		} else {
-			toast.error(message);
-		}
+		await handleUploadUserProfile(file);
 	}
 
 	return (
@@ -53,7 +35,7 @@ const DropdownProfile = () => {
 			onClick={() => setOpen(!open)}
 			className="px-5 py-1 rounded-md shadow-sm hover:scale-103 duration-300 ease-in-out shadow-black/30 cursor-pointer bg-white active:scale-95"
 		>
-			👋 {user.username}
+			👋 {user?.username}
 		</button>
 
 		{open && (
@@ -76,11 +58,13 @@ const DropdownProfile = () => {
 				{user?.profilePicture ?
 				(<p className="text-xs cursor-pointer py-0.5 px-3 bg-red-500 text-white rounded-lg" onClick={async() => {
 					await handleRemoveProfile();
-				}}>Remove profile</p>) :
+				}}>{
+					loading ? "Removing...": "Remove profile"
+				}</p>) :
 				(<p 
 				className="text-xs cursor-pointer py-0.5 px-3 bg-blue-500 text-white rounded-lg" 
 				onClick={() => profileImageInputFieldRef.current.click()}>
-					Select profile</p>
+					{loading ? "Setting profile...": "Select profile"}</p>
 				)}
 			</div>
 
@@ -93,7 +77,7 @@ const DropdownProfile = () => {
 				</div>
 
 				<div
-				onClick={deleteAccount}
+				onClick={async() => await handleDeleteAccount()}
 				className="text-red-500 shadow-md shadow-black/10 px-5 py-1 rounded-md text-sm cursor-pointer border-2 border-red-400 active:scale-[95%] hover:border-0 hover:bg-red-500 hover:text-white duration-300 ease-in-out"
 				>
 				<p>Delete Account</p>
