@@ -8,14 +8,11 @@ const signup = (req, res) => {
 
 		bcrypt.hash(password, 10, async (err, hash) => {
 
-			let newUser = await userModel.create({
+			const newUser = await userModel.create({
 				fullname,
 				email,
 				password: hash,
 			});
-
-			const userData = newUser.toObject();
-			delete userData.password;
 
 			const token = jwt.sign(
 				{ id: newUser._id },
@@ -33,7 +30,11 @@ const signup = (req, res) => {
 			return res.status(201).json({
 				message: "User created",
 				success: true,
-				user: userData,
+				user: {
+					username: newUser.fullname,
+					email: newUser.email,
+					profilePicture: newUser.profilePicture
+				},
 			});
 		});
 	} catch (err) {
@@ -53,7 +54,7 @@ const login = async (req, res) => {
 
 		if (!user) {
 			return res.status(400).json({
-				message: "User not exists",
+				message: "User not exist",
 				success: false,
 			});
 		}
