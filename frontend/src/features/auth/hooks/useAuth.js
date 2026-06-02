@@ -55,7 +55,6 @@ export const useAuth = () => {
 
     const handleGetMe = async() => {
         try {
-            setLoading(true);
             const {data} = await getMe();
 
             const {success, user} = data;
@@ -64,9 +63,7 @@ export const useAuth = () => {
                 setUser(user);
             }
         } catch(err) {
-            setError(err?.response?.data?.message || "Get me failed");
-        } finally {
-            setLoading(false);
+            setError(err?.response?.data?.message || "Error in getting user data");
         }
     }
 
