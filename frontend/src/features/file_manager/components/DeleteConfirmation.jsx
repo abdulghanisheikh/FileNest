@@ -35,13 +35,13 @@ const DeleteConfirmation = ({ isOpen, loading, onConfirm, onCancel, filename = "
 
                     <div className="actions">
                         <button
-                        className="desactivate"
+                        className="desactivate active:scale-95 duration-300 ease-in-out"
                         onClick={onConfirm}
                         type="button">{loading ? "Deleting..." : "Yes, Delete"}
                         </button>
 
                         <button 
-                        className="cancel" 
+                        className="cancel active:scale-95 duration-300 ease-in-out" 
                         type="button"
                         onClick={onCancel}
                         >Cancel</button>
