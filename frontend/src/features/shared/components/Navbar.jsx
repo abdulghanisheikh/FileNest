@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import DropdownProfile from "../../auth/components/DropdownProfile";
 
 const Navbar = ({ query, setQuery }) => {
+
+  
+
   return (
     <div className='navbar flex w-full py-4 rounded-md px-5 justify-between items-center gap-2'>
       

@@ -17,8 +17,7 @@ const DeleteConfirmation = ({ isOpen, loading, onConfirm, onCancel, filename = "
                     <div className="content">
                         <span className="title">Confirm Delete</span>
                         <p className="message">
-                            {
-                            filename === "" ? (
+                            {filename === "" ? (
                                 `Are you sure you want to deactivate your account? All of your data will
                                 be permanently removed. This action cannot be undone`
                             ) : (
@@ -37,7 +36,7 @@ const DeleteConfirmation = ({ isOpen, loading, onConfirm, onCancel, filename = "
                         <button
                         className="desactivate active:scale-95 duration-300 ease-in-out"
                         onClick={onConfirm}
-                        type="button">{loading === "delete" ? "Deleting..." : "Yes, Delete"}
+                        type="button">{loading === "delete" || loading === "delete account" ? "Deleting..." : "Yes, Delete"}
                         </button>
 
                         <button 
@@ -56,11 +55,12 @@ const DeleteConfirmation = ({ isOpen, loading, onConfirm, onCancel, filename = "
 const StyledWrapper = styled.div`
   .card {
     overflow: hidden;
-    position: relative;
+    height: fit-content;
+    position: static;
     background-color: #ffffff;
     text-align: left;
     border-radius: 0.5rem;
-    max-width: 290px;
+    min-width: 290px;
     box-shadow:
       0 20px 25px -5px rgba(0, 0, 0, 0.1),
       0 10px 10px -5px rgba(0, 0, 0, 0.04);

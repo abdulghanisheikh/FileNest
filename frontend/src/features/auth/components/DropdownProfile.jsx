@@ -1,12 +1,15 @@
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { ToastContainer } from "react-toastify";
 import { useAuth } from "../hooks/useAuth.js";
 import { AuthContext } from "../auth.context.jsx";
 import { useProfileManager } from "../hooks/useProfileManager.js";
+import DeleteConfirmation from "../../file_manager/components/DeleteConfirmation.jsx";
 
 const DropdownProfile = () => {
 	const [open, setOpen] = useState(false);
+	const [openDoubleCheck, setOpenDoubleCheck] = useState(false);
+	const deleteBoxRef = useRef(null);
 
 	const { handleLogout } = useAuth();
 
@@ -27,6 +30,24 @@ const DropdownProfile = () => {
 
 		await handleUploadUserProfile(file);
 	}
+
+	const handleConfirmAccountDelete = async() => {
+		await handleDeleteAccount();
+	}
+
+	useEffect(() => {
+		const clickOutside = (e) => {
+			if(deleteBoxRef.current && !deleteBoxRef.current.contains(e.target)) {
+				setOpenDoubleCheck(false);
+			}
+		}
+
+		// run clickOutside on every click anywhere in on the webpage
+		document.addEventListener("mousedown", clickOutside);
+
+		// remove listener when DropdownProfile component disappears
+		return () => document.removeEventListener("mousedown", clickOutside);
+	}, []);
 
 	return (
 		<div className="relative flex flex-col gap-1 rounded-md z-[2]">
@@ -64,8 +85,9 @@ const DropdownProfile = () => {
 				(<p 
 				className="text-xs cursor-pointer py-0.5 px-3 bg-blue-500 text-white rounded-lg" 
 				onClick={() => profileImageInputFieldRef.current.click()}>
-					{loading === "profile" ? "Setting profile...": "Select profile"}</p>
-				)}
+					{loading === "profile" ? "Setting profile...": "Select profile"}
+				</p>)
+				}
 			</div>
 
 			<div className="flex flex-col gap-2">
@@ -77,11 +99,22 @@ const DropdownProfile = () => {
 				</div>
 
 				<div
-				onClick={async() => await handleDeleteAccount()}
+				onClick={() => setOpenDoubleCheck(true)}
 				className="text-red-500 shadow-md shadow-black/10 px-5 py-1 rounded-md text-sm cursor-pointer border-2 border-red-400 active:scale-[95%] hover:border-0 hover:bg-red-500 hover:text-white duration-300 ease-in-out"
 				>
 				<p>{loading === "delete account" ? "Deleting..." : "Delete Account"}</p>
 				</div>
+
+				{openDoubleCheck && (
+					<div ref={deleteBoxRef} className="absolute left-1/2 top-50 -translate-1/2 z-[5]">
+						<DeleteConfirmation 
+							isOpen={openDoubleCheck}
+							loading={loading}
+							onConfirm={() => handleConfirmAccountDelete()}
+							onCancel={() => setOpenDoubleCheck(false)}
+						/>
+					</div>
+				)}
 
 			</div>
 			<ToastContainer position="top-left" />
