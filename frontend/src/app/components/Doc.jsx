@@ -33,6 +33,7 @@ function getTimeStamp(addedOn) {
 
 const Doc = ({ filename, filesize, filetype, addedOn, publicUrl, deleteFile, getSummary }) => {
     const [open, setOpen] = useState(false);
+
     const imageTypes = ["image/png", "image/gif", "image/jpeg", "image/svg+xml", "image/x-icon", "image/webp"];
 
     function renderIcon() {
@@ -81,11 +82,14 @@ const Doc = ({ filename, filesize, filetype, addedOn, publicUrl, deleteFile, get
                             
                             <button onClick={deleteFile} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-red-500 duration-300 ease-in-out'>Delete</button>
                             
-                            {types.includes(filetype) && 
+                            {types.includes(filetype) &&
+
                             <button onClick={getSummary} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-green-600 duration-300 ease-in-out rounded-b-md flex justify-center items-center gap-1'>
                                 <p>Summarize</p>
                                 <SiGooglegemini />
-                            </button>}
+                            </button>
+                            }
+
                         </div>}
                     </div>
                     <p>{(filesize / MB).toFixed(2)} MB</p>

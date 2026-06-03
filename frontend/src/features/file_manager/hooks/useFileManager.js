@@ -25,10 +25,10 @@ export const useFileManager = () => {
         }
     }
 
-    const handleFileDelete = async({filepath}) => {
+    const handleFileDelete = async(filepath) => {
         try {
             setLoading("delete");
-            const {data} = await deleteFile({filepath});
+            const {data} = await deleteFile(filepath);
             const {success} = data;
 
             if(success) {
@@ -38,7 +38,6 @@ export const useFileManager = () => {
             return data;
         } catch(err) {
             setError(err?.response?.data?.message || "Delete operation failed");
-
             return {success: false, message: err?.response?.data?.message || "Delete operation failed"};
         } finally {
             setLoading("");

@@ -9,33 +9,38 @@ import { useFileManager } from "../hooks/useFileManager.js";
 import { FileManagerContext } from "../file_manager.context";
 import { useSummary } from "../../ai_summary/hooks/useSummary.js";
 import { SummaryContext } from "../../ai_summary/summary.context.jsx";
+import DeleteConfirmation from "../components/DeleteConfirmation.jsx";
 
 function Documents() {
 	const [query, setQuery] = useState("");
+	const [fileToDelete, setFileToDelete] = useState(null);
 
 	const summaryComponentReference = useRef(null);
 
-	const {handleGetSummary} = useSummary();
+	const { handleGetSummary } = useSummary();
 
 	const summaryContext = useContext(SummaryContext);
-	const {loading, summaryData, setSummaryData} = summaryContext;
+	const { loading: summaryLoading, summaryData, setSummaryData } = summaryContext;
 
-	const {handleFetchDocs, handleFileDelete} = useFileManager();
+	const { handleFetchDocs, handleFileDelete } = useFileManager();
 	const context = useContext(FileManagerContext);
-	const {docs} = context;
+	const { docs, loading } = context;
 
-	const deleteFile = async(filepath) => {
-		const data = await handleFileDelete({filepath});
+	const handleConfirmDelete = async(doc) => {
+		const data = await handleFileDelete(doc.path);
+
 		const {success, message} = data;
 
 		if(success) {
 			toast.success(message);
+			setFileToDelete(null);
+
 			await handleFetchDocs();
 		} else {
 			toast.error(message);
 		}
 	}
-	
+
 	useEffect(() => {
 		handleFetchDocs();
 	}, []);
@@ -46,69 +51,88 @@ function Documents() {
 
 	return (
 		<div className="flex w-full relative min-h-screen bg-zinc-100">
-		{summaryData.summary && (
-			<div 
-			onClick={() => setSummaryData({
-				docName: "",
-				summary: ""
-			})}
-			className="absolute inset-0 w-full h-full bg-black/50 z-[3] backdrop-blur-sm"></div>
-		)}
+			{summaryData.summary && (
+				<div
+				onClick={() => setSummaryData({ docName: "", summary: "" })}
+				className="absolute inset-0 w-full h-full bg-black/50 z-[3] backdrop-blur-sm">	
+				</div>
+			)}
 
-		<Sidepanel />
-		<div className="flex flex-col w-[80%] rounded-md gap-1">
+			{fileToDelete && (
+				<div
+				onClick={() => setFileToDelete(null)}
+				className="absolute inset-0 w-full h-full bg-black/10 z-[3] backdrop-blur-xs"
+				>
+				</div>
+			)}
 
-			<Navbar query={query} setQuery={setQuery} />
+			<Sidepanel />
 
-			<div className="main flex flex-col p-5 gap-5 rounded-md justify-start">
-			<h1 className="text-4xl">Documents</h1>
-			<div className="flex gap-2 flex-wrap justify-start w-full">
+			<div className="flex flex-col w-[80%] rounded-md gap-1">
+				<Navbar query={query} setQuery={setQuery} />
 
-				{loading ? (
-					<div className="flex gap-3 items-center justify-center absolute top-1/2 left-1/2 -translate-1/2 z-[4] bg-white text-black py-0.5 px-3 rounded-md shadow-md shadow-black/30">
-						<p className="text-lg">Loading summary...</p>
-						<ThreeDots
-						visible={true}
-						height="20"
-						width="40"
-						color="black"
-						radius="9"
-						ariaLabel="three-dots-loading"
-						wrapperStyle={{}}
-						wrapperClass=""
-						/>
+				<div className="main flex flex-col p-5 gap-5 rounded-md justify-start">
+					<h1 className="text-4xl">Documents</h1>
+
+					<div className="flex gap-2 flex-wrap justify-start w-full">
+
+						{summaryLoading ? (
+							<div className="flex gap-3 items-center justify-center absolute top-1/2 left-1/2 -translate-1/2 z-[4] bg-white text-black py-0.5 px-3 rounded-md shadow-md shadow-black/30">
+								<p className="text-lg">Loading summary...</p>
+								<ThreeDots
+									visible={true}
+									height="20"
+									width="40"
+									color="black"
+									radius="9"
+									ariaLabel="three-dots-loading"
+									wrapperStyle={{}}
+									wrapperClass=""
+								/>
+							</div>
+						) : (
+							summaryData.summary &&
+							<SummaryComponent
+								summaryComponentReference={summaryComponentReference}
+								summary={summaryData}
+								setSummary={setSummaryData}
+							/>
+						)}
+
+						{fileToDelete && (
+							<div className="absolute top-1/2 left-1/2 -translate-1/2 z-[5]">
+								<DeleteConfirmation 
+									isOpen={Boolean(fileToDelete)}
+									loading={loading}
+									onConfirm={() => handleConfirmDelete(fileToDelete)}
+									onCancel={() => setFileToDelete(null)}
+									filename={fileToDelete?.originalname}
+								/>
+							</div>
+						)}
+
+						{filteredDocs.length === 0 ? (
+							<p className="text-sm">No documents uploaded yet.</p>
+						) : (
+							filteredDocs.map((doc, index) => {
+								return (
+									<Doc
+										key={index}
+										getSummary={async () => await handleGetSummary({ filepath: doc.path, filename: doc.originalname })}
+										filename={doc.originalname}
+										filesize={doc.fileSize}
+										filetype={doc.fileType}
+										addedOn={doc.addedOn}
+										publicUrl={doc.publicUrl}
+										deleteFile={() => setFileToDelete(doc)}
+									/>
+								);
+							})
+						)}
 					</div>
-				) : (
-					summaryData.summary && 
-					<SummaryComponent 
-					summaryComponentReference={summaryComponentReference} 
-					summary={summaryData} 
-					setSummary={setSummaryData} 
-					/>
-				)}
-
-				{filteredDocs.length === 0 ? (
-				<p className="text-sm">No documents uploaded yet.</p>
-				) : (
-				filteredDocs.map((doc, index) => {
-					return (
-					<Doc
-						key={index}
-						getSummary={async() => await handleGetSummary({filepath: doc.path, filename: doc.originalname})}
-						filename={doc.originalname}
-						filesize={doc.fileSize}
-						filetype={doc.fileType}
-						addedOn={doc.addedOn}
-						publicUrl={doc.publicUrl}
-						deleteFile={() => deleteFile(doc.path)}
-					/>
-					);
-				})
-				)}
+				</div>
 			</div>
-			</div>
-		</div>
-		<ToastContainer position="top-left" />
+			<ToastContainer position="top-left" />
 		</div>
 	);
 }

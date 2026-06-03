@@ -17,7 +17,7 @@ export const fetchDocs = async() => {
     return response;
 }
 
-export const deleteFile = async({filepath}) => {
+export const deleteFile = async(filepath) => {
     const response = await api.delete(`${baseURL}/file/delete?filepath=${filepath}`);
     return response;
 }
