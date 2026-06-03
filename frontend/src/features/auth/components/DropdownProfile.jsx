@@ -63,14 +63,14 @@ const DropdownProfile = () => {
 
 	return (
 		<div
-			className="relative flex flex-col gap-1 rounded-md z-[2]">
+		ref={dropdownProfileReference}
+		className="relative flex flex-col gap-1 rounded-md z-[2]">
 
 			<div className="flex items-center justify-center gap-1.5">
 				<div className="px-5 py-1 rounded-md">
 					👋 {user?.username}
 				</div>
 
-				
 				<ToggleMenu 
 				toggle={() => setOpen(!open)}
 				open={open} />
@@ -78,7 +78,6 @@ const DropdownProfile = () => {
 
 			{open && (
 				<div
-					ref={dropdownProfileReference}
 					className="absolute top-13 right-0 h-90 w-90 flex flex-col gap-1 justify-between p-5 text-black bg-white rounded-md shadow-sm shadow-black/20 text-center font-semibold">
 
 					<div className="flex flex-col items-center">
