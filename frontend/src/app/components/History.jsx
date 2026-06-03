@@ -1,14 +1,8 @@
-import { useContext } from 'react';
 import { FileManagerContext } from '../../features/file_manager/file_manager.context';
 import ListItem from './ListItem';
-import { ToastContainer, toast } from "react-toastify";
-import { useFileManager } from '../../features/file_manager/hooks/useFileManager';
+import { ToastContainer } from "react-toastify";
 
-const History = ({ uploadHistory }) => {
-    const context = useContext(FileManagerContext);
-    const {setRefresh} = context;
-
-    const {handleFileDelete} = useFileManager();
+const History = ({ uploadHistory, setFileToDelete }) => {
 
     const docType = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.  document", "text/plain", "application/json", "text/csv", "text/markdown"];
     const imageType = ["image/png", "image/gif", "image/jpeg", "image/svg+xml", "image/x-icon", "image/webp"];
@@ -40,20 +34,6 @@ const History = ({ uploadHistory }) => {
         else return "📄";
     }
 
-    const handleFileDeleteClick = async(filepath) => {
-        const data = await handleFileDelete({filepath});
-
-        const {success, message} = data;
-
-        if(success) {
-            toast.success(message);
-
-            setRefresh(true);
-        } else {
-            toast.error(message);
-        }
-    }
-
     return (
         <div className='history bg-sky-200 rounded-xl px-5 flex flex-col h-screen/90 w-1/2 gap-5 py-5'>
             <h1 className='text-3xl font-semibold'>Todays Uploads</h1>
@@ -66,7 +46,7 @@ const History = ({ uploadHistory }) => {
                             key={idx}
                             getMinutesAgo={() => getMinutesAgo(item.addedOn)}
                             renderIcon={() => renderIcon(item.fileType)}
-                            deleteFile={() => handleFileDeleteClick(item.path)}
+                            deleteFile={() => setFileToDelete(item)}
                         />
                     })}
 

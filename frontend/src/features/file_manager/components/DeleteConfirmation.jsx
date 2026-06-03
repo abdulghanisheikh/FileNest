@@ -37,7 +37,7 @@ const DeleteConfirmation = ({ isOpen, loading, onConfirm, onCancel, filename = "
                         <button
                         className="desactivate active:scale-95 duration-300 ease-in-out"
                         onClick={onConfirm}
-                        type="button">{loading ? "Deleting..." : "Yes, Delete"}
+                        type="button">{loading === "delete" ? "Deleting..." : "Yes, Delete"}
                         </button>
 
                         <button 

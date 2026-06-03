@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import {FileManagerContext} from "../features/file_manager/file_manager.context.jsx";
+import { FileManagerContext } from "../features/file_manager/file_manager.context.jsx";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import ProgressBar from "../app/components/ProgressBar.jsx";
@@ -7,226 +7,266 @@ import History from "../app/components/History.jsx";
 import ContentBox from "../app/components/ContentBox.jsx";
 import Navbar from "../features/shared/components/Navbar";
 import Sidepanel from "../app/components/Sidepanel.jsx";
+import { useFileManager } from "../features/file_manager/hooks/useFileManager.js";
+import DeleteConfirmation from "../features/file_manager/components/DeleteConfirmation.jsx";
 
 function Dashboard() {
-  const [usedStorage, setUsedStorage] = useState(0);
-  const [eachSizes, setEachSizes] = useState({
-    docSize: 0,
-    imageSize: 0,
-    mediaSize: 0,
-    otherSize: 0,
-  });
-  const [eachTimes, setEachTimes] = useState({
-    docTime: null,
-    imageTime: null,
-    mediaTime: null,
-    otherTime: null,
-  });
-  const MB = 1000000;
-  const [uploadHistory, setUploadHistory] = useState([]);
-  
-  let baseUrl;
-  if(import.meta.env.VITE_ENVIRONMENT === "development") {
-    baseUrl = "http://localhost:3000";
-  } else {
-    baseUrl = import.meta.env.VITE_BASE_URL;
-  }
+	const [usedStorage, setUsedStorage] = useState(0);
+	const [fileToDelete, setFileToDelete] = useState(null);
 
-  const context = useContext(FileManagerContext);
-  const {refresh, setRefresh} = context;
+	const [eachSizes, setEachSizes] = useState({
+		docSize: 0,
+		imageSize: 0,
+		mediaSize: 0,
+		otherSize: 0,
+	});
+	const [eachTimes, setEachTimes] = useState({
+		docTime: null,
+		imageTime: null,
+		mediaTime: null,
+		otherTime: null,
+	});
+	const MB = 1000000;
+	const [uploadHistory, setUploadHistory] = useState([]);
 
-  async function fetchUsedStorage() {
-    try {
-      const { data } = await axios.get(`${baseUrl}/user/usedStorage`, {
-        withCredentials: true,
-      });
-      const { success, totalSize } = data;
-      if (success) setUsedStorage(totalSize);
-    } catch (err) {
-      toast.error(err.message);
-    }
-  }
+	let baseUrl;
+	if (import.meta.env.VITE_ENVIRONMENT === "development") {
+		baseUrl = "http://localhost:3000";
+	} else {
+		baseUrl = import.meta.env.VITE_BASE_URL;
+	}
 
-  function getDateString(now) {
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
+	const context = useContext(FileManagerContext);
+	const { refresh, setRefresh, loading } = context;
 
-    const day = String(now.getDate()).padStart(2, "0");
-    const month = months[now.getMonth()];
+	async function fetchUsedStorage() {
+		try {
+			const { data } = await axios.get(`${baseUrl}/user/usedStorage`, {
+				withCredentials: true,
+			});
+			const { success, totalSize } = data;
+			if (success) setUsedStorage(totalSize);
+		} catch (err) {
+			toast.error(err.message);
+		}
+	}
 
-    return `${day} ${month}`;
-  }
+	function getDateString(now) {
+		const months = [
+			"Jan",
+			"Feb",
+			"Mar",
+			"Apr",
+			"May",
+			"Jun",
+			"Jul",
+			"Aug",
+			"Sep",
+			"Oct",
+			"Nov",
+			"Dec",
+		];
 
-  function getTimeStamp(now) {
-    let hours = now.getHours();
-    const minutes = now.getMinutes().toString().padStart(2, "0");
-    const ampm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12;
-    if (hours === 0) hours = 12;
-    return `${hours}:${minutes} ${ampm}`;
-  }
+		const day = String(now.getDate()).padStart(2, "0");
+		const month = months[now.getMonth()];
 
-  async function fetchEachStorage() {
-    try {
-      const { data } = await axios.get(`${baseUrl}/file/eachStorage`, {
-        withCredentials: true,
-      });
-      const {
-        success,
-        message,
-        docStorage,
-        imageStorage,
-        mediaStorage,
-        otherStorage,
-        docUpdate,
-        imageUpdate,
-        mediaUpdate,
-        otherUpdate,
-      } = data;
-      if(success) {
-        setEachSizes({
-          docSize: docStorage,
-          imageSize: imageStorage,
-          mediaSize: mediaStorage,
-          otherSize: otherStorage,
-        });
-        
-        setEachTimes({
-          docTime: new Date(docUpdate),
-          imageTime: new Date(imageUpdate),
-          mediaTime: new Date(mediaUpdate),
-          otherTime: new Date(otherUpdate),
-        });
-      }
-      else {
-        toast.error(message);
-      }
-    } 
-    catch (err) {
-      toast.error(err.message);
-    }
-  }
+		return `${day} ${month}`;
+	}
 
-  async function fetchUploadHistory() {
-    try {
-      const res = await axios.get(`${baseUrl}/user/getUploadHistory`, {
-        withCredentials: true,
-      });
-      const { success, message, files } = res.data;
-      if (success) setUploadHistory(files);
-      else toast.error(message);
-    } catch (err) {
-      toast.error(err.response?.data?.message);
-    }
-  }
+	function getTimeStamp(now) {
+		let hours = now.getHours();
+		const minutes = now.getMinutes().toString().padStart(2, "0");
+		const ampm = hours >= 12 ? "pm" : "am";
+		hours = hours % 12;
+		if (hours === 0) hours = 12;
+		return `${hours}:${minutes} ${ampm}`;
+	}
 
-  // run once, when component mounts
-  useEffect(() => {
-    const reloadAll = async() => {
-      await Promise.all([
-        fetchUsedStorage(),
-        fetchEachStorage(),
-        fetchUploadHistory()
-      ]);
-    }
+	async function fetchEachStorage() {
+		try {
+			const { data } = await axios.get(`${baseUrl}/file/eachStorage`, {
+				withCredentials: true,
+			});
+			const {
+				success,
+				message,
+				docStorage,
+				imageStorage,
+				mediaStorage,
+				otherStorage,
+				docUpdate,
+				imageUpdate,
+				mediaUpdate,
+				otherUpdate,
+			} = data;
+			if (success) {
+				setEachSizes({
+					docSize: docStorage,
+					imageSize: imageStorage,
+					mediaSize: mediaStorage,
+					otherSize: otherStorage,
+				});
 
-    reloadAll();
-  }, []);
+				setEachTimes({
+					docTime: new Date(docUpdate),
+					imageTime: new Date(imageUpdate),
+					mediaTime: new Date(mediaUpdate),
+					otherTime: new Date(otherUpdate),
+				});
+			}
+			else {
+				toast.error(message);
+			}
+		}
+		catch (err) {
+			toast.error(err.message);
+		}
+	}
 
-  // run whenever refresh becomes true
-  useEffect(() => {
-    if (!refresh) return;
+	async function fetchUploadHistory() {
+		try {
+			const res = await axios.get(`${baseUrl}/user/getUploadHistory`, {
+				withCredentials: true,
+			});
+			const { success, message, files } = res.data;
+			if (success) setUploadHistory(files);
+			else toast.error(message);
+		} catch (err) {
+			toast.error(err.response?.data?.message);
+		}
+	}
 
-    async function reloadAll() {
-      await Promise.all([
-        fetchUsedStorage(),
-        fetchEachStorage(),
-        fetchUploadHistory(),
-      ]);
+	const {handleFileDelete} = useFileManager();
 
-      setRefresh(false);
-    }
+	const handleConfirmDelete = async(doc) => {
+		const data = await handleFileDelete(doc.path);
 
-    reloadAll();
-  }, [refresh]);
+		const {success, message} = data;
 
-  return (
-    <div className="flex w-full min-h-screen bg-zinc-100">
-      <Sidepanel />
+		if(success) {
+			toast.success(message);
 
-      <div className="flex flex-col min-h-screen w-[80%] rounded-md">
+			setFileToDelete(null);
+            setRefresh(true);
+		} else {
+			toast.error(message);
+		}
+	}
 
-        <Navbar />
+	// run once, when component mounts
+	useEffect(() => {
+		const reloadAll = async () => {
+			await Promise.all([
+				fetchUsedStorage(),
+				fetchEachStorage(),
+				fetchUploadHistory()
+			]);
+		}
 
-        <div className="main flex rounded-2xl justify-between bg-zinc-100 px-10 py-5">
-          <div className="flex flex-col items-center justify-center w-1/2 px-12 gap-3 h-full">
+		reloadAll();
+	}, []);
 
-            <ProgressBar usedStorage={usedStorage} />
+	// run whenever refresh becomes true
+	useEffect(() => {
+		if (!refresh) return;
 
-            <div className="flex gap-2 flex-wrap h-full w-full">
-              <ContentBox
-                title="Documents"
-                storage={(eachSizes.docSize/MB).toFixed(2)}
-                to="/documents"
-                time={eachTimes.docTime ? getTimeStamp(eachTimes.docTime) : ""}
-                date={eachTimes.docTime ? getDateString(eachTimes.docTime) : ""}
-              />
+		async function reloadAll() {
+			await Promise.all([
+				fetchUsedStorage(),
+				fetchEachStorage(),
+				fetchUploadHistory(),
+			]);
 
-              <ContentBox
-                title="Images"
-                storage={(eachSizes.imageSize / MB).toFixed(2)}
-                to="/images"
-                time={
-                  eachTimes.imageTime ? getTimeStamp(eachTimes.imageTime) : ""
-                }
-                date={
-                  eachTimes.imageTime ? getDateString(eachTimes.imageTime) : ""
-                }
-              />
+			setRefresh(false);
+		}
 
-              <ContentBox
-                title="Media"
-                storage={(eachSizes.mediaSize/MB).toFixed(2)}
-                to="/media"
-                time={
-                  eachTimes.mediaTime ? getTimeStamp(eachTimes.mediaTime) : ""
-                }
-                date={
-                  eachTimes.mediaTime ? getDateString(eachTimes.mediaTime) : ""
-                }
-              />
+		reloadAll();
+	}, [refresh]);
 
-              <ContentBox
-                title="Others"
-                storage={(eachSizes.otherSize/MB).toFixed(2)}
-                to="/other"
-                time={
-                  eachTimes.otherTime ? getTimeStamp(eachTimes.otherTime) : ""
-                }
-                date={
-                  eachTimes.otherTime ? getDateString(eachTimes.otherTime) : ""
-                }
-              />
-            </div>
-          </div>
-          <History uploadHistory={uploadHistory} />
-        </div>
-      </div>
+	return (
+		<div className="flex relative w-full min-h-screen bg-zinc-100">
 
-      <ToastContainer position="top-left" />
-    </div>
-  );
+			{fileToDelete && (
+				<div 
+				onClick={() => setFileToDelete(null)}
+				className="absolute inset-0 w-full h-full bg-black/20 backdrop:blur-xs"></div>
+			)}
+
+			{fileToDelete && (
+                <div className="absolute top-1/2 left-1/2 -translate-1/2 z-[5]">
+                    <DeleteConfirmation
+					isOpen={Boolean(fileToDelete)}
+					loading={loading}
+					onConfirm={() => handleConfirmDelete(fileToDelete)}
+					onCancel={() => setFileToDelete(null)}
+					filename={fileToDelete?.originalname}
+                    />
+                </div>
+			)}
+
+			<Sidepanel />
+
+			<div className="flex flex-col min-h-screen w-[80%] rounded-md">
+				<Navbar />
+
+				<div className="main flex rounded-2xl justify-between bg-zinc-100 px-10 py-5">
+					<div className="flex flex-col items-center justify-center w-1/2 px-12 gap-3 h-full">
+
+						<ProgressBar usedStorage={usedStorage} />
+
+						<div className="flex gap-2 flex-wrap h-full w-full">
+							<ContentBox
+								title="Documents"
+								storage={(eachSizes.docSize / MB).toFixed(2)}
+								to="/documents"
+								time={eachTimes.docTime ? getTimeStamp(eachTimes.docTime) : ""}
+								date={eachTimes.docTime ? getDateString(eachTimes.docTime) : ""}
+							/>
+
+							<ContentBox
+								title="Images"
+								storage={(eachSizes.imageSize / MB).toFixed(2)}
+								to="/images"
+								time={
+									eachTimes.imageTime ? getTimeStamp(eachTimes.imageTime) : ""
+								}
+								date={
+									eachTimes.imageTime ? getDateString(eachTimes.imageTime) : ""
+								}
+							/>
+
+							<ContentBox
+								title="Media"
+								storage={(eachSizes.mediaSize / MB).toFixed(2)}
+								to="/media"
+								time={
+									eachTimes.mediaTime ? getTimeStamp(eachTimes.mediaTime) : ""
+								}
+								date={
+									eachTimes.mediaTime ? getDateString(eachTimes.mediaTime) : ""
+								}
+							/>
+
+							<ContentBox
+								title="Others"
+								storage={(eachSizes.otherSize / MB).toFixed(2)}
+								to="/other"
+								time={
+									eachTimes.otherTime ? getTimeStamp(eachTimes.otherTime) : ""
+								}
+								date={
+									eachTimes.otherTime ? getDateString(eachTimes.otherTime) : ""
+								}
+							/>
+						</div>
+					</div>
+
+					<History uploadHistory={uploadHistory} setFileToDelete={setFileToDelete} />
+				</div>
+			</div>
+
+			<ToastContainer position="top-left" />
+		</div>
+	);
 }
 export default Dashboard;
