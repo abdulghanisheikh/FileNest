@@ -84,12 +84,11 @@ const Doc = ({ filename, filesize, filetype, addedOn, publicUrl, deleteFile, get
         className="doc justify-between shadow-sm shadow-black/20 flex flex-col p-5 bg-white w-50 h-40 text-sm rounded-2xl tracking-tighter">
             <div className="flex justify-between items-center">
                 <div className='rounded-full p-3 bg-pink-700 text-white'>
-                    {renderIcon()}
+                    {renderIcon()} 
                 </div>
 
                 <div className='flex flex-col justify-between items-end gap-1'>
-                    <div 
-                    ref={docOptionsReference}
+                    <div
                     className='relative cursor-pointer p-1 rounded-full bg-sky-700 text-white'>
 
                         {!open ? (
@@ -100,21 +99,14 @@ const Doc = ({ filename, filesize, filetype, addedOn, publicUrl, deleteFile, get
 
                         {open && (
                             <div
-                            className='absolute top-8 right-0 w-25 flex flex-col rounded-md bg-sky-800 text-white text-xs font-semibold z-30 shadow-md shadow-black/30'>
+                            ref={docOptionsReference}
+                            className='absolute top-7 right-0 w-25 flex flex-col rounded-md bg-sky-800 text-white text-xs font-semibold z-30 shadow-md shadow-black/30'>
                                 <a href={publicUrl} target="_blank" className='cursor-pointer text-center w-full hover:bg-white active:scale-95 hover:text-blue-500 duration-300 ease-in-out p-1 rounded-t-md'>View</a>
                                 
-                                <button onClick={(e) => {
-                                    e.stopPropagation();
-                                    deleteFile();
-                                    setOpen(false);
-                                }} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-red-500 duration-300 ease-in-out'>Delete</button>
+                                <button onClick={() => deleteFile()} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-red-500 duration-300 ease-in-out'>Delete</button>
                                 
                                 {types.includes(filetype) &&
-                                    <button onClick={(e) => {
-                                            e.stopPropagation();
-                                            getSummary();
-                                            setOpen(false);
-                                        }} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-green-600 duration-300 ease-in-out rounded-b-md flex justify-center items-center gap-1'>
+                                    <button onClick={() => getSummary()} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-green-600 duration-300 ease-in-out rounded-b-md flex justify-center items-center gap-1'>
                                         <p>Summarize</p>
                                         <SiGooglegemini />
                                     </button>

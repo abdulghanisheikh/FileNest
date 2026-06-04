@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, useRef } from "react";
-import Doc from "../../../app/components/Doc.jsx";
+import Doc from "../components/Doc.jsx";
 import Navbar from "../../shared/components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
 import Sidepanel from "../../../app/components/Sidepanel.jsx";
