@@ -1,19 +1,40 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdOutlineRemove } from "react-icons/md";
 
 const ListItem = ({ item, idx, renderIcon, getMinutesAgo, deleteFile }) => {
     const [open, setOpen] = useState(false);
+    const optionsReference = useRef();
+
+    useEffect(() => {
+        const clickOutside = (e) => {
+            if(optionsReference.current && !optionsReference.current.contains(e.target)) {
+                setOpen(false);
+            }
+        }
+
+        document.addEventListener("mousedown", clickOutside);
+
+        return () => document.removeEventListener("mousedown", clickOutside);
+    }, []);
+
     return <li
         key={idx}
         className='flex rounded-full px-3 py-2 items-center justify-between shadow-sm shadow-black/20 bg-white text-black text-xs'>
+
         <div className='flex justify-center items-center p-1 text-lg rounded-full'>{renderIcon()}</div>
+
         <p className="font-semibold truncate w-80">{item.originalname}</p>
+
         <p>{getMinutesAgo()}</p>
+
         <div className='cursor-pointer relative rounded-full p-1 bg-sky-700 text-white' onClick={() => setOpen(!open)}>
+
             {open ? <MdOutlineRemove size={18} /> : <BsThreeDotsVertical size={18} />}
-            {open && <div className='flex flex-col absolute -left-16 top-0 bg-sky-700 text-white rounded-md overflow-hidden duration-[300] ease-in-out'>
+
+            {open && <div ref={optionsReference} className='flex flex-col absolute -left-16 top-0 bg-sky-700 text-white rounded-md overflow-hidden duration-[300] ease-in-out'>
                 <a href={item.publicUrl} target="_blank" className='hover:bg-white px-3 py-1 text-center hover:text-blue-500 duration-300 ease-in-out font-semibold text-xs'>View</a>
+
                 <p onClick={() => deleteFile(item.path)} className='hover:bg-white px-3 py-1 text-center hover:text-red-500 duration-300 ease-in-out font-semibold text-xs'>Delete</p>
             </div>}
         </div>
