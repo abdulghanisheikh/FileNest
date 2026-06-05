@@ -7,10 +7,12 @@ const deleteFolder = async (folderName) => {
     try {
         const limit = 1000;
         const offset = 0;
+
         const { data: files, error } = await supabase
             .storage
             .from("UserFiles")
             .list(folderName, { limit, offset });
+
         if (error) {
             return {
                 success: false,
@@ -18,17 +20,21 @@ const deleteFolder = async (folderName) => {
                 error: error.message
             }
         }
+
         if (!files || files.length === 0) {
             return {
                 success: true,
                 message: "No files, nothing to delete."
             }
         }
+
         const filePaths = files.map(file => `${folderName}/${file.name}`);
+
         const { error: deleteError } = await supabase
             .storage
             .from("UserFiles")
             .remove(filePaths);
+
         if (deleteError) {
             return {
                 success: false,
@@ -36,6 +42,7 @@ const deleteFolder = async (folderName) => {
                 error: deleteError.message
             }
         }
+
         return {
             success: true,
             message: "User account is deleted successfully"
@@ -63,16 +70,12 @@ const deleteAccount = async (req, res) => {
         }
 
         await fileModel.deleteMany({ owner: deletedUser._id });
+
+        // delete files
         let result = await deleteFolder(deletedUser._id);
 
         if (result.success) {
-            result = await deleteFolder(`profile-pictures/${deletedUser._id}`);
-            if (result.success) {
-                return res.status(200).json(result);
-            }
-            else {
-                return res.status(400).json(result);
-            }
+            // delete profile picture from imagekit
         }
         
         else {
@@ -99,7 +102,9 @@ const removeUserProfile = async (req, res) => {
             });
         }
 
-        await imagekit.files.delete(user.profileId);
+        if(!user.googleId) {
+            await imagekit.files.delete(user.profileId);
+        }
 
         user.profilePicture = "";
         user.profileId = "";
@@ -109,6 +114,7 @@ const removeUserProfile = async (req, res) => {
             success: true,
             message: "User profile removed"
         });
+
     } catch (err) {
         return res.status(500).json({
             success: false,

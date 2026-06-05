@@ -2,10 +2,42 @@ const userModel = require("../models/user.model.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const signup = async(req, res) => {
+const sendTokenResponse = async({user, res, message}) => {
 	try {
-		const { fullname, email, password } = req.body;
+		const token = jwt.sign(
+			{ id: user._id },
+			process.env.JWT_SECRET,
+			{ expiresIn: "24h" },
+		);
 
+		res.cookie("token", token, {
+			httpOnly: true, // JS can't access cookies in frontend
+			secure: process.env.NODE_ENV === "development" ? false : true,
+			maxAge: 24 * 60 * 60 * 1000, // 1 day
+			sameSite: "none", // allow cross-origin domain
+		});
+
+		return res.status(200).json({
+			success: true,
+			message,
+			user: {
+				username: user.fullname,
+				email: user.email,
+				profilePicture: user.profilePicture
+			},
+		});
+	} catch(err) {
+		return res.status(500).json({
+			success: false,
+			error: err.message
+		});
+	}
+}
+
+const signup = async(req, res) => {
+	const { fullname, email, password } = req.body;
+
+	try {
 		const existingUser = await userModel.findOne({
 			$or: [
 				{fullname},
@@ -28,28 +60,7 @@ const signup = async(req, res) => {
 				password: hash,
 			});
 
-			const token = jwt.sign(
-				{ id: newUser._id },
-				process.env.JWT_SECRET,
-				{ expiresIn: "24h" },
-			);
-
-			res.cookie("token", token, {
-				httpOnly: true, // JS can't access cookies in frontend
-				secure: true,
-				maxAge: 24 * 60 * 60 * 1000, // 1 day
-				sameSite: "none", // allow cross-origin domain
-			});
-
-			return res.status(201).json({
-				message: "User created",
-				success: true,
-				user: {
-					username: newUser.fullname,
-					email: newUser.email,
-					profilePicture: newUser.profilePicture
-				},
-			});
+			await sendTokenResponse({ user: newUser, res, message: "User created" });
 		});
 	} catch (err) {
 		res.status(500).json({
@@ -61,9 +72,9 @@ const signup = async(req, res) => {
 };
 
 const login = async (req, res) => {
+	const { email, password } = req.body;
+
 	try {
-		const { email, password } = req.body;
-		
 		const user = await userModel.findOne({ email });
 
 		if (!user) {
@@ -81,28 +92,7 @@ const login = async (req, res) => {
 			});
 		}
 
-		const token = jwt.sign(
-			{ id: user._id },
-			process.env.JWT_SECRET,
-			{ expiresIn: "24h" },
-		);
-
-		res.cookie("token", token, {
-			httpOnly: true, // JS can't access cookies in frontend
-			secure: true,
-			maxAge: 24 * 60 * 60 * 1000, // 1 day
-			sameSite: "none", // allow cross-origin domain
-		});
-
-		return res.status(200).json({
-			success: true,
-			message: "Login Successfull",
-			user: {
-				username: user.fullname,
-				email: user.email,
-				profilePicture: user.profilePicture
-			},
-		});
+		await sendTokenResponse({ user, res, message: "Login Successfull" });
 	} catch (err) {
 		res.status(500).json({
 			message: "Server error",
@@ -111,6 +101,40 @@ const login = async (req, res) => {
 		});
 	}
 };
+
+const googleCallback = async(req, res) => {
+	const {id, displayName, emails, photos} = req.user;
+	const email = emails[0].value;
+	const profilePicture = photos[0].value;
+
+	try {
+		let user = await userModel.findOne({email});
+
+		if(!user) {
+			user = await userModel.create({
+				fullname: displayName,
+				email,
+				profilePicture,
+				googleId: id
+			});
+		}
+
+		const token = await jwt.sign(
+			{ id: user._id },
+			process.env.JWT_SECRET,
+			{ expiresIn: "1d" }
+		);
+
+		res.cookie("token", token);
+
+		res.redirect("http://localhost:5173/dashboard");
+	} catch(err) {
+		return res.status(500).json({
+			success: false,
+			error: err.message
+		});
+	}
+}
 
 const logout = async (req, res) => {
 	try {
@@ -156,4 +180,4 @@ const getMe = async (req, res) => {
 	}
 }
 
-module.exports = { signup, login, logout, getMe };
+module.exports = { signup, login, logout, getMe, googleCallback };

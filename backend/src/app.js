@@ -1,13 +1,17 @@
 require("dotenv").config();
 const express = require("express");
-const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const passport = require("passport");
+const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
+
+const app = express();
 
 const authRouter = require("./routes/auth.routes.js");
 const userRouter = require("./routes/user.routes.js");
 const fileRouter = require("./routes/file.routes.js");
 const summaryRouter = require("./routes/summary.routes.js");
+const { profile } = require("./config/llm.config.js");
 
 app.use(cors({
     origin: ["http://localhost:5173", process.env.FRONTEND],
@@ -19,10 +23,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use(passport.initialize());
+
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/callback"
+}, (_, __, profile, done) => {
+    return done(null, profile);
+}));
+
 // routes
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/file", fileRouter);
 app.use("/", summaryRouter);
+
+app.get("/", (req, res) => {
+    res.send("Server is running");
+});
 
 module.exports = {app};

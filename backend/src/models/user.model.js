@@ -22,9 +22,12 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: function() {
+            return !this.googleId;
+        },
         minLength: [5, "password must be atleast 5 characters long"]
     },
+    googleId: String,
     docUpdate: {
         type: Date,
         default: Date.now()

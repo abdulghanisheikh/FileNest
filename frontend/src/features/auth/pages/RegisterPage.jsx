@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { ThreeDots } from "react-loader-spinner";
 import { AuthContext } from "../auth.context.jsx";
+import GoogleButton from "../components/GoogleButton.jsx";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -76,9 +77,11 @@ const RegisterPage = () => {
             <img className="object-cover" src="/file-pic.png" alt="" />
           </div>
         </div>
-        <div className="flex flex-col px-20 py-40 w-[50%] bg-zinc-200">
-          <div className="flex flex-col gap-8">
+
+        <div className="flex flex-col px-20 py-25 w-[50%] bg-zinc-200">
+          <div className="flex flex-col gap-4">
             <h1 className="text-3xl text-gray-800 font-semibold">Create Account</h1>
+
             <form onSubmit={handleSubmit} className="flex flex-col justify-center gap-5">
               <div className="flex flex-col gap-1">
                 <label className="text-gray-800">Full Name</label>
@@ -99,6 +102,15 @@ const RegisterPage = () => {
               <p className="text-sm">Already have an account? <span className="text-blue-600 cursor-pointer"><Link to="/">Log In</Link></span></p>
 
             </form>
+
+            <div className="flex items-center gap-3 w-2/3">
+              <div className="flex-1 h-0.5 bg-gray-700 rounded-full" />
+              <span className="text-gray-800 text-sm font-semibold">OR</span>
+              <div className="flex-1 h-0.5 bg-gray-700 rounded-full" />
+            </div>
+
+            <GoogleButton />
+
             <ToastContainer position="top-left" />
           </div>
         </div>
