@@ -110,6 +110,7 @@ const googleCallback = async(req, res) => {
 	try {
 		let user = await userModel.findOne({email});
 
+		// register as new user
 		if(!user) {
 			user = await userModel.create({
 				fullname: displayName,
