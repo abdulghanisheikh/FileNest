@@ -1,7 +1,7 @@
 const userModel = require("../models/user.model.js");
 const fileModel = require("../models/file.model.js");
 const supabase = require("../config/supabase.config.js");
-const { imagekit } = require("../config/imagekit.config.js");
+const { deleteProfile } = require("../config/imagekit.config.js");
 
 const deleteFolder = async (folderName) => {
     try {
@@ -51,7 +51,6 @@ const deleteFolder = async (folderName) => {
     catch (err) {
         return {
             success: false,
-            message: "Server error",
             error: err.message
         }
     }
@@ -60,22 +59,33 @@ const deleteFolder = async (folderName) => {
 const deleteAccount = async (req, res) => {
     try {
         let userId = req.user.id;
-        let deletedUser = await userModel.findByIdAndDelete(userId);
-
-        if (!deletedUser) {
-            return res.status(400).json({
-                success: false,
-                message: "Deletion failed"
-            });
-        }
-
-        await fileModel.deleteMany({ owner: deletedUser._id });
 
         // delete files
-        let result = await deleteFolder(deletedUser._id);
+        let result = await deleteFolder(userId);
+
+        const user = await userModel.findById(userId);
 
         if (result.success) {
-            // delete profile picture from imagekit
+            // delete profile
+            const deleteProfileResult = await deleteProfile(user.profileId);
+
+            let deletedUser = await userModel.findByIdAndDelete(userId);
+
+            if (!deletedUser) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Deletion failed"
+                });
+            }
+
+            await fileModel.deleteMany({ owner: deletedUser._id });
+
+            res.cookie("token", "");
+
+            return res.status(200).json({
+                success: true,
+                message: "Account deleted"
+            });
         }
         
         else {
@@ -85,7 +95,6 @@ const deleteAccount = async (req, res) => {
     catch (err) {
         return res.status(500).json({
             success: false,
-            message: "Server error",
             error: err.message
         });
     }

@@ -3,6 +3,6 @@ const router = express.Router();
 const isLoggedIn = require("../middlewares/isLoggedIn.js");
 const getSummary = require("../controllers/summary.controller.js");
 
-router.get("/summarize", isLoggedIn, getSummary);
+router.get("/", isLoggedIn, getSummary);
 
 module.exports = router;

@@ -2,7 +2,7 @@ const userModel = require("../models/user.model.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const sendTokenResponse = async({user, res, message}) => {
+const sendTokenResponse = async ({ user, res, message }) => {
 	try {
 		const token = jwt.sign(
 			{ id: user._id },
@@ -14,7 +14,7 @@ const sendTokenResponse = async({user, res, message}) => {
 			httpOnly: true, // JS can't access cookies in frontend
 			secure: process.env.NODE_ENV === "development" ? false : true,
 			maxAge: 24 * 60 * 60 * 1000, // 1 day
-			sameSite: "none", // allow cross-origin domain
+			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 		});
 
 		return res.status(200).json({
@@ -26,7 +26,7 @@ const sendTokenResponse = async({user, res, message}) => {
 				profilePicture: user.profilePicture
 			},
 		});
-	} catch(err) {
+	} catch (err) {
 		return res.status(500).json({
 			success: false,
 			error: err.message
@@ -34,18 +34,18 @@ const sendTokenResponse = async({user, res, message}) => {
 	}
 }
 
-const signup = async(req, res) => {
+const signup = async (req, res) => {
 	const { fullname, email, password } = req.body;
 
 	try {
 		const existingUser = await userModel.findOne({
 			$or: [
-				{fullname},
-				{email}
+				{ fullname },
+				{ email }
 			]
 		});
 
-		if(existingUser) {
+		if (existingUser) {
 			return res.status(400).json({
 				success: false,
 				message: "User already exist"
@@ -83,7 +83,7 @@ const login = async (req, res) => {
 				success: false,
 			});
 		}
-		
+
 		const isMatch = await bcrypt.compare(password, user.password);
 		if (!isMatch) {
 			return res.status(400).json({
@@ -102,16 +102,16 @@ const login = async (req, res) => {
 	}
 };
 
-const googleCallback = async(req, res) => {
-	const {id, displayName, emails, photos} = req.user;
+const googleCallback = async (req, res) => {
+	const { id, displayName, emails, photos } = req.user;
 	const email = emails[0].value;
 	const profilePicture = photos[0].value;
 
 	try {
-		let user = await userModel.findOne({email});
+		let user = await userModel.findOne({ email });
 
 		// register as new user
-		if(!user) {
+		if (!user) {
 			user = await userModel.create({
 				fullname: displayName,
 				email,
@@ -120,20 +120,32 @@ const googleCallback = async(req, res) => {
 			});
 		}
 
-		const token = await jwt.sign(
+		const token = jwt.sign(
 			{ id: user._id },
 			process.env.JWT_SECRET,
 			{ expiresIn: "1d" }
 		);
 
-		res.cookie("token", token);
-
-		res.redirect("http://localhost:5173/dashboard");
-	} catch(err) {
-		return res.status(500).json({
-			success: false,
-			error: err.message
+		res.cookie("token", token, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === "production",
+			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+			maxAge: 1000 * 60 * 60 * 24
 		});
+
+		if (process.env.NODE_ENV === "development") {
+			res.redirect("http://localhost:5173/dashboard");
+		} else {
+			res.redirect(`${process.env.FRONTEND}/dashboard`);
+		}
+	} catch (err) {
+		console.log(err.message);
+		
+		if (process.env.NODE_ENV === "development") {
+			res.redirect("http://localhost:5173/login-page");
+		} else {
+			res.redirect(`${process.env.FRONTEND}/login-page`);
+		}
 	}
 }
 
@@ -153,7 +165,6 @@ const logout = async (req, res) => {
 	} catch (err) {
 		return res.status(500).json({
 			success: false,
-			message: "Server error",
 			error: err.message,
 		});
 	}
@@ -175,7 +186,6 @@ const getMe = async (req, res) => {
 	} catch (err) {
 		return res.status(500).json({
 			success: false,
-			message: "Something went wrong",
 			error: err.message
 		});
 	}

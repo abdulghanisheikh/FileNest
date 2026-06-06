@@ -14,4 +14,10 @@ const uploadToImagekit = async({buffer, fileName, folder = ""}) => {
     return uploadedFile;
 }
 
-module.exports = {uploadToImagekit, imagekit};
+const deleteProfile = async(fileId) => {
+    const deleteResult = await imagekit.deleteFile(fileId);
+
+    return deleteResult;
+} 
+
+module.exports = {uploadToImagekit, deleteProfile};

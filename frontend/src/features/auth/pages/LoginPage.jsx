@@ -19,8 +19,6 @@ const LoginPage = () => {
 	const context = useContext(AuthContext);
 	const { loading, user } = context;
 
-	console.log("user:", user);
-
 	if (!loading && user) {
 		navigate("/dashboard");
 	}

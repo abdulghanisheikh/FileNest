@@ -25,10 +25,14 @@ app.use(cookieParser());
 
 app.use(passport.initialize());
 
+const callbackUrl = process.env.NODE_ENV === "development" ?
+    "http://localhost:3000/auth/google/callback" :
+    process.env.GOOGLE_CALLBACK_URL
+
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback"
+    callbackURL: callbackUrl
 }, (_, __, profile, done) => {
     return done(null, profile);
 }));
@@ -37,7 +41,7 @@ passport.use(new GoogleStrategy({
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/file", fileRouter);
-app.use("/", summaryRouter);
+app.use("/summary", summaryRouter);
 
 app.get("/", (req, res) => {
     res.send("Server is running");
