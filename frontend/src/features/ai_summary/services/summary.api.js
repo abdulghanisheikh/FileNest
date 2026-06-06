@@ -13,6 +13,6 @@ const api = new axios.create({
 });
 
 export const getSummary = async(filepath) => {
-    const response = await api.get(`${baseURL}/?filepath=${filepath}`);
+    const response = await api.get(`${baseURL}/summary/?filepath=${filepath}`);
     return response;
 }
