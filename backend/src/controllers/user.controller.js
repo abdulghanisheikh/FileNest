@@ -67,7 +67,7 @@ const deleteAccount = async (req, res) => {
 
         if (result.success) {
             // delete profile
-            const deleteProfileResult = await deleteProfile(user.profileId);
+            // const deleteProfileResult = await deleteProfile(user.profileId);
 
             let deletedUser = await userModel.findByIdAndDelete(userId);
 
