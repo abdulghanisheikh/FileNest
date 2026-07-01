@@ -4,18 +4,21 @@ let baseURL = import.meta.env.VITE_ENV === "development" ?
     "http://localhost:3000" :
     import.meta.env.VITE_BASE_URL;
 
-const api = new axios.create({
+const api = axios.create({
     baseURL,
     withCredentials: true
 });
 
 export const fetchDocs = async() => {
-    const response = await api.get(`${baseURL}/file/get-docs`);
+    const response = await api.get('/file/get-docs');
     return response;
 }
 
 export const deleteFile = async(filepath) => {
-    const response = await api.delete(`${baseURL}/file/delete?filepath=${filepath}`);
+    const response = await api.delete('/file/delete', {
+        params: { filepath }
+    });
+
     return response;
 }
 
@@ -23,21 +26,21 @@ export const uploadFile = async({file}) => {
     const formData = new FormData();
     formData.append("uploaded-file", file);
 
-    const response = await api.post(`${baseURL}/user/upload`, formData);
+    const response = await api.post('/user/upload', formData);
     return response;
 }
 
 export const fetchImages = async() => {
-    const response = await api.get(`${baseURL}/file/get-images`);
+    const response = await api.get('/file/get-images');
     return response;
 }
 
 export const fetchMedia = async() => {
-    const response = await api.get(`${baseURL}/file/get-media`);
+    const response = await api.get('/file/get-media');
     return response;
 }
 
 export const fetchOtherFiles = async() => {
-    const response = await api.get(`${baseURL}/file/get-others`);
+    const response = await api.get('/file/get-others');
     return response;
 }
