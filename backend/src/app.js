@@ -25,9 +25,9 @@ app.use(cookieParser());
 
 app.use(passport.initialize());
 
-const callbackUrl = process.env.NODE_ENV === "production" ?
-    process.env.GOOGLE_CALLBACK_URL :
-    "http://localhost:3000/auth/google/callback"
+const callbackUrl = process.env.NODE_ENV === "development" ? 
+    "http://localhost:3000/auth/google/callback" :
+    process.env.GOOGLE_CALLBACK_URL
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,

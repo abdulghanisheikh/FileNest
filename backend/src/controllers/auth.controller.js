@@ -103,7 +103,7 @@ const login = async (req, res) => {
 };
 
 const googleCallback = async (req, res) => {
-	const { id, displayName, emails, photos } = req.user;
+	const { id, displayName, emails, photos } = req.user; // from google
 	const email = emails[0].value;
 	const profilePicture = photos[0].value;
 
