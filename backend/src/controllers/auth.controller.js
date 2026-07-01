@@ -134,15 +134,13 @@ const googleCallback = async (req, res) => {
 		});
 
 		if (process.env.NODE_ENV === "development") {
-			console.log("You are in development case");
 			res.redirect("http://localhost:5173/dashboard");
 		} else {
-			console.log("You are in product case");
 			res.redirect(`${process.env.FRONTEND}/dashboard`);
 		}
 	} catch (err) {
-		console.log(err.message);
-		
+		console.log("Google callback error:", err.message);
+
 		if (process.env.NODE_ENV === "development") {
 			res.redirect("http://localhost:5173/login-page");
 		} else {

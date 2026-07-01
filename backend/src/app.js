@@ -7,6 +7,7 @@ const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
 const morgan = require("morgan");
 
 const app = express();
+app.set("trust proxy", 1);
 
 const authRouter = require("./routes/auth.routes.js");
 const userRouter = require("./routes/user.routes.js");
@@ -30,6 +31,8 @@ app.use(passport.initialize());
 const callbackUrl = process.env.NODE_ENV === "development" ? 
     "http://localhost:3000/auth/google/callback" :
     process.env.GOOGLE_CALLBACK_URL
+
+console.log("Google callbackURL:", callbackUrl);
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
