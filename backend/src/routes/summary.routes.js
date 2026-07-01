@@ -5,6 +5,8 @@ const getSummary = require("../controllers/summary.controller.js");
 
 /**
  * @route GET /summary/
+ * @description generates summary of the document
+ * @access private
  */
 router.get("/", isLoggedIn, getSummary);
 

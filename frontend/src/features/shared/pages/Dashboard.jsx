@@ -1,14 +1,14 @@
 import { useEffect, useState, useContext } from "react";
-import { FileManagerContext } from "../features/file_manager/file_manager.context.jsx";
+import { FileManagerContext } from "../../file_manager/file_manager.context.jsx";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import ProgressBar from "../app/components/ProgressBar.jsx";
-import History from "../app/components/History.jsx";
-import ContentBox from "../app/components/ContentBox.jsx";
-import Navbar from "../features/shared/components/Navbar";
-import Sidepanel from "../app/components/Sidepanel.jsx";
-import { useFileManager } from "../features/file_manager/hooks/useFileManager.js";
-import DeleteConfirmation from "../features/file_manager/components/DeleteConfirmation.jsx";
+import ProgressBar from "../../../app/components/ProgressBar.jsx";
+import History from "../../../app/components/History.jsx";
+import ContentBox from "../../../app/components/ContentBox.jsx";
+import Navbar from "../components/Navbar.jsx";
+import Sidepanel from "../../../app/components/Sidepanel.jsx";
+import { useFileManager } from "../../file_manager/hooks/useFileManager.js";
+import DeleteConfirmation from "../../file_manager/components/DeleteConfirmation.jsx";
 
 function Dashboard() {
 	const [usedStorage, setUsedStorage] = useState(0);
@@ -29,12 +29,9 @@ function Dashboard() {
 	const MB = 1000000;
 	const [uploadHistory, setUploadHistory] = useState([]);
 
-	let baseUrl;
-	if (import.meta.env.VITE_ENVIRONMENT === "development") {
-		baseUrl = "http://localhost:3000";
-	} else {
-		baseUrl = import.meta.env.VITE_BASE_URL;
-	}
+	let baseUrl = import.meta.env.VITE_ENV === "development" ?
+    "http://localhost:3000" :
+    import.meta.env.VITE_BASE_URL;
 
 	const context = useContext(FileManagerContext);
 	const { refresh, setRefresh, loading } = context;

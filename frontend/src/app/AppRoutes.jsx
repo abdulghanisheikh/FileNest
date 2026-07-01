@@ -3,7 +3,7 @@ import FileUpload from "../features/file_manager/pages/FileUpload";
 import Documents from "../features/file_manager/pages/Documents";
 import LoginPage from "../features/auth/pages/LoginPage";
 import RegisterPage from "../features/auth/pages/RegisterPage";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../features/shared/pages/Dashboard";
 import Images from "../features/file_manager/pages/Images";
 import Media from "../features/file_manager/pages/Media";
 import Other from "../features/file_manager/pages/Other";

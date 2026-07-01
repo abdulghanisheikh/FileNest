@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const passport = require("passport");
 const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
+const morgan = require("morgan");
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(cors({
     credentials: true
 }));
 
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -47,4 +49,4 @@ app.get("/", (req, res) => {
     res.send("Server is running");
 });
 
-module.exports = {app};
+module.exports = app;

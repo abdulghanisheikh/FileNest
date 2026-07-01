@@ -100,7 +100,7 @@ const Doc = ({ filename, filesize, filetype, addedOn, publicUrl, deleteFile, get
                         {open && (
                             <div
                             ref={docOptionsReference}
-                            className='absolute top-7 right-0 w-25 flex flex-col rounded-md bg-sky-800 text-white text-xs font-semibold z-30 shadow-md shadow-black/30'>
+                            className='absolute top-7 right-0 w-25 flex flex-col rounded-md bg-sky-800 text-white text-xs font-semibold z-2 shadow-md shadow-black/30'>
                                 <a href={publicUrl} target="_blank" className='cursor-pointer text-center w-full hover:bg-white active:scale-95 hover:text-blue-500 duration-300 ease-in-out p-1 rounded-t-md'>View</a>
                                 
                                 <button onClick={() => deleteFile()} className='w-full p-1 cursor-pointer hover:bg-white active:scale-95 hover:text-red-500 duration-300 ease-in-out'>Delete</button>

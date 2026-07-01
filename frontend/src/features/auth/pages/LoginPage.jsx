@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { ThreeDots } from "react-loader-spinner";
 import { useAuth } from "../hooks/useAuth.js";
@@ -9,8 +10,6 @@ import GoogleButton from "../components/GoogleButton.jsx";
 const LoginPage = () => {
 	const { handleLogin } = useAuth();
 
-	const navigate = useNavigate();
-
 	const [loginData, setLoginData] = useState({
 		email: "",
 		password: ""
@@ -19,8 +18,12 @@ const LoginPage = () => {
 	const context = useContext(AuthContext);
 	const { loading, user } = context;
 
-	if (!loading && user) {
-		navigate("/dashboard");
+	if(loading === 'login') {
+		return <div>Loading...</div>
+	}
+
+	if(user) {
+		return <Navigate to='/dashboard'></Navigate>
 	}
 
 	const handleChange = (name, value) => {
@@ -44,7 +47,7 @@ const LoginPage = () => {
 			});
 
 			setTimeout(() => {
-				navigate('/dashboard');
+				return <Navigate to='/dashboard'></Navigate>
 			}, 2000);
 		}
 	}
