@@ -7,7 +7,7 @@ if(import.meta.env.VITE_ENV === "development") {
     baseURL = import.meta.env.VITE_BASE_URL;
 }
 
-const api = new axios.create({
+const api = axios.create({
     baseURL,
     withCredentials: true
 });
