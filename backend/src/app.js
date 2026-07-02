@@ -15,8 +15,18 @@ const fileRouter = require("./routes/file.routes.js");
 const summaryRouter = require("./routes/summary.routes.js");
 const { profile } = require("./config/llm.config.js");
 
+const allowedOrigins = ["http://localhost:5173", process.env.FRONTEND];
+
 app.use(cors({
-    origin: ["http://localhost:5173", process.env.FRONTEND],
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true
 }));

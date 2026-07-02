@@ -2,6 +2,8 @@ const userModel = require("../models/user.model.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const sendTokenResponse = async ({ user, res, message }) => {
 	try {
 		const token = jwt.sign(
@@ -11,10 +13,11 @@ const sendTokenResponse = async ({ user, res, message }) => {
 		);
 
 		res.cookie("token", token, {
-			httpOnly: true, // JS can't access cookies in frontend
-			secure: process.env.NODE_ENV === "development" ? false : true,
-			maxAge: 24 * 60 * 60 * 1000, // 1 day
-			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+			httpOnly: true,
+			secure: !isDev,
+			maxAge: 24 * 60 * 60 * 1000,
+			sameSite: isDev ? "lax" : "none",
+			partitioned: !isDev
 		});
 
 		return res.status(200).json({
@@ -128,12 +131,13 @@ const googleCallback = async (req, res) => {
 
 		res.cookie("token", token, {
 			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-			maxAge: 1000 * 60 * 60 * 24
+			secure: !isDev,
+			sameSite: isDev ? "lax" : "none",
+			maxAge: 1000 * 60 * 60 * 24,
+			partitioned: !isDev
 		});
 
-		if (process.env.NODE_ENV === "development") {
+		if (isDev) {
 			res.redirect("http://localhost:5173/dashboard");
 		} else {
 			res.redirect(`${process.env.FRONTEND}/dashboard`);
