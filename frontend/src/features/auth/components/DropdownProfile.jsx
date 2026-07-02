@@ -89,9 +89,9 @@ const DropdownProfile = () => {
 						} className="h-25 w-25 rounded-full p-2 object-cover" alt="" />
 
 						{user?.profilePicture ?
-							(<p className="text-xs cursor-pointer py-0.5 px-3 bg-red-500 text-white rounded-lg" onClick={async () => {
-								await handleRemoveProfile();
-							}}>{
+							(<p className="text-xs cursor-pointer py-0.5 px-3 bg-red-500 text-white rounded-lg" onClick={
+								async() => await handleRemoveProfile()
+							}>{
 									loading === "remove profile" ? "Removing..." : "Remove profile"
 								}</p>) :
 							(<p

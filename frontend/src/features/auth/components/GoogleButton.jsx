@@ -1,12 +1,12 @@
 import React from 'react';
 
 const GoogleButton = () => {
-	const baseUrl = import.meta.env.VITE_ENV === "production" ?
-		import.meta.env.VITE_BASE_URL :
-		"http://localhost:3000";
+	const googleAuthUrl = import.meta.env.VITE_ENV === 'production' ? 
+	`${import.meta.env.VITE_BASE_URL}/auth/google` : 
+	'http://localhost:3000/auth/google';
 
 	return (
-		<a href={`${baseUrl}/auth/google`} className="bg-[linear-gradient(#e9e9e9,#e9e9e9_50%,#fff)] group inline-flex transition-all duration-300 overflow-visible py-1 px-5 w-fit ml-16 rounded-full">
+		<a href={googleAuthUrl} className="bg-[linear-gradient(#e9e9e9,#e9e9e9_50%,#fff)] group inline-flex transition-all duration-300 overflow-visible py-1 px-5 w-fit ml-16 rounded-full">
 
 			<div className="w-half h-full bg-[linear-gradient(to_top,#ececec,#fff)] overflow-hidden shadow-[0_0_1px_rgba(0,0,0,0.07),0_0_1px_rgba(0,0,0,0.05),0_3px_3px_rgba(0,0,0,0.25),0_1px_3px_rgba(0,0,0,0.12)] rounded-full hover:shadow-none duration-300">
 
