@@ -27,7 +27,7 @@ export const useProfileManager = () => {
 
     const handleRemoveProfile = async() => {
         try {
-            setLoading("remove profile");
+            setLoading('remove profile');
 
             const {data} = await removeUserProfile();
 
@@ -39,7 +39,7 @@ export const useProfileManager = () => {
         } catch(err) {
             toast.error(err.response?.data?.message || "Error in removing user profile");
         } finally {
-            setLoading("");
+            setLoading('');
         }
     }
 

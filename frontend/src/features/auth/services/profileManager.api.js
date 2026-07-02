@@ -1,13 +1,13 @@
 import axios from "axios";
 
 let baseURL;
-if(import.meta.env.VITE_ENVIRONMENT === "development") {
+if(import.meta.env.VITE_ENV === "development") {
     baseURL = "http://localhost:3000"
 } else {
     baseURL = import.meta.env.VITE_BASE_URL;
 }
 
-const api = new axios.create({
+const api = axios.create({
     baseURL,
     withCredentials: true
 });
